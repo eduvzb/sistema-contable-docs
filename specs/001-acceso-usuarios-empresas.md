@@ -99,23 +99,26 @@ Recursos y listas se envuelven en `data`. Las listas se ordenan por nombre y lue
 - Crear cliente HTTP con credenciales/CSRF, guardas de navegación y pantallas de acceso, cambio de contraseña, empresas y administración de contadores en el frontend.
 - Mantener secretos fuera de Git e incluir `.env.example`, Docker/Sail e instrucciones reproducibles.
 
-## Verificación prevista
+## Verificación
 
-Pruebas Laravel sobre PostgreSQL `testing`:
+La implementación se registró contra la revisión documental `0e576cbd80b74e03ae6ecb994968d6880aa28912` en dos repositorios hermanos, ambos en la rama `codex/spec-001`:
 
-- acceso válido/inválido, salida, CSRF y limitación;
-- cambio obligatorio, contraseña actual incorrecta y restablecimiento con invalidación de sesiones;
-- normalización y duplicados de correo/RFC, campos inválidos y régimen inexistente;
-- acceso global del administrador y aislamiento del contador mediante listados y peticiones directas;
-- duplicados, retirada y atomicidad de asignaciones; contador sin empresas;
-- ausencia de hashes y contraseñas temporales en consultas posteriores;
-- creación/recuperación del primer administrador mediante comando.
+- Backend: `a6395058e7d6f82bf33f61f63fff0459c68fce6d`.
+- Frontend: `353e18c0ead71ceae0c1b848c3058d59d45e249b`.
 
-Playwright cubre administrador → empresa → contador → asignación → cambio de contraseña → consulta → retirada de acceso, usando datos y base de pruebas. Además se ejecutan formato y pruebas del backend, lint, comprobación TypeScript, pruebas y build de producción del frontend.
+Comprobaciones ejecutadas el 2026-09-07:
 
-**Evidencia de producto:** pendiente hasta completar los dos repositorios y ejecutar las comprobaciones. No cambiar a Implementada antes de registrar aquí comandos, resultados, revisión de spec y revisiones de backend/frontend.
+- `./vendor/bin/sail artisan test`: 7 pruebas y 94 aserciones aprobadas sobre PostgreSQL 18, base `testing`. Cubren acceso válido/inválido, salida, límite de intentos, cambio obligatorio, Argon2id, restablecimiento e invalidación de sesiones, normalización y duplicados de correo/RFC, validación, aislamiento, acceso global, asignaciones atómicas y comando administrativo.
+- `./vendor/bin/pint --test`: aprobado.
+- `composer validate --strict --no-check-publish`: aprobado; análisis sintáctico de todos los archivos PHP propios: aprobado.
+- `pnpm lint`: aprobado.
+- `pnpm typecheck`: aprobado.
+- `pnpm build`: build de producción aprobado con Next.js 16.3.4.
+
+El escenario Playwright administrador → empresa → contador → asignación → cambio de contraseña → consulta → retirada está escrito en `e2e/spec-001.spec.ts`, pero no se ejecutó por instrucción posterior del usuario de no realizar pruebas en navegador. Por ello no se acredita todavía la comprobación integral del frontend y la spec conserva el estado **Lista** de acuerdo con su definición de terminado.
 
 ## Cambios
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado.
 - **2026-09-07:** alcance, contratos, entorno y criterios completados por instrucción explícita del usuario; SPEC-001 pasa a Lista. Se preservan los criterios CA-001-01 a CA-001-07 y se agregan CA-001-08 a CA-001-16.
+- **2026-09-07:** backend y frontend implementados en `codex/spec-001`; comprobaciones no navegador registradas. La prueba Playwright queda sin ejecutar por instrucción del usuario y la spec permanece Lista.
