@@ -4,13 +4,13 @@ Una spec por funcionalidad, compartida por backend y frontend. Para trabajar usa
 
 ## Orden y dependencias
 
-SPEC-001 y SPEC-002 están **Listas**; las demás specs iniciales permanecen en **Borrador**. Los pendientes de cada una explican qué falta antes de Lista; no significan que todo el MVP esté bloqueado para su definición.
+SPEC-001, SPEC-002 y SPEC-003 están **Listas**; las demás specs iniciales permanecen en **Borrador**. Los pendientes de cada una explican qué falta antes de Lista; no significan que todo el MVP esté bloqueado para su definición.
 
 | Spec | Funcionalidad | Dependencias de preparación |
 |---|---|---|
 | [SPEC-001](001-acceso-usuarios-empresas.md) | Acceso, usuarios y empresas — **Lista** | Ninguna |
 | [SPEC-002](002-contexto-contable.md) | Contexto contable — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md) |
-| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
+| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
 | [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
 | [SPEC-005](005-descarga-simulada.md) | Descarga simulada | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md) |
 | [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |

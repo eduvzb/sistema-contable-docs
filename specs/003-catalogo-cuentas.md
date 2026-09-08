@@ -1,6 +1,6 @@
 # SPEC-003 — Catálogo de cuentas
 
-**Estado:** Borrador  
+**Estado:** Lista
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md)
 
@@ -24,25 +24,50 @@ El usuario operativo administra las cuentas de una empresa accesible y las deja 
 |---|---|---|
 | CA-003-01 | Se crea una cuenta con los datos que defina el contrato. | Queda en el catálogo de la empresa seleccionada y puede consultarse. |
 | CA-003-02 | Se edita una cuenta existente de la empresa. | Se muestran los datos actualizados; la cuenta conserva su pertenencia empresarial. |
-| CA-003-03 | Se activa o desactiva una cuenta. | Su condición se conserva y es consultable; el efecto sobre nuevos movimientos se debe decidir antes de Lista. |
+| CA-003-03 | Se activa o desactiva una cuenta. | Su condición se conserva y es consultable; una cuenta inactiva no puede elegirse para nuevas partidas, sin alterar movimientos históricos. |
 | CA-003-04 | Se importan cuentas válidas según el formato que se concrete. | Quedan disponibles en el catálogo de la empresa, incluyendo las relaciones jerárquicas representadas en el formato. |
 | CA-003-05 | Se relaciona una cuenta hija con una cuenta padre conforme a OQ-001. | La jerarquía se conserva y puede consultarse sin un máximo de niveles inventado. |
 | CA-003-06 | Se intenta usar en una partida de A una cuenta que pertenece a B. | La operación no permite contabilizar con la cuenta ajena, conforme a BR-003. |
 | CA-003-07 | Se intenta consultar o editar el catálogo de una empresa no asignada. | El backend impide el acceso y conserva los datos. |
+| CA-003-08 | Se propone como padre una cuenta ajena, inexistente, la propia cuenta o una descendiente. | Se rechaza el cambio sin crear referencias cruzadas ni ciclos. |
+| CA-003-09 | Una fila del archivo de importación es inválida, duplicada o referencia un padre inexistente. | Se informa el error por fila y no se importa ninguna cuenta del lote. |
+| CA-003-10 | Se edita una cuenta que ya tiene partidas. | Puede cambiar nombre y estado; código, naturaleza y padre permanecen sin cambios. |
 
-## Pendientes y decisiones
+## Decisiones y pendientes
 
-- **Antes de Lista:** campos/códigos y unicidad; naturaleza de las cuentas necesaria para SPEC-008; niveles que reciben movimientos y efecto de inactividad sobre nuevas partidas; edición de cuentas ya utilizadas; formato de importación, duplicados, errores y resultado de lotes. Concretar integridad de la jerarquía (ciclos y referencias inválidas).
-- **Supuesto para validar:** jerarquía sin máximo de niveles fijado, OQ-001. La observación del catálogo real debe cerrar las decisiones necesarias para captura y balanza.
+- Una cuenta conserva código de hasta 64 caracteres, nombre, naturaleza `DEBIT|CREDIT`, padre opcional, `accepts_entries` y estado activo. El código se recorta y es único dentro de la empresa; no se impone una máscara contable no documentada.
+- La jerarquía usa una referencia padre de la misma empresa, sin máximo de niveles. Se rechazan cuenta propia, padre ajeno y ciclos. `accepts_entries` distingue cuentas agrupadoras de cuentas seleccionables sin deducirlo de su nivel.
+- Las cuentas inactivas o con `accepts_entries=false` permanecen consultables, pero SPEC-006 debe rechazarlas en nuevas partidas. Las relaciones y movimientos históricos se conservan.
+- Una cuenta sin partidas puede editar todos sus campos. Cuando SPEC-006 registre la primera partida, código, naturaleza y padre quedan protegidos; nombre y estado siguen editables. CA-003-06/10 se integran y verifican allí.
+- La importación inicial usa CSV UTF-8 con encabezado exacto `code,name,nature,parent_code,accepts_entries,active`. Naturaleza acepta `DEBIT|CREDIT`; booleanos aceptan `true|false`. El padre puede existir previamente o estar en el mismo archivo, sin depender del orden de filas.
+- La importación es síncrona y atómica. Rechaza encabezados, filas, códigos repetidos dentro del archivo o ya existentes, padres inexistentes y ciclos; devuelve errores identificados por fila y no escribe parcialmente.
+- **Supuesto para validar:** jerarquía sin máximo de niveles fijado, OQ-001. La observación del catálogo real puede ajustar estos campos mediante esta misma spec.
 - **Posterior:** catálogo SAT automático, migración de pólizas/saldos históricos y reglas de selección automática.
 
 ## Plan técnico y contratos
 
-- Backend: operaciones de catálogo por empresa e importación con el formato acordado; define el contrato de consulta/selección de cuentas que consumen SPEC-006 y SPEC-008.
-- Frontend: listado/jerarquía, formulario y carga de catálogo con resultado comprensible.
-- Concretar fallos de importación y edición antes de escribir sus criterios de error definitivos; no asumir procesamiento asíncrono.
+### Persistencia
 
-Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
+`accounts` conserva `company_id`, `parent_id`, `code`, `name`, `nature`, `accepts_entries`, `active` y marcas de tiempo. La base garantiza código único por empresa y padre de la misma empresa. No existe eliminación en esta spec.
+
+### API autenticada
+
+Todas las rutas aplican la sesión Sanctum, el cambio obligatorio de contraseña y el acceso vigente a la empresa de SPEC-001.
+
+| Operación | Resultado |
+|---|---|
+| `GET /api/companies/{companyId}/accounts` | `200` con el catálogo plano ordenado por código; cada fila incluye su `parent_id` para reconstruir el árbol. |
+| `POST /api/companies/{companyId}/accounts` | `201` con la cuenta creada. Requiere código, nombre y naturaleza; padre es opcional y los booleanos predeterminan `true`. |
+| `PUT /api/companies/{companyId}/accounts/{accountId}` | `200` con la cuenta actualizada, conservando empresa e integridad jerárquica. |
+| `POST /api/companies/{companyId}/account-imports` | `201` con `{ imported_count, accounts }` para un archivo multipart `file`; falla atómicamente con `422`. |
+
+La representación es `{ id, company_id, parent_id, code, name, nature, accepts_entries, active }`. Peticiones no autenticadas devuelven `401`; empresa/cuenta ajena o inexistente devuelve `404`; datos, jerarquía o importación inválidos devuelven `422` sin cambios.
+
+### Interfaz
+
+La empresa enlaza a `/companies/{companyId}/accounts`. La pantalla muestra la jerarquía, naturaleza, capacidad de recibir movimientos y estado; permite crear, editar, activar/desactivar e importar CSV, con errores de campos o filas. El catálogo pertenece a la empresa y no cambia al seleccionar otro periodo.
+
+Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). SPEC-006 consume cuentas activas que aceptan movimientos y aplica el bloqueo de estructura cuando existan partidas; SPEC-008 consume `nature` para la balanza.
 
 ## Verificación
 
@@ -56,3 +81,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance del catálogo.
+- **2026-09-07:** preparación para implementación por autorización explícita del usuario. Se fijaron campos, naturaleza, selección de movimientos, edición de cuentas utilizadas, integridad jerárquica y CSV atómico; SPEC-003 pasa a Lista.
