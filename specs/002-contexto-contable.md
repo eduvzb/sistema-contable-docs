@@ -66,9 +66,26 @@ Separar pertenencia empresarial de filtrado por periodo: los criterios temporale
 
 ## Verificación
 
-**Evidencia de producto:** pendiente; no ejecutada. No existe implementación vinculada todavía.
+**Revisión implementada:** `2dc868a2484772db6c5fc881ff7eadab63ea059f`.
 
-Prever pruebas de pertenencia persistida, consultas entre empresas y cambio de contexto. Verificar CA-002-03/05 con pólizas y CA-002-06 con fechas de trabajo distintas del periodo seleccionado.
+**Referencias de implementación:**
+
+- Backend, rama `codex/spec-002`: `098ec630fdbe41ee393dd04ccd4e6505dc8ceb5d`.
+- Frontend, rama `codex/spec-002`: `7f59d6c86dc3a3bb61f314d16032df21b316f593`.
+
+**2026-09-07 — Comprobaciones ejecutadas:**
+
+| Cobertura | Evidencia y resultado |
+|---|---|
+| CA-002-02; alta y consulta de periodos; errores de autenticación, contraseña temporal, año inválido/duplicado, cruce de empresa y periodo; `CLOSED` informativo | `./vendor/bin/sail artisan test --compact tests/Feature/Spec002Test.php`: 5 pruebas, 41 aserciones, aprobadas sobre PostgreSQL `testing`. |
+| Regresión de SPEC-001 y SPEC-002 | `./vendor/bin/sail artisan test --compact`: 12 pruebas, 135 aserciones, aprobadas. |
+| Formato y carga del backend | `./vendor/bin/sail pint --dirty --format agent`, revisión de sintaxis PHP y `php artisan route:list --path=api --except-vendor`: aprobados; las tres rutas del contrato quedaron registradas. |
+| Dependencias backend | `./vendor/bin/sail composer validate --strict --no-check-publish`: válido. `./vendor/bin/sail composer audit`: sin avisos de vulnerabilidad. |
+| Compilación de CA-002-01/04/06 y ruta de contexto | `pnpm lint`, `pnpm typecheck` y `pnpm build`: aprobados con Next.js 16.3.4; la compilación incluye `/companies/[id]` y `/companies/[id]/periods/[periodId]`. |
+
+No se escribieron ni ejecutaron pruebas de SPEC-002 en navegador por instrucción explícita del usuario. La interfaz, su cambio de contexto y la memoria local no cuentan todavía con evidencia de ejecución interactiva. CA-002-03/05 permanecen pendientes hasta que SPEC-006 implemente pólizas y su pertenencia estable al periodo. Por esos pendientes, el estado continúa **Lista** y no **Implementada**.
+
+Pendiente: comprobar interactivamente selección/cambio de contexto y verificar CA-002-03/05 con pólizas. CA-002-06 se cubre estructuralmente al no derivar el contexto de la fecha actual, pero su recorrido de usuario tampoco se declara ejecutado.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -77,3 +94,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance contable.
 - **2026-09-07:** preparación para implementación. Se resolvieron alta de ejercicios por cualquier usuario con acceso, doce meses persistidos, estado informativo, contexto explícito en URL, memoria local no autoritativa, contratos API y errores observables. SPEC-002 pasa a Lista por instrucción explícita del usuario.
+- **2026-09-07:** se implementaron persistencia, API, autorización, selector y contexto visible; se registraron las comprobaciones sin navegador y los pendientes de integración que impiden marcar la spec como Implementada.
