@@ -1,6 +1,6 @@
 # SPEC-008 — Balanza básica
 
-**Estado:** Borrador  
+**Estado:** Lista
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md)
 
@@ -27,31 +27,48 @@ El usuario operativo consulta la balanza de una empresa accesible y periodo; el 
 | CA-008-03 | Existe una póliza DRAFT con partidas, balanceadas o desbalanceadas. | Sus partidas no afectan la balanza definitiva. |
 | CA-008-04 | Una póliza pasa de DRAFT a POSTED conforme a SPEC-006. | La balanza refleja el efecto de sus partidas contabilizadas al volver a consultarla, sin duplicar ese efecto por consultas repetidas. |
 | CA-008-05 | Se consulta empresa A teniendo también acceso a B. | La balanza de A no mezcla cuentas ni movimientos de B; un usuario sin acceso a A tampoco puede consultarla. |
-| CA-008-06 | Una factura origina pólizas en julio y agosto. | Cada póliza conserva su periodo; los movimientos de cada consulta respetan ese periodo. El arrastre del saldo inicial se concreta antes de Lista. |
+| CA-008-06 | Una factura origina pólizas en julio y agosto. | Cada póliza conserva su periodo; los movimientos de cada consulta respetan ese periodo. El saldo inicial de agosto incluye el efecto `POSTED` de julio, pero el movimiento de agosto solo incluye sus propias partidas. |
+| CA-008-07 | Un usuario consulta una empresa no asignada o un periodo de otra empresa. | La respuesta es `404` y no revela cuentas ni movimientos del contexto ajeno. |
+| CA-008-08 | Una cuenta no tiene movimientos `POSTED` en ningún periodo o en el periodo consultado. | La cuenta aparece una sola vez con importes en cero, sin crear agregados de cuentas padre. |
 
 ## Pendientes y decisiones
 
-- **Antes de Lista:** origen de saldo inicial para la demostración y relación entre periodos; naturaleza/signo de cuentas y fórmula/presentación de saldo final; jerarquía/agregación evitando doble conteo; inclusión de cuentas sin movimiento; precisión y redondeo; filtros y efecto de edición de POSTED acordado en SPEC-006. No asumir saldo inicial cero ni convertir OQ-012 en obligación de implementar OpeningBalance.
+- **Resuelto para este alcance:** el saldo inicial no proviene de `OpeningBalance`: es el saldo acumulado de las partidas de pólizas `POSTED` pertenecientes a periodos anteriores de la misma empresa, ordenados por `(year, month)`. En el primer periodo sin historial, el resultado observable es cero, sin persistir un saldo inicial inventado.
+- **Resuelto para este alcance:** cada cuenta se presenta como una fila independiente; no se agregan cuentas padre ni se muestran subtotales jerárquicos. Se incluyen todas las cuentas del catálogo de la empresa, incluso sin movimiento, para que una consulta no oculte cuentas existentes.
+- **Resuelto para este alcance:** el saldo usa la naturaleza de la cuenta. Para `DEBIT`, `saldo = cargos - abonos`; para `CREDIT`, `saldo = abonos - cargos`. El saldo inicial y final pueden ser negativos cuando el movimiento neto queda del lado contrario. El saldo final es el saldo inicial más el movimiento neto del periodo.
+- **Resuelto para este alcance:** los importes usan seis decimales, se calculan como `numeric` en PostgreSQL y se serializan como texto con exactamente seis decimales; no se redondean con punto flotante.
+- **Fuera de este alcance:** `OpeningBalance`, migración histórica, cierres, reaperturas, balanza electrónica SAT y conversión monetaria.
 - **Validación durante MVP:** lectura de saldos por cuenta y correspondencia con las pólizas que el contador registró.
 - **Posterior:** carga/migración histórica y diseño completo de saldos iniciales, balanza fiscal, cierre y reapertura. La definición mínima para una balanza verificable sí debe quedar preparada.
 
 ## Plan técnico y contratos
 
-- Backend: define el único contrato y cálculo de balanza consumido por la pantalla y la exportación SPEC-009; usa cuentas de SPEC-003 y partidas contabilizadas de SPEC-006.
-- Frontend: consulta por contexto y presentación de componentes conforme al contrato.
-- Preparar ejemplos de cuentas de naturaleza distinta y movimientos entre periodos al resolver pendientes; no introducir tablas de saldos, cachés o consolidaciones por anticipación.
+- Backend: `GET /api/companies/{companyId}/accounting-periods/{periodId}/trial-balance`, protegido por Sanctum y la misma visibilidad de empresa de las demás funciones. Devuelve `{ data, meta }`; `data` contiene una fila por cuenta con `account_id`, `code`, `name`, `nature`, `accepts_entries`, `active`, `opening_balance`, `debit_total`, `credit_total` y `closing_balance`. Todos los importes son textos de seis decimales. `meta` identifica `company_id`, `accounting_period_id`, `year`, `month` y `decimal_scale: 6`.
+- El cálculo consulta únicamente partidas de pólizas `POSTED` de la empresa y periodo correspondiente. Las partidas de `DRAFT`, otras empresas y periodos posteriores quedan fuera. La consulta es agregada por cuenta y no duplica partidas por relaciones con CFDI.
+- Frontend: el espacio de trabajo consulta este endpoint cuando existe un periodo seleccionado y presenta la balanza en una vista propia; el contexto de empresa y periodo sigue siendo explícito.
+- SPEC-009 consumirá este mismo contrato, sin repetir el cálculo ni crear otra fuente de saldos.
 
-Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
+Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos de este alcance quedan cerrados para la implementación descrita; cualquier ampliación de saldos iniciales o agregación deberá actualizar esta spec antes de implementarse.
 
 ## Verificación
 
-**Evidencia de producto:** pendiente; no ejecutada. No existe implementación vinculada todavía.
+**Evidencia de producto:** la implementación está vinculada en el árbol de trabajo; la interacción visual queda pendiente porque la instrucción de esta entrega prohíbe navegador y Playwright.
 
-Prever pruebas con valores decimales conocidos, POSTED/DRAFT, dos empresas y dos periodos. Agregar resultados numéricos definitivos al resolver saldo inicial, naturaleza y agregación; sin esos acuerdos no hay evidencia suficiente de correctitud de la balanza.
+| Criterios | Prueba/comprobación | Resultado |
+|---|---|---|
+| CA-008-01/02/03/05/06/08 | `tests/Feature/Spec008Test.php::test_trial_balance_returns_nature_aware_balances_and_excludes_drafts_and_future_periods` | Pasa: verifica naturaleza, arrastre entre julio/agosto, `POSTED`, exclusión de `DRAFT` y futuro, decimales y cuenta sin movimiento. |
+| CA-008-04 | `tests/Feature/Spec008Test.php::test_posting_a_draft_is_reflected_once_when_the_trial_balance_is_queried_repeatedly` | Pasa: el cambio a `POSTED` aparece una vez en consultas repetidas. |
+| CA-008-07 | `tests/Feature/Spec008Test.php::test_trial_balance_returns_not_found_for_unauthenticated_or_foreign_contexts` | Pasa: `401` sin sesión y `404` para empresa o periodo ajenos. |
+| CA-008-05 | `tests/Feature/Spec008Test.php::test_trial_balance_does_not_mix_companies_or_periods` | Pasa: solo se devuelve el catálogo y movimiento de la empresa consultada. |
+| Backend | `./vendor/bin/sail artisan test --compact` | Pasa: 35 pruebas, 302 assertions. |
+| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm build` | Pasa; no se ejecutó `pnpm test:e2e`. |
 
-Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
+Las pruebas cubren valores decimales conocidos, `POSTED`/`DRAFT`, dos empresas y varios periodos. La revisión visual/interactiva queda pendiente por la restricción vigente; no se declara la spec Implementada hasta contar con esa evidencia o una decisión explícita de aceptarla.
+
+La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental); la implementación queda en los árboles backend y frontend indicados por el estado de continuidad.
 
 ## Cambios
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el cálculo pendiente de balanza.
+- **2026-09-08:** se cerró el alcance mínimo: saldo inicial derivado de periodos anteriores, saldo por naturaleza, filas sin movimiento sin agregados jerárquicos, seis decimales como texto y contrato `trial-balance`. La spec queda Lista y su implementación mínima está añadida; `OpeningBalance` y migración permanecen fuera del MVP.

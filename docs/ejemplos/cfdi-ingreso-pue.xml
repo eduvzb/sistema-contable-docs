@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" Version="4.0" Fecha="2026-07-08T12:00:00" FormaPago="03" SubTotal="12500.000000" Moneda="MXN" Total="14500.000000" TipoDeComprobante="I" Exportacion="01" MetodoPago="PUE" LugarExpedicion="01000">
+  <cfdi:Emisor Rfc="FLU010101AAA" Nombre="Comercializadora Flujo Completo, S.A. de C.V." RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="XAXX010101000" Nombre="Cliente Demo" DomicilioFiscalReceptor="01000" RegimenFiscalReceptor="616" UsoCFDI="G03" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="80101500" Cantidad="1.000000" ClaveUnidad="E48" Unidad="Servicio" Descripcion="Servicio de consultoría" ValorUnitario="12500.000000" Importe="12500.000000" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="12500.000000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2000.000000" />
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos TotalImpuestosTrasladados="2000.000000">
+    <cfdi:Traslados>
+      <cfdi:Traslado Base="12500.000000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2000.000000" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital Version="1.1" UUID="A0000000-0000-4000-8000-000000000001" FechaTimbrado="2026-07-08T12:01:00" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>

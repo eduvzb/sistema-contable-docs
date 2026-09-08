@@ -59,15 +59,27 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 - Frontend: modal ancho con encabezado, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. Las reglas vienen del backend.
 - SPEC-004 consume las relaciones `POSTED` para su indicador; SPEC-007 agrega pagos y SPEC-008 consume las partidas contabilizadas sin duplicar contratos.
 
-Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
+### Contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos
+
+El detalle existente `GET /api/companies/{companyId}/fiscal-documents/{fiscalDocumentId}` conserva los campos fiscales definidos por SPEC-004 y agrega `accounting_policies`. El listado de CFDI no expone esta colección para evitar cargar la trazabilidad completa en la bandeja.
+
+Cada elemento de `accounting_policies` incluye `id`, `company_id`, `accounting_period_id`, `type`, `number`, `display_number`, `entry_date`, `concept`, `status`, un objeto `period` con `id`, `year`, `month` y `status`, y `entries`. Cada elemento de `entries` incluye `id`, `position`, `account_id`, un objeto `account` con `id`, `code` y `name`, `concept`, `reference`, `debit` y `credit`. Los importes conservan seis decimales como texto.
+
+La colección contiene todas las pólizas relacionadas con el CFDI, incluidas relaciones entre periodos, ordenadas por `entry_date` descendente y después `id` descendente; las partidas se ordenan por `position` ascendente. Un CFDI sin relaciones devuelve `accounting_policies: []`. Una póliza sin CFDI no se incluye desde ningún detalle de CFDI. La relación no asigna partidas individuales a CFDI.
+
+El contrato se autoriza con el acceso a la empresa del CFDI. Un usuario sin acceso o una empresa distinta recibe el mismo `404` que el detalle actual; no se exponen pólizas, partidas, cuentas ni periodos fuera de la empresa visible. La consulta utiliza carga anticipada de las relaciones necesarias y no cambia las reglas de contabilización ni el cálculo de SPEC-008.
+
+Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contrato de trazabilidad inversa de esta brecha queda cerrado; cualquier ampliación posterior debe actualizar esta spec antes de modificar consumidores.
 
 ## Verificación
 
-**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 31 pruebas y 263 aserciones; SPEC-006 cubre consecutivo, borrador sin partidas, fecha fuera del periodo, cuentas no operables, desbalance, contabilización balanceada, edición de `POSTED`, relaciones entre periodos y aislamiento. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron. Se añadió cobertura Playwright para la tabla de partidas, totales, contabilización y CFDI relacionado, sin ejecutarla por la restricción vigente de no abrir navegador.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 42 pruebas y 350 aserciones; la suite incluye 10 pruebas y 58 aserciones focalizadas en SPEC-006, con CFDI sin pólizas, una y varias pólizas entre periodos, partidas/cuentas, pólizas sin CFDI, aislamiento entre empresas y usuario sin acceso. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron. No se ejecutó navegador, Playwright ni E2E por la restricción vigente.
 
-**Revisiones de implementación:** backend `7427840516423bb59f122e6db33eb890ba3bcbb8`; frontend `2020e0194c3ba998aa29a412005019ca8734bd15`.
+**Evidencia de continuidad 2026-09-08:** `./vendor/bin/sail artisan test --compact tests/Feature/Spec006Test.php` pasó con 15 pruebas y 114 aserciones. Cubre rechazo y rollback de cuenta o CFDI de otra empresa, `404` al consultar/modificar/contabilizar sin autorización, conservación de `created_by`, cambio correcto de `updated_by`, marcas de tiempo, edición balanceada de `POSTED` y serialización exacta de `999999999999.999999` a seis decimales tanto desde póliza como desde detalle fiscal. La regresión completa pasó con 72 pruebas y 650 aserciones.
 
-Prever pruebas de DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, uso de cuentas/XML de otra empresa y auditoría mínima. Probar ingresos/egresos manuales y regresiones de edición POSTED cuando se defina esa política.
+**Revisiones de implementación:** backend parte de `868b20eaaa24c387e7e80f97a5798f024a4582e4` y frontend de `597bdc5f71c2ee071ce173ddc81167f2a7461bd7`; estas correcciones permanecen como cambios locales posteriores a esos commits. La documentación parte de `4e38ac5cc0b7dd2cd6900f49cb8b7ed48b127410` con cambios locales conservados. Al confirmar esta revisión documental, su hash real debe registrarse en `SPEC_REVISION` de ambos consumidores.
+
+La suite cubre DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, cuentas/XML de otra empresa, autorización, auditoría mínima y edición válida de POSTED. Permanecen pendientes los recorridos interactivos y los escenarios manuales de ingreso/egreso que exigen navegador.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -78,3 +90,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-08:** se prepara la implementación con editor tabular: numeración por empresa–periodo–tipo, fecha dentro del periodo, DRAFT sin partidas, POSTED balanceada editable y relaciones CFDI por póliza. Pasa a Lista; la evidencia se registra después de implementar.
 - **2026-09-08:** se implementaron pólizas, partidas y relaciones con CFDI, junto con la evidencia automatizada aplicable.
+- **2026-09-08:** se cerró el contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos; se implementó en el detalle del CFDI con aislamiento por empresa y cobertura automatizada. Permanece pendiente la comprobación interactiva por la restricción de no usar navegador.
+- **2026-09-08:** se eliminó el uso de `float` en recursos de importes y totales, y se amplió la cobertura de aislamiento, atomicidad, autorización, auditoría y edición balanceada de pólizas contabilizadas.

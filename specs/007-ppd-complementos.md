@@ -1,14 +1,14 @@
 # SPEC-007 — PPD y complementos
 
-**Estado:** Borrador  
+**Estado:** Lista
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md)
 
 ## Propósito y alcance
 
-Representar facturas PPD pendientes de pago/cobro, complementos, pagos parciales y pagos en varios periodos. Conservar relaciones, importes y trazabilidad para consultar el saldo pendiente cuando su cálculo esté definido.
+Representar facturas PPD, complementos de pago, asignaciones parciales y pagos en varios periodos. Conservar relaciones documentales, importes asignados y trazabilidad hacia las pólizas y periodos, sin calcular todavía saldos de liquidación.
 
-El complemento permanece como FiscalDocument con relaciones a las facturas conforme a OQ-005. No incluye provisiones automáticas, automatización de IVA, reglas por régimen ni moneda extranjera avanzada.
+El complemento permanece como `FiscalDocument` con relaciones a las facturas conforme a OQ-005. En este alcance se admiten CFDI 4.0 de tipo `P` y sus referencias `DoctoRelacionado`; no se crea una entidad `PaymentComplement` independiente. No incluye cálculo de saldo, sobrepagos, diferencias, provisiones automáticas, automatización de IVA, reglas por régimen ni moneda extranjera avanzada.
 
 ## Fuentes
 
@@ -19,40 +19,68 @@ El complemento permanece como FiscalDocument con relaciones a las facturas confo
 
 ## Comportamiento y criterios de aceptación
 
-La factura PPD puede relacionarse con una póliza inicial y después con movimientos de pago/cobro. Un complemento mantiene su relación con cada factura e importe correspondiente; los pagos conservan su periodo. El usuario operativo registra manualmente las partidas mediante SPEC-006; el administrador accede a cualquier empresa y el contador solo a sus asignadas, conforme a DT-008/SPEC-001.
+La factura PPD puede relacionarse con una póliza inicial y un complemento puede conservar una o varias asignaciones a facturas. Cada asignación conserva el UUID referido y `ImpPagado` con seis decimales como texto; cuando la factura ya está importada en la misma empresa también conserva su documento relacionado. Los complementos y sus pólizas conservan sus fechas y periodos mediante SPEC-006. El usuario operativo registra manualmente las partidas mediante SPEC-006; el administrador accede a cualquier empresa y el contador solo a sus asignadas, conforme a DT-008/SPEC-001.
 
-«Contabilizado» no significa «liquidado». OQ-004 propone importe de la operación menos pagos relacionados, pero no decide todos los componentes del cálculo; se debe cerrar esa definición antes de implementar el saldo.
+«Contabilizado» no significa «liquidado». El detalle de este alcance no expone saldo, importe pagado acumulado ni estado de liquidación. OQ-004 permanece pendiente para una ampliación posterior.
 
 | ID | Dado / cuando | Resultado esperado |
 |---|---|---|
 | CA-007-01 | Se registra una factura PPD sin pagos. | Puede representarse pendiente de liquidación y vincularse a una póliza inicial, sin asumir que ocurrió un cobro/pago. |
 | CA-007-02 | Existe un complemento relacionado con una factura. | Se conserva como documento fiscal con relación a la factura y el pago puede trazarse a su póliza; BR-015 mantiene su estado de revisión normativa. |
-| CA-007-03 | Una factura de 100,000 tiene un pago de 40,000 en el caso simple de AC-004, sin diferencias. | Se representan factura, pago y pendiente de 60,000 conforme al ejemplo provisional; este ejemplo no resuelve ajustes, monedas ni la base general del cálculo. |
-| CA-007-04 | Una factura de 100,000 recibe 50,000 en julio y 50,000 en agosto, como en AC-005. | Cada pago/póliza conserva su periodo; la operación puede reconstruirse cronológicamente y consultarse su saldo bajo el cálculo que se prepare. |
-| CA-007-05 | Un complemento se relaciona con más de una factura. | Se conserva cada relación con su importe correspondiente, según el modelo provisional OQ-005, sujeto a validación. |
-| CA-007-06 | Una factura participa en una póliza POSTED pero tiene pagos pendientes. | Puede identificarse contabilizada sin presentarse por ello como liquidada. |
+| CA-007-03 | Una factura de 100,000 tiene un pago de 40,000 en el caso simple de AC-004, sin diferencias. | Se representan la factura, el complemento y la asignación documental `40.000000`; no se calcula ni se expone un saldo de `60,000`. |
+| CA-007-04 | Una factura de 100,000 recibe 50,000 en julio y 50,000 en agosto, como en AC-005. | Cada complemento conserva su asignación y sus pólizas relacionadas conservan el periodo correspondiente; la operación puede reconstruirse cronológicamente sin calcular saldo. |
+| CA-007-05 | Un complemento se relaciona con más de una factura. | Se conserva cada UUID referido y su importe `ImpPagado`; las facturas importadas en la misma empresa aparecen como relaciones navegables. |
+| CA-007-06 | Una factura participa en una póliza POSTED y tiene complementos relacionados. | Puede identificarse contabilizada mediante SPEC-006 sin presentarse por ello como liquidada. |
 | CA-007-07 | Se intenta relacionar un pago/complemento con información de otra empresa. | No se crea una relación que mezcle información de empresas. |
-| CA-007-08 | Se consulta una factura con pagos y pólizas en distintos periodos. | Se pueden reconstruir sus relaciones sin limitar artificialmente todos sus movimientos al periodo de la factura. |
+| CA-007-08 | Se consulta una factura con complementos y pólizas en distintos periodos. | Se pueden reconstruir sus relaciones documentales y contables sin limitar artificialmente todos sus movimientos al periodo de la factura. |
+| CA-007-09 | Se importa un complemento cuya factura referida todavía no existe en la empresa. | Se conserva el UUID y el importe referido como relación pendiente, sin crear un documento ficticio ni exponer documentos de otra empresa. |
 
 ## Pendientes y decisiones
 
-- **Antes de Lista:** base del importe y pagos computables para saldo, fecha de corte y relación del cálculo con estados de pólizas; diferencias, sobrepagos, duplicidad de relaciones y monedas; campos del complemento en las versiones CFDI admitidas; tratamiento de referencias a facturas aún no importadas; contrato de relaciones e importes por factura. Estos puntos impiden cerrar el cálculo, no iniciar otras specs.
-- **Supuestos para validar:** saldo conceptual de OQ-004 y representación de complemento para múltiples facturas de OQ-005. BR-015 conserva revisión normativa pendiente; la representación funcional no declara validez fiscal.
+- **Resuelto para este alcance:** contrato de relaciones documentales CFDI `P` → facturas, importes `ImpPagado` con seis decimales, referencias pendientes y trazabilidad contable mediante las relaciones de SPEC-006. Las referencias de otra empresa permanecen sin vínculo navegable.
+- **Fuera de este alcance y pendiente:** base del saldo, pagos computables, fecha de corte, diferencias, sobrepagos, duplicidad de relaciones, estados de liquidación, moneda avanzada y cualquier tratamiento fiscal o contable automático. Estos puntos requieren una decisión posterior antes de calcular saldos.
+- **Supuestos para validar:** representación funcional de complementos para múltiples facturas conforme a OQ-005. BR-015 conserva revisión normativa pendiente; esta representación no declara validez fiscal.
 - **Posterior:** provisiones e IVA automáticos (OQ-006/OQ-007), diferencias cambiarias y tratamientos fiscales completos. Las cuentas las selecciona el contador.
 
 ## Plan técnico y contratos
 
-- Backend: concretar datos extraídos con SPEC-004, definir aquí relaciones complemento-factura, importes de pago y saldo; reutilizar contratos de pólizas de SPEC-006. No crear una entidad PaymentComplement independiente por aparecer como candidata en el análisis.
-- Frontend: detalle de factura con complementos, pagos, periodos, pólizas y saldo; distinguir estado contable de liquidación.
-- Una vez decidido el cálculo, agregar criterios para diferencias, fechas de corte y errores relevantes antes de Lista. Aplicar DT-004 a importes y operaciones decimales.
+- Backend: extraer `DoctoRelacionado/@IdDocumento` e `ImpPagado` de CFDI 4.0 tipo `P`, persistir una asignación documental con UUID e importe, resolver el documento si pertenece a la misma empresa y extender el detalle fiscal en ambos sentidos. Reutilizar los contratos de pólizas de SPEC-006. No crear una entidad `PaymentComplement` independiente.
+- Frontend: detalle fiscal con facturas relacionadas desde un complemento y complementos desde una factura, importes asignados y pólizas/periodos existentes. No mostrar saldo ni estado de liquidación.
+- Ejemplo documental de factura PPD y complemento de pago: [ejemplos de XML CFDI](../docs/ejemplos/README.md).
+- Los importes de asignación se almacenan con seis decimales y se representan como texto. El cálculo, las diferencias, los sobrepagos y los errores asociados quedan para una ampliación que deberá actualizar esta spec antes de modificar consumidores.
 
-Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
+### Contrato de trazabilidad documental
+
+La importación de un CFDI 4.0 tipo `P` conserva sus referencias `DoctoRelacionado` en una colección `payment_allocations`. Cada elemento contiene:
+
+```json
+{
+  "related_uuid": "11111111-1111-4111-8111-111111111111",
+  "invoice_id": 42,
+  "allocated_amount": "40000.000000"
+}
+```
+
+`invoice_id` es `null` cuando el UUID todavía no está importado en la misma empresa o pertenece a otra empresa. No se crea un `FiscalDocument` ficticio. Desde el detalle de una factura, `payment_complements` expone `id`, `uuid`, `issued_at` y `allocated_amount`; desde el detalle del complemento, `payment_allocations` expone los datos anteriores y, cuando existe, el resumen de la factura relacionada. Las colecciones conservan un orden estable por el identificador de asignación.
+
+Las asignaciones se autorizan con el mismo acceso a la empresa del documento. Una referencia coincidente en otra empresa no se enlaza ni se serializan sus datos. Las pólizas y periodos se consultan mediante `accounting_policies` de SPEC-006; este contrato no añade saldo, liquidación ni cálculo contable.
+
+Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contrato de trazabilidad de este alcance queda cerrado; cualquier ampliación de saldos o tratamiento de pagos debe actualizar esta spec antes de modificar consumidores.
 
 ## Verificación
 
-**Evidencia de producto:** pendiente; no ejecutada. No existe implementación vinculada todavía.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08 en los árboles de trabajo. La spec no se promueve a Implementada porque falta la comprobación interactiva autorizada.
 
-Prever fixtures de factura sin pago, parcial, pagos en dos periodos y complemento para múltiples facturas. Verificar trazabilidad y aislamiento. Los ejemplos simples no sustituyen las pruebas del cálculo definitivo ni una revisión normativa.
+| Criterios | Prueba/comprobación | Resultado |
+| --- | --- | --- |
+| CA-007-01/02/03/05/07/09 | `tests/Feature/Spec007Test.php::test_payment_complement_preserves_a_same_company_allocation_in_both_document_details`, `test_payment_complement_preserves_multiple_invoice_allocations`, `test_pending_invoice_reference_is_resolved_when_the_invoice_is_imported_later`, `test_payment_reference_to_another_company_remains_unresolved_and_is_not_exposed` | Pasa: extracción, importes de seis decimales, múltiples facturas, referencias pendientes, resolución posterior y aislamiento. |
+| CA-007-04/06/08 | `tests/Feature/Spec007Test.php::test_payment_and_invoice_policies_keep_their_own_periods_in_the_trace` | Pasa: complementos y pólizas conservan sus periodos y el detalle mantiene `accounted` separado de la relación documental. |
+| Autorización | `tests/Feature/Spec007Test.php::test_user_without_company_access_cannot_read_payment_trace` | Pasa: el usuario sin acceso recibe `404`. |
+| Backend | `./vendor/bin/sail artisan test --compact tests/Feature/Spec007Test.php` | Pasa: 6 pruebas, 43 aserciones. |
+| Regresión backend | `./vendor/bin/sail artisan test --compact` | Pasa: 54 pruebas, 440 aserciones. |
+| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm build` | Pasa con Next.js 16.3.4; no se ejecutó navegador ni Playwright. |
+
+Las pruebas verifican extracción, persistencia, trazabilidad bidireccional y aislamiento. No se prueba cálculo de saldo porque está fuera de este alcance.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -61,3 +89,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar reglas de PPD.
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
+- **2026-09-08:** por decisión de continuidad se reduce el alcance implementable a trazabilidad documental: relaciones CFDI `P`–factura, importes `ImpPagado`, referencias pendientes y navegación hacia pólizas/periodos. El saldo PPD y los tratamientos fiscales permanecen diferidos; la spec pasa a Lista.
+- **2026-09-08:** se implementaron parser CFDI 4.0 tipo `P`, persistencia de asignaciones, resolución posterior de referencias, detalle fiscal bidireccional, interfaz y cobertura automatizada. Permanece pendiente la comprobación interactiva.

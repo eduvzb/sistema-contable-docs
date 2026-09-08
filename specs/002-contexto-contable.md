@@ -38,7 +38,7 @@ El contexto se identifica por empresa y periodo en la URL y en los contratos API
 - Sin contexto, la interfaz solicita seleccionar empresa, ejercicio y mes y no supone el mes actual. Un contexto inexistente, de otra empresa o ya no accesible se trata como no encontrado; una memoria local nunca concede acceso.
 - La fecha en que el usuario trabaja no cambia el periodo seleccionado. SPEC-004, SPEC-006 y SPEC-007 decidirán las reglas entre sus fechas de dominio y el periodo sin duplicarlas aquí.
 - **Validación durante MVP:** utilidad de la presentación de empresa/periodo al cambiar de tarea.
-- **Integración pendiente:** CA-002-03/05 se comprueban al implementar las pólizas de SPEC-006.
+- **Integración comprobada:** CA-002-03/05 se verifican mediante las rutas explícitas de pólizas de SPEC-006; la pertenencia de una póliza al periodo seleccionado permanece estable al cambiar de contexto.
 
 ## Plan técnico y contratos
 
@@ -82,10 +82,14 @@ Separar pertenencia empresarial de filtrado por periodo: los criterios temporale
 | Formato y carga del backend | `./vendor/bin/sail pint --dirty --format agent`, revisión de sintaxis PHP y `php artisan route:list --path=api --except-vendor`: aprobados; las tres rutas del contrato quedaron registradas. |
 | Dependencias backend | `./vendor/bin/sail composer validate --strict --no-check-publish`: válido. `./vendor/bin/sail composer audit`: sin avisos de vulnerabilidad. |
 | Compilación de CA-002-01/04/06 y ruta de contexto | `pnpm lint`, `pnpm typecheck` y `pnpm build`: aprobados con Next.js 16.3.4; la compilación incluye `/companies/[id]` y `/companies/[id]/periods/[periodId]`. |
+| CA-002-03/05; pertenencia estable de póliza al contexto explícito y aislamiento al cambiar de periodo | `tests/Feature/Spec002Test.php::test_policy_creation_keeps_its_explicit_period_when_the_context_changes`: pasa; creación DRAFT por empresa/periodo, consulta en el periodo original y ausencia en el periodo siguiente. |
+| Regresión backend posterior a la integración | `./vendor/bin/sail artisan test --compact`: pasa el 2026-09-08 con 62 pruebas y 544 aserciones. |
+| CA-002-01/02/04; validación autoritativa del contexto en frontend | La carga protegida queda suspendida hasta validar `GET /api/companies/{companyId}/accounting-periods/{periodId}`; un `periodId` malformado, ajeno, inexistente o revocado se retira de la URL y de la memoria local, y se vuelve al selector. `pnpm lint`, `pnpm build` y `pnpm typecheck` pasan. |
+| Regresión completa posterior a la corrección de continuidad | `./vendor/bin/sail artisan test --compact`: 72 pruebas y 650 aserciones aprobadas; las 31 rutas API se listaron correctamente. |
 
-No se escribieron ni ejecutaron pruebas de SPEC-002 en navegador por instrucción explícita del usuario. La interfaz, su cambio de contexto y la memoria local no cuentan todavía con evidencia de ejecución interactiva. CA-002-03/05 permanecen pendientes hasta que SPEC-006 implemente pólizas y su pertenencia estable al periodo. Por esos pendientes, el estado continúa **Lista** y no **Implementada**.
+No se escribieron ni ejecutaron pruebas de SPEC-002 en navegador por instrucción explícita del usuario. La interfaz, su cambio de contexto y la memoria local no cuentan todavía con evidencia de ejecución interactiva. CA-002-03/05 ya no están pendientes: la integración con SPEC-006 quedó comprobada por backend. Por la evidencia visual restante, el estado continúa **Lista** y no **Implementada**.
 
-Pendiente: comprobar interactivamente selección/cambio de contexto y verificar CA-002-03/05 con pólizas. CA-002-06 se cubre estructuralmente al no derivar el contexto de la fecha actual, pero su recorrido de usuario tampoco se declara ejecutado.
+Pendiente: comprobar interactivamente selección/cambio de contexto. CA-002-06 se cubre estructuralmente al no derivar el contexto de la fecha actual, pero su recorrido de usuario tampoco se declara ejecutado. La spec continúa **Lista** porque falta evidencia visual, no por un contrato o integración backend pendiente.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -95,3 +99,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance contable.
 - **2026-09-07:** preparación para implementación. Se resolvieron alta de ejercicios por cualquier usuario con acceso, doce meses persistidos, estado informativo, contexto explícito en URL, memoria local no autoritativa, contratos API y errores observables. SPEC-002 pasa a Lista por instrucción explícita del usuario.
 - **2026-09-07:** se implementaron persistencia, API, autorización, selector y contexto visible; se registraron las comprobaciones sin navegador y los pendientes de integración que impiden marcar la spec como Implementada.
+- **2026-09-08:** se comprobó la integración con las pólizas ya implementadas: la creación conserva empresa/periodo explícitos y el cambio de contexto no reasigna ni mezcla pólizas. Permanece únicamente la evidencia visual pendiente.
+- **2026-09-08:** se reforzó el frontend para validar el periodo contra el backend antes de montar pólizas, balanza o documentos; los contextos inválidos se olvidan y regresan al selector sin usar el almacenamiento local como autorización.

@@ -87,10 +87,12 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). SPEC-006 
 | Formato, sintaxis y rutas backend | `./vendor/bin/sail pint --dirty --format agent`, revisión de sintaxis PHP y `php artisan route:list --path=api/companies --except-vendor`: aprobados; las cuatro rutas del catálogo quedaron registradas. |
 | Dependencias backend | `./vendor/bin/sail composer validate --strict --no-check-publish`: válido. `./vendor/bin/sail composer audit`: sin avisos de vulnerabilidad. |
 | Compilación de la interfaz | `pnpm lint`, `pnpm typecheck` y `pnpm build`: aprobados con Next.js 16.3.4; la compilación incluye `/companies/[id]/accounts`. |
+| CA-003-06/10; aislamiento de partidas y protección posterior al primer uso | `./vendor/bin/sail artisan test --compact tests/Feature/Spec003Test.php`: 16 pruebas y 112 aserciones aprobadas. Rechaza con `422` cambios de código, naturaleza o padre sin alterar los datos originales; permite nombre y estado. La cobertura de pólizas rechaza cuentas ajenas y confirma rollback completo. |
+| Regresión completa posterior a la integración | `./vendor/bin/sail artisan test --compact`: 72 pruebas y 650 aserciones aprobadas. |
 
-No se escribieron ni ejecutaron pruebas de SPEC-003 en navegador por instrucción explícita del usuario. La jerarquía, formularios, cambio de estado e importación no cuentan todavía con evidencia interactiva. El rechazo de cuentas inactivas/agrupadoras en nuevas partidas (parte de CA-003-03), el aislamiento al registrar partidas (CA-003-06) y el bloqueo estructural después del primer uso (CA-003-10) permanecen pendientes hasta SPEC-006. Por esos pendientes, el estado continúa **Lista** y no **Implementada**.
+No se escribieron ni ejecutaron pruebas de SPEC-003 en navegador por instrucción explícita del usuario. La jerarquía, formularios, cambio de estado e importación no cuentan todavía con evidencia interactiva. El rechazo de cuentas inactivas/agrupadoras en nuevas partidas (parte de CA-003-03), el aislamiento al registrar partidas (CA-003-06) y el bloqueo estructural después del primer uso (CA-003-10) están comprobados en backend. Por la evidencia interactiva pendiente, el estado continúa **Lista** y no **Implementada**.
 
-Pendiente: comprobar interactivamente el catálogo y completar CA-003-03/06/10 con las partidas de SPEC-006.
+Pendiente: comprobar interactivamente el catálogo; CA-003-03/06/10 ya cuentan con cobertura de integración automatizada mediante SPEC-006.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -100,3 +102,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance del catálogo.
 - **2026-09-07:** preparación para implementación por autorización explícita del usuario. Se fijaron campos, naturaleza, selección de movimientos, edición de cuentas utilizadas, integridad jerárquica y CSV atómico; SPEC-003 pasa a Lista.
 - **2026-09-07:** se implementaron catálogo, jerarquía, estado e importación CSV en backend/frontend; se registraron las comprobaciones sin navegador y la integración pendiente con SPEC-006.
+- **2026-09-08:** se hizo autoritativo el bloqueo de código, naturaleza y padre después de la primera partida, conservando editables nombre y estado; se añadió cobertura de aislamiento y atomicidad.

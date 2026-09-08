@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" Version="4.0" Fecha="2026-07-12T12:00:00" FormaPago="99" SubTotal="3200.000000" Moneda="MXN" Total="3712.000000" TipoDeComprobante="E" Exportacion="01" MetodoPago="PPD" LugarExpedicion="01000">
+  <cfdi:Emisor Rfc="PRO010101AAA" Nombre="Proveedor Demo" RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="FLU010101AAA" Nombre="Comercializadora Flujo Completo, S.A. de C.V." DomicilioFiscalReceptor="01000" RegimenFiscalReceptor="601" UsoCFDI="G03" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="14111500" Cantidad="1.000000" ClaveUnidad="H87" Unidad="Pieza" Descripcion="Materiales de oficina" ValorUnitario="3200.000000" Importe="3200.000000" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="3200.000000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="512.000000" />
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos TotalImpuestosTrasladados="512.000000">
+    <cfdi:Traslados>
+      <cfdi:Traslado Base="3200.000000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="512.000000" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital Version="1.1" UUID="A0000000-0000-4000-8000-000000000002" FechaTimbrado="2026-07-12T12:01:00" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>

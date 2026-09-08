@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:pago20="http://www.sat.gob.mx/Pagos20" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" Version="4.0" Fecha="2026-08-05T12:00:00" FormaPago="03" SubTotal="0.000000" Moneda="XXX" Total="0.000000" TipoDeComprobante="P" Exportacion="01" LugarExpedicion="01000">
+  <cfdi:Emisor Rfc="FLU010101AAA" Nombre="Comercializadora Flujo Completo, S.A. de C.V." RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="PRO010101AAA" Nombre="Proveedor Demo" DomicilioFiscalReceptor="01000" RegimenFiscalReceptor="601" UsoCFDI="CP01" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="84111506" Cantidad="1.000000" ClaveUnidad="ACT" Descripcion="Pago" ValorUnitario="0.000000" Importe="0.000000" ObjetoImp="01" />
+  </cfdi:Conceptos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital Version="1.1" UUID="A0000000-0000-4000-8000-000000000003" FechaTimbrado="2026-08-05T12:01:00" />
+    <pago20:Pagos Version="2.0">
+      <pago20:Pago FechaPago="2026-08-05T12:00:00" FormaDePagoP="03" MonedaP="MXN" Monto="1500.000000">
+        <pago20:DoctoRelacionado IdDocumento="A0000000-0000-4000-8000-000000000002" MonedaDR="MXN" NumParcialidad="1" ImpSaldoAnt="3712.000000" ImpPagado="1500.000000" ImpSaldoInsoluto="2212.000000" ObjetoImpDR="01" />
+      </pago20:Pago>
+    </pago20:Pagos>
+  </cfdi:Complemento>
+</cfdi:Comprobante>
