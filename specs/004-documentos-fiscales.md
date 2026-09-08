@@ -1,6 +1,6 @@
 # SPEC-004 — Documentos fiscales
 
-**Estado:** Borrador  
+**Estado:** Lista
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md)
 
@@ -34,23 +34,33 @@ La importación es responsable de la incorporación que reutiliza SPEC-005. El i
 | CA-004-07 | Un archivo no puede incorporarse según las validaciones acordadas. | El usuario identifica el problema; no se presenta ese archivo como importado correctamente. El efecto sobre el resto del lote sigue pendiente. |
 | CA-004-08 | El XML contiene moneda y tipo de cambio. | Se conservan los datos existentes; no se ejecuta lógica contable avanzada de moneda extranjera. |
 
+## Decisiones cerradas
+
+- Se admiten exclusivamente XML CFDI 4.0 de tipo `I`, `E` y `P`. El RFC de la empresa debe coincidir con emisor o receptor; se clasifica como emitido cuando coincide el emisor y como recibido cuando coincide el receptor.
+- Se conservan los XML originales en almacenamiento privado y solo un usuario con acceso vigente a la empresa puede descargarlos.
+- La bandeja del contexto filtra por mes y ejercicio de la fecha de emisión. Los documentos se pueden relacionar con pólizas de otros periodos de la misma empresa.
+- Los lotes se procesan por archivo: los válidos se incorporan y cada archivo inválido o duplicado se devuelve con su error. El UUID es único por empresa.
+- Subtotal, impuestos, total y tipo de cambio se conservan con seis decimales y se representan por API como texto. No se calcula conversión monetaria.
+
 ## Pendientes y decisiones
 
-- **Antes de Lista:** versiones/tipos CFDI admitidos; validación de XML y pertenencia al RFC de la empresa; fecha usada para el filtro por periodo; límites y resultado de lotes con válidos, inválidos y duplicados; permisos de recuperación del original; nombres de estados/indicadores y errores. Concretar precisión/representación de importes con DT-004.
+- **Resuelto para esta entrega:** versiones/tipos, pertenencia al RFC, fecha de filtro, importación parcial, recuperación autorizada del original y representación decimal.
 - **Supuestos para validar:** duplicados por UUID dentro de la empresa (BR-010/AC-015); «contabilizado» derivado de POSTED y distinto de «liquidado» (OQ-003). No crear una máquina de estados compleja (OQ-009).
 - **Posterior:** excepciones por sustitución/corrección, consulta SAT de cancelaciones y conversión contable de moneda. El mismo UUID en empresas distintas no se decide como duplicado global.
 
 ## Plan técnico y contratos
 
-- Backend: conservación del archivo, extracción y consulta aislada; define el contrato de incorporación reutilizable por SPEC-005, y consulta de documentos consumida por SPEC-006/007/009. La representación de complementos se prepara con SPEC-007, sin modelarla como entidad separada por anticipación.
-- Frontend: carga individual/lote, resultado, bandeja y detalle; consume el indicador de contabilización al integrar SPEC-006. La importación y consulta básica pueden prepararse primero; no duplicar la definición de relaciones para resolver esa integración.
-- Concretar política de lote y errores antes de cerrar los casos de fallo. Seleccionar mecanismo de ejecución según necesidad demostrada (DT-005).
+- Backend: conservación privada del archivo, extracción y consulta aislada por empresa; expone incorporación parcial, listado por periodo, descarga autorizada y el indicador derivado de pólizas `POSTED`.
+- Frontend: carga múltiple, resultado por archivo y bandeja local con filtros básicos, sin añadir descarga SAT ni automatizaciones fiscales.
+- La política de lote se cerró como parcial. No requiere workers ni infraestructura adicional (DT-005).
 
 Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
 
 ## Verificación
 
-**Evidencia de producto:** pendiente; no ejecutada. No existe implementación vinculada todavía.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 31 pruebas y 263 aserciones; SPEC-004 cubre lote mixto, UUID duplicado, RFC ajeno, filtro por periodo, aislamiento, descarga autorizada e indicador contabilizado derivado. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron en frontend. Se añadió cobertura Playwright para el flujo integrado, sin ejecutarla por la restricción vigente de no abrir navegador.
+
+**Revisiones de implementación:** backend `7427840516423bb59f122e6db33eb890ba3bcbb8`; frontend `2020e0194c3ba998aa29a412005019ca8734bd15`.
 
 Prever pruebas de conservación del original, extracción, duplicado reintentado dentro de la misma empresa, lote mixto según contrato, aislamiento de archivos y regresión DRAFT/POSTED. El cálculo del indicador debe probarse al integrar SPEC-006.
 
@@ -61,3 +71,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance de documentos.
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
+- **2026-09-08:** se prepara la implementación conjunta con SPEC-006: CFDI 4.0 `I`/`E`/`P`, carga parcial, original privado, filtro por emisión y decimales de seis posiciones. Pasa a Lista; la evidencia se registra después de implementar.
+- **2026-09-08:** se implementaron contrato API, almacenamiento privado, lote parcial y bandeja de CFDI; se registró la evidencia automatizada aplicable.

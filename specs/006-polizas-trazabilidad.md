@@ -1,6 +1,6 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-**Estado:** Borrador  
+**Estado:** Lista
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md)
 
@@ -39,23 +39,33 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 | CA-006-12 | Un usuario sin acceso intenta consultar, modificar o contabilizar una póliza de otra empresa. | No puede realizar la operación ni obtener sus datos. |
 | CA-006-13 | El contador modifica manualmente cuentas o partidas de una póliza cuya edición está permitida. | Los cambios válidos se conservan y pueden consultarse, manteniendo las validaciones y auditoría aplicables. La política de edición de POSTED debe resolverse antes de Lista. |
 
+## Decisiones cerradas
+
+- La póliza obtiene un número consecutivo automático, único por empresa, periodo y tipo. La fecha debe pertenecer al periodo seleccionado.
+- Un borrador exige tipo, fecha y concepto, y puede no tener partidas. Una póliza `POSTED` exige al menos dos partidas, cuentas activas que acepten movimientos, un único cargo o abono positivo por partida, total positivo y cargos iguales a abonos usando seis decimales.
+- `POSTED` puede editarse, pero cualquier actualización debe continuar balanceada y conserva su estado. La creación y actualización conservan creador, último editor y marcas de tiempo.
+- Las relaciones de CFDI son opcionales, solo pueden usar documentos de la misma empresa y pueden cruzar periodos. La relación es con la póliza, no con cada partida.
+- La columna Día del editor es la fecha de la póliza derivada para cada renglón; no se almacena como atributo de partida.
+
 ## Pendientes y decisiones
 
-- **Antes de Lista:** numeración y unicidad; fecha vs periodo; mínimos de datos de borrador y de contabilización (una suma cero no define por sí sola una póliza válida); importes por partida, precisión y redondeo; reglas de uso de cuentas inactivas/agrupadoras con SPEC-003; política de edición de POSTED e impacto consistente en balanza/trazabilidad; restricciones de agrupación de XML y operaciones de vinculación/desvinculación. Aclarar si trazabilidad exige relación específica XML-partida o recorrido a través de la póliza.
+- **Resuelto para esta entrega:** numeración, fecha/periodo, mínimos DRAFT/POSTED, precisión decimal, cuentas operables, edición POSTED y relación de CFDI por póliza.
 - **Supuesto para validar:** DRAFT puede estar incompleta/descuadrada (BR-006/OQ-002/AC-011). Se mantiene la exigencia de balance para POSTED.
 - **Posterior:** estados CANCELLED/REVERSED, tipos adicionales, cierre, provisiones automáticas y auditoría histórica de campos. No inventar bloqueo ni permiso de edición POSTED para resolver su pendiente.
 
 ## Plan técnico y contratos
 
-- Backend: define contratos de póliza/partidas, contabilización y relaciones con documentos; valida contexto y cuentas mediante SPEC-002/003/004. Concretar consistencia del guardado/contabilización para no publicar estados parciales ni mezclar empresas.
-- Frontend: captura manual, guardado, acción de contabilizar, errores y navegación bidireccional. Las reglas vienen del backend.
-- SPEC-004 consume la existencia de relaciones POSTED para su indicador; SPEC-007 agrega el contexto de pagos; SPEC-008 consume partidas contabilizadas. Definir aquí esos datos compartidos sin duplicar contratos en sus consumidoras.
+- Backend: contratos de póliza/partidas, contabilización y relaciones con CFDI, dentro de una transacción; valida contexto, cuentas y empresa mediante SPEC-002/003/004.
+- Frontend: modal ancho con encabezado, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. Las reglas vienen del backend.
+- SPEC-004 consume las relaciones `POSTED` para su indicador; SPEC-007 agrega pagos y SPEC-008 consume las partidas contabilizadas sin duplicar contratos.
 
 Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
 
 ## Verificación
 
-**Evidencia de producto:** pendiente; no ejecutada. No existe implementación vinculada todavía.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 31 pruebas y 263 aserciones; SPEC-006 cubre consecutivo, borrador sin partidas, fecha fuera del periodo, cuentas no operables, desbalance, contabilización balanceada, edición de `POSTED`, relaciones entre periodos y aislamiento. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron. Se añadió cobertura Playwright para la tabla de partidas, totales, contabilización y CFDI relacionado, sin ejecutarla por la restricción vigente de no abrir navegador.
+
+**Revisiones de implementación:** backend `7427840516423bb59f122e6db33eb890ba3bcbb8`; frontend `2020e0194c3ba998aa29a412005019ca8734bd15`.
 
 Prever pruebas de DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, uso de cuentas/XML de otra empresa y auditoría mínima. Probar ingresos/egresos manuales y regresiones de edición POSTED cuando se defina esa política.
 
@@ -66,3 +76,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar reglas de pólizas.
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
+- **2026-09-08:** se prepara la implementación con editor tabular: numeración por empresa–periodo–tipo, fecha dentro del periodo, DRAFT sin partidas, POSTED balanceada editable y relaciones CFDI por póliza. Pasa a Lista; la evidencia se registra después de implementar.
+- **2026-09-08:** se implementaron pólizas, partidas y relaciones con CFDI, junto con la evidencia automatizada aplicable.
