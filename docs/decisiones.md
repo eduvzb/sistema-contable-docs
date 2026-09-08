@@ -15,8 +15,10 @@ Registro único para acuerdos compartidos. Las decisiones limitadas a una funcio
 | DT-007 | La aplicación propia usa el modo SPA de Sanctum con sesión en cookie HttpOnly, protección CSRF y frontend/API bajo dominio compartido; Laravel es la autoridad de autenticación y autorización. | Instrucción explícita del usuario para SPEC-001 y documentación oficial de Sanctum. |
 | DT-008 | Existen solo los roles `admin` y `accountant` en el MVP. El administrador tiene acceso operativo a todas las empresas; el contador solo a las asignadas. Las funcionalidades consumidoras de SPEC-001 aplican esta misma política. | Instrucción explícita del usuario para SPEC-001, 2026-09-07. |
 | DT-009 | Los catálogos fiscales necesarios se conservan versionados con procedencia y fecha y se consumen sin depender de SAT en tiempo de ejecución. SPEC-001 inicia esta regla con `c_RegimenFiscal`. | Instrucción explícita del usuario para SPEC-001, 2026-09-07. |
+| DT-010 | El contexto contable se identifica explícitamente por empresa y periodo en URLs y contratos API; no se conserva una selección autoritativa implícita en la sesión del backend. El frontend puede recordar el último contexto como conveniencia, pero debe validarlo nuevamente contra la API. | Instrucción explícita del usuario para SPEC-002, 2026-09-07. |
 
 ## Registro de cambios
 
 - **2026-09-07:** se trasladaron DT-001 a DT-005 desde AGENTS.md sin introducir arquitectura adicional. Se registraron DP-001 y DP-002 y la simplificación constitucional autorizada. Los detalles aún no definidos permanecen pendientes; no se aprobaron reglas contables nuevas.
 - **2026-09-07:** se registraron DT-006 a DT-009 al preparar SPEC-001: versiones, autenticación SPA, roles/acceso y catálogo fiscal local.
+- **2026-09-07:** se registró DT-010 al preparar SPEC-002: contexto explícito y memoria local no autoritativa.

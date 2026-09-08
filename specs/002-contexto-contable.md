@@ -1,6 +1,6 @@
 # SPEC-002 — Contexto contable
 
-**Estado:** Borrador  
+**Estado:** Lista
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md)
 
@@ -18,7 +18,9 @@ No incluye el flujo formal de cierre/reapertura ni reglas inventadas para period
 
 ## Comportamiento y criterios de aceptación
 
-El usuario operativo elige una empresa accesible y un ejercicio/mes. El administrador puede elegir cualquiera; el contador, solo una asignada, conforme a DT-008/SPEC-001. Las operaciones posteriores usan ese contexto; seleccionar otro no reasigna información histórica. Cada funcionalidad conserva su autorización en el backend.
+El usuario operativo elige una empresa accesible y un ejercicio/mes. El administrador puede elegir cualquiera; el contador, solo una asignada, conforme a DT-008/SPEC-001. Cualquier usuario con acceso a la empresa puede habilitar explícitamente un ejercicio; se crean sus doce meses en estado `OPEN`. No se crean periodos por la fecha actual ni al registrar una empresa.
+
+El contexto se identifica por empresa y periodo en la URL y en los contratos API conforme a DT-010. El frontend puede recordar el último contexto válido en almacenamiento local, pero siempre lo comprueba de nuevo contra el backend. Las operaciones posteriores reciben el contexto explícito; seleccionar otro no reasigna información histórica y cada funcionalidad conserva su autorización.
 
 | ID | Dado / cuando | Resultado esperado |
 |---|---|---|
@@ -29,19 +31,38 @@ El usuario operativo elige una empresa accesible y un ejercicio/mes. El administ
 | CA-002-05 | Se consulta una póliza de un periodo y luego se selecciona otro. | El periodo propio de la póliza se conserva; no se reasigna por el cambio de selección. |
 | CA-002-06 | Se opera en agosto sobre información contable de julio, como en el análisis §7. | Se puede seleccionar julio como contexto; el mes de la sesión no lo reemplaza automáticamente. Las reglas adicionales de fecha siguen pendientes. |
 
-## Pendientes y decisiones
+## Decisiones y pendientes
 
-- **Antes de Lista:** creación/disponibilidad de ejercicios y periodos, datos del selector, tratamiento de contexto ausente o inválido y relación entre fecha de operación y periodo. Resolver si ABIERTO/CERRADO se muestran solo como información o qué comportamiento mínimo requieren; no derivar un cierre formal de esos nombres.
+- Un ejercicio es un entero de cuatro dígitos. Habilitarlo crea atómicamente y una sola vez los meses `1` a `12`, todos `OPEN`, con unicidad por empresa, ejercicio y mes. Repetir el alta devuelve un error de validación y no cambia datos.
+- `OPEN` y `CLOSED` se representan y muestran. En esta spec ambos son seleccionables y el estado no bloquea acciones; no existe operación para cambiarlo. Cierre, reapertura, permisos, bloqueos y auditoría permanecen posteriores conforme a OQ-016.
+- Sin contexto, la interfaz solicita seleccionar empresa, ejercicio y mes y no supone el mes actual. Un contexto inexistente, de otra empresa o ya no accesible se trata como no encontrado; una memoria local nunca concede acceso.
+- La fecha en que el usuario trabaja no cambia el periodo seleccionado. SPEC-004, SPEC-006 y SPEC-007 decidirán las reglas entre sus fechas de dominio y el periodo sin duplicarlas aquí.
 - **Validación durante MVP:** utilidad de la presentación de empresa/periodo al cambiar de tarea.
-- **Posterior:** permisos de cierre, bloqueos, reapertura y auditoría del cierre (OQ-016). Estos flujos no son dependencias del MVP.
+- **Integración pendiente:** CA-002-03/05 se comprueban al implementar las pólizas de SPEC-006.
 
 ## Plan técnico y contratos
 
-- Backend: definir el contrato para consultar/seleccionar el contexto y comprobar acceso usando SPEC-001. Las operaciones de las demás specs deben recibir o resolver inequívocamente ese contexto.
-- Frontend: selector de empresa/ejercicio/mes y representación visible del contexto. Preparar la forma de actualizar consultas al cambiarlo sin datos de otra empresa.
-- Separar pertenencia empresarial de filtrado por periodo: los criterios temporales de XML se concretan en SPEC-004 y los de pagos en SPEC-007.
+### Persistencia
 
-Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contratos aún no están cerrados: resolver los detalles necesarios antes de Lista, sin introducir reglas para completar huecos.
+`accounting_periods` conserva `company_id`, `year`, `month`, `status` y marcas de tiempo. Una restricción única cubre `(company_id, year, month)`; las restricciones de base de datos limitan el año a cuatro dígitos y el mes a `1..12`. El periodo pertenece a una empresa y es la referencia estable que usarán las entidades consumidoras.
+
+### API JSON autenticada
+
+Todas las rutas aplican la sesión Sanctum, el cambio obligatorio de contraseña y el acceso vigente a la empresa de SPEC-001.
+
+| Operación | Resultado |
+|---|---|
+| `GET /api/companies/{companyId}/accounting-periods` | `200` con periodos accesibles, ordenados por ejercicio descendente y mes ascendente. |
+| `GET /api/companies/{companyId}/accounting-periods/{periodId}` | `200` con el periodo cuando pertenece a la empresa accesible. |
+| `POST /api/companies/{companyId}/accounting-years` con `{ "year": 2026 }` | `201` con los doce periodos creados; cualquier usuario con acceso a la empresa puede ejecutarlo. |
+
+Cada periodo se representa como `{ id, company_id, year, month, month_name, status }`, con `status` en `OPEN|CLOSED` y nombre de mes en español. Una petición no autenticada devuelve `401`; una empresa/periodo inexistente, ajeno o no asignado devuelve `404`; año ausente, no entero o no de cuatro dígitos y ejercicio ya habilitado devuelven `422` sin escritura parcial.
+
+### Interfaz
+
+La empresa presenta ejercicios disponibles, sus meses y una acción para habilitar ejercicio. Elegir un periodo navega a `/companies/{companyId}/periods/{periodId}`. Esa ruta valida empresa y periodo mediante la API antes de guardar `{ company_id, period_id }` como último contexto. Una barra visible muestra razón social, ejercicio, mes y estado y permite cambiar de contexto. Un valor local inválido o revocado se elimina y regresa al selector sin mostrar datos protegidos.
+
+Separar pertenencia empresarial de filtrado por periodo: los criterios temporales de XML se concretan en SPEC-004, los de pólizas en SPEC-006 y los de pagos en SPEC-007. Aplican las [decisiones técnicas compartidas](../docs/decisiones.md).
 
 ## Verificación
 
@@ -55,3 +76,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance contable.
+- **2026-09-07:** preparación para implementación. Se resolvieron alta de ejercicios por cualquier usuario con acceso, doce meses persistidos, estado informativo, contexto explícito en URL, memoria local no autoritativa, contratos API y errores observables. SPEC-002 pasa a Lista por instrucción explícita del usuario.
