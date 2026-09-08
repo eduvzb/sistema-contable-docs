@@ -71,9 +71,26 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). SPEC-006 
 
 ## Verificación
 
-**Evidencia de producto:** pendiente; no ejecutada. No existe implementación vinculada todavía.
+**Revisión implementada:** `dfec655a56741b34257a80841dc9fd6933f698e2`.
 
-Prever cobertura de operaciones de catálogo, jerarquía e importación. Proteger BR-003 con pruebas de referencias a otra empresa tanto en catálogo como al registrar partidas.
+**Referencias de implementación:**
+
+- Backend, rama `codex/spec-003`: `601c75e1aa15092a8e3d7c24684f89d91f42e5bb`.
+- Frontend, rama `codex/spec-003`: `552a1e64ef966684abc8b4a81dec9a65f4a02086`.
+
+**2026-09-07 — Comprobaciones ejecutadas:**
+
+| Cobertura | Evidencia y resultado |
+|---|---|
+| CA-003-01/02/04/05/07/08/09; persistencia de estado de CA-003-03; código por empresa, jerarquía, aislamiento e importación atómica | `./vendor/bin/sail artisan test --compact tests/Feature/Spec003Test.php`: 12 pruebas, 77 aserciones, aprobadas sobre PostgreSQL `testing`. |
+| Regresión de SPEC-001 a SPEC-003 | `./vendor/bin/sail artisan test --compact`: 24 pruebas, 212 aserciones, aprobadas. |
+| Formato, sintaxis y rutas backend | `./vendor/bin/sail pint --dirty --format agent`, revisión de sintaxis PHP y `php artisan route:list --path=api/companies --except-vendor`: aprobados; las cuatro rutas del catálogo quedaron registradas. |
+| Dependencias backend | `./vendor/bin/sail composer validate --strict --no-check-publish`: válido. `./vendor/bin/sail composer audit`: sin avisos de vulnerabilidad. |
+| Compilación de la interfaz | `pnpm lint`, `pnpm typecheck` y `pnpm build`: aprobados con Next.js 16.3.4; la compilación incluye `/companies/[id]/accounts`. |
+
+No se escribieron ni ejecutaron pruebas de SPEC-003 en navegador por instrucción explícita del usuario. La jerarquía, formularios, cambio de estado e importación no cuentan todavía con evidencia interactiva. El rechazo de cuentas inactivas/agrupadoras en nuevas partidas (parte de CA-003-03), el aislamiento al registrar partidas (CA-003-06) y el bloqueo estructural después del primer uso (CA-003-10) permanecen pendientes hasta SPEC-006. Por esos pendientes, el estado continúa **Lista** y no **Implementada**.
+
+Pendiente: comprobar interactivamente el catálogo y completar CA-003-03/06/10 con las partidas de SPEC-006.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -82,3 +99,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance del catálogo.
 - **2026-09-07:** preparación para implementación por autorización explícita del usuario. Se fijaron campos, naturaleza, selección de movimientos, edición de cuentas utilizadas, integridad jerárquica y CSV atómico; SPEC-003 pasa a Lista.
+- **2026-09-07:** se implementaron catálogo, jerarquía, estado e importación CSV en backend/frontend; se registraron las comprobaciones sin navegador y la integración pendiente con SPEC-006.
