@@ -1,6 +1,6 @@
 # SPEC-001 — Acceso, usuarios y empresas
 
-**Estado:** Lista  
+**Estado:** QA
 **Usuario:** Administrador y contador  
 **Dependencias:** Ninguna funcionalidad previa; decisiones compartidas DT-001 a DT-009.
 
@@ -19,6 +19,16 @@ Quedan fuera registro público, invitaciones por correo, edición de perfiles, b
 - [BR-001](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa) (aislamiento confirmado).
 - [Análisis §6: datos de empresa](../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#6-empresas), limitado a los datos fiscales incluidos por el alcance del MVP.
 - [Catálogo CFDI 4.0 del SAT](https://www.sat.gob.mx/minisitio/Factura/emite_quenecesitoparafacturar.htm), del que se conserva una copia versionada de `c_RegimenFiscal` en el backend.
+
+## Contexto de ejecución
+
+**Modo actual:** QA. La implementación y las comprobaciones técnicas están completas; esta spec se usa para validar visualmente el recorrido descrito en `Verificación`, no para iniciar otra implementación.
+
+**Paquete funcional:** esta spec contiene el alcance autoritativo de acceso, roles, empresas, contadores, asignaciones, autenticación, contratos, errores y criterios CA-001-01 a CA-001-16. Para una actualización futura, trabajar sólo los criterios nuevos o modificados y conservar la evidencia existente.
+
+**Dependencias y fuentes consolidadas:** no depende de otra spec funcional; las decisiones compartidas y las fuentes enlazadas arriba ya están reflejadas en el comportamiento, decisiones locales y contratos de este documento. No recargar esas fuentes durante una ejecución normal si no cambiaron.
+
+**Reabrir fuentes cuando:** una fuente cambie después de esta preparación, aparezca una contradicción, se modifique una política de acceso compartida, exista un pendiente que afecte el resultado o el usuario solicite cambiar el comportamiento.
 
 ## Comportamiento y criterios de aceptación
 
@@ -115,10 +125,11 @@ Comprobaciones ejecutadas el 2026-09-07:
 - `pnpm typecheck`: aprobado.
 - `pnpm build`: build de producción aprobado con Next.js 16.3.4.
 
-El escenario Playwright administrador → empresa → contador → asignación → cambio de contraseña → consulta → retirada está escrito en `e2e/spec-001.spec.ts`, pero no se ejecutó por instrucción posterior del usuario de no realizar pruebas en navegador. Por ello no se acredita todavía la comprobación integral del frontend y la spec conserva el estado **Lista** de acuerdo con su definición de terminado.
+**QA humana:** pendiente. Validar visualmente el recorrido administrador → empresa → contador → asignación → cambio de contraseña → consulta → retirada. La implementación y las comprobaciones técnicas están completas; la aprobación humana debe registrarse antes de marcar la spec Implementada.
 
 ## Cambios
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado.
 - **2026-09-07:** alcance, contratos, entorno y criterios completados por instrucción explícita del usuario; SPEC-001 pasa a Lista. Se preservan los criterios CA-001-01 a CA-001-07 y se agregan CA-001-08 a CA-001-16.
-- **2026-09-07:** backend y frontend implementados en `codex/spec-001`; comprobaciones no navegador registradas. La prueba Playwright queda sin ejecutar por instrucción del usuario y la spec permanece Lista.
+- **2026-09-07:** backend y frontend implementados en `codex/spec-001`; comprobaciones técnicas registradas.
+- **2026-09-10:** se reclasificó como QA conforme a DP-004; sólo resta validación visual humana del recorrido preparado.

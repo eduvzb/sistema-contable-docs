@@ -1,6 +1,6 @@
 # SPEC-005 — Descarga simulada
 
-**Estado:** Lista
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md)
 
@@ -15,6 +15,16 @@ Incluye documentos preparados/de prueba, estados básicos del proceso e incorpor
 - [Alcance §6: simulación y exclusiones](../docs/planeacion/003%20-%20MVP-Scope.md#6-importaci%C3%B3n-y-obtenci%C3%B3n-de-xml).
 - [BR-020](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#22-br-020--la-descarga-autom%C3%A1tica-se-simula-en-el-mvp) (CONFIRMADA PARA MVP); [AC-016](../docs/planeacion/004%20-%20Escenarios%20contables.md#18-escenario-ac-016--descarga-simulada-de-xml) (DEFINIDO PARA MVP).
 - [Alcance §21: integración SAT fuera del MVP](../docs/planeacion/003%20-%20MVP-Scope.md#21-fuera-del-mvp).
+
+## Contexto de ejecución
+
+**Modo actual:** QA. La implementación y las comprobaciones técnicas están completas; usar esta spec para validar visualmente inicio, resultado, reintento y continuidad hacia la bandeja y la póliza.
+
+**Paquete funcional:** esta spec contiene el alcance autoritativo del servicio simulado, fixtures, estados, incorporación y criterios CA-005-01 a CA-005-06. Para una actualización futura, trabajar sólo criterios nuevos o modificados.
+
+**Dependencias y fuentes consolidadas:** consultar SPEC-001 y SPEC-002 para autorización y contexto, y SPEC-004/SPEC-006 para los contratos de incorporación y continuidad. Las fuentes enlazadas arriba ya están reflejadas en este documento; no recargarlas durante una ejecución normal si no cambiaron.
+
+**Reabrir fuentes cuando:** cambie un contrato de dependencia, la simulación deje de cubrir el alcance, aparezca una contradicción o el usuario solicite conexión real, nuevos estados o comportamiento adicional.
 
 ## Comportamiento y criterios de aceptación
 
@@ -50,20 +60,22 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 
 ## Verificación
 
-**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. La comprobación visual queda pendiente porque la instrucción vigente prohíbe navegador y Playwright.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08; las comprobaciones técnicas están completas. La spec está en QA para validación visual humana.
 
 | Criterios | Prueba/comprobación | Resultado |
 |---|---|---|
 | CA-005-01/02/03/05/06 | `tests/Feature/Spec005Test.php::test_authorized_user_can_run_simulated_download_and_repeated_results_are_deduplicated` y `test_simulated_download_returns_not_found_for_unauthenticated_or_foreign_contexts` | Pasa: solicita por empresa/periodo, incorpora dos fixtures deterministas, repite sin duplicar, conserva originales y aísla autenticación/empresas/periodos. |
 | CA-005-02 | `tests/Feature/Spec005Test.php::test_simulated_download_reports_partial_imports_and_keeps_valid_documents` | Pasa: informa tres encontrados, dos incorporados y un rechazo sin deshacer los válidos. |
-| CA-005-04 | `tests/Feature/Spec005Test.php::test_simulated_download_document_can_be_used_in_a_policy_without_losing_company_or_period_context` | Pasa: descarga, incorporación, póliza `POSTED`, pivote y trazabilidad inversa conservan empresa y periodo. La interacción visual sigue pendiente. |
+| CA-005-04 | `tests/Feature/Spec005Test.php::test_simulated_download_document_can_be_used_in_a_policy_without_losing_company_or_period_context` | Pasa: descarga, incorporación, póliza `POSTED`, pivote y trazabilidad inversa conservan empresa y periodo. |
 | Vacío | `tests/Feature/Spec005Test.php::test_empty_simulated_download_returns_completed_without_creating_documents` | Pasa: `COMPLETED`, cero encontrados y cero documentos persistidos. |
 | Fallo/reintento | `tests/Feature/Spec005Test.php::test_failed_simulated_download_does_not_import_and_can_be_retried` | Pasa: `FAILED` no persiste y un segundo intento controlado incorpora los documentos. |
 | Backend focalizado | `./vendor/bin/sail artisan test --compact tests/Feature/Spec005Test.php` | Pasa: 7 pruebas y 62 aserciones. |
 | Backend completo | `./vendor/bin/sail artisan test --compact` | Pasa: 72 pruebas y 650 aserciones. |
-| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm run build` | Pasa; no se ejecutó `pnpm test:e2e`, navegador ni Playwright. |
+| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm run build` | Pasa. |
 
-Revisiones de implementación: backend sobre `868b20eaaa24c387e7e80f97a5798f024a4582e4` con cambios locales; frontend sobre `597bdc5f71c2ee071ce173ddc81167f2a7461bd7` con cambios locales. La spec permanece Lista hasta contar con evidencia interactiva de la acción y la continuidad XML → póliza, aunque esa continuidad ya está cubierta por backend.
+Revisiones de implementación: backend sobre `868b20eaaa24c387e7e80f97a5798f024a4582e4` con cambios locales; frontend sobre `597bdc5f71c2ee071ce173ddc81167f2a7461bd7` con cambios locales.
+
+**QA humana:** pendiente. Validar visualmente inicio, resultado/reintento y continuidad hacia la bandeja y una póliza; sólo la aprobación humana registrada permite marcar la spec Implementada.
 
 La evidencia de implementación registra criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -73,5 +85,6 @@ La evidencia de implementación registra criterios cubiertos, prueba/comprobaci�
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-08:** se cerró el contrato mínimo de simulación síncrona, fixtures deterministas por empresa/periodo, incorporación parcial reutilizando SPEC-004 y estados `COMPLETED`/`FAILED` con vacío y reintento controlados en pruebas. Pasa a Lista; la implementación y su evidencia quedan pendientes.
-- **2026-09-08:** se implementaron el endpoint, el servicio controlado, la incorporación compartida y la acción de frontend; las verificaciones automatizadas pasan. Permanece pendiente únicamente la comprobación interactiva no autorizada.
+- **2026-09-08:** se implementaron el endpoint, el servicio controlado, la incorporación compartida y la acción de frontend; las verificaciones automatizadas pasan.
 - **2026-09-08:** se añadió la prueba integrada descarga simulada → CFDI incorporado → póliza balanceada → consulta inversa, conservando empresa y periodo.
+- **2026-09-10:** se reclasificó como QA conforme a DP-004; sólo resta validación visual humana del recorrido preparado.

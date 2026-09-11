@@ -1,6 +1,6 @@
 # SPEC-007 — PPD y complementos
 
-**Estado:** Lista
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md)
 
@@ -16,6 +16,16 @@ El complemento permanece como `FiscalDocument` con relaciones a las facturas con
 - [BR-012](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#14-br-012--pue-y-ppd-se-tratan-como-escenarios-diferentes), [BR-013](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#15-br-013--una-factura-ppd-puede-tener-varios-pagos), [BR-014](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#16-br-014--los-pagos-pueden-ocurrir-en-distintos-periodos), [BR-015](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#17-br-015--los-complementos-deben-conservar-su-relaci%C3%B3n-con-la-factura). BR-012/013/014 están confirmadas; BR-015 conserva PENDIENTE DE VALIDACIÓN NORMATIVA aunque se utiliza para representar el escenario MVP.
 - [AC-003](../docs/planeacion/004%20-%20Escenarios%20contables.md#5-escenario-ac-003--factura-ppd-pendiente-de-pago-o-cobro), [AC-004](../docs/planeacion/004%20-%20Escenarios%20contables.md#6-escenario-ac-004--pago-parcial-de-factura-ppd), [AC-005](../docs/planeacion/004%20-%20Escenarios%20contables.md#7-escenario-ac-005--m%C3%BAltiples-pagos-en-distintos-periodos), [AC-007](../docs/planeacion/004%20-%20Escenarios%20contables.md#9-escenario-ac-007--un-xml-relacionado-con-varias-p%C3%B3lizas) (necesidad funcional; cuentas/cálculos pendientes).
 - [OQ-003](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#5-oq-003--momento-en-que-un-cfdi-se-considera-contabilizado), [OQ-004](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#6-oq-004--saldo-pendiente-en-ppd), [OQ-005](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#7-oq-005--complementos-que-pagan-m%C3%BAltiples-facturas), [OQ-006](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#8-oq-006--provisi%C3%B3n-en-operaciones-ppd), [OQ-007](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#9-oq-007--iva-pendiente-y-momento-de-pagocobro), [OQ-019](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#21-oq-019--moneda-extranjera).
+
+## Contexto de ejecución
+
+**Modo actual:** QA. La implementación y las comprobaciones técnicas están completas; usar esta spec para validar visualmente trazabilidad factura PPD ↔ complemento, importes, referencias y navegación.
+
+**Paquete funcional:** esta spec contiene el alcance autoritativo de trazabilidad documental, relaciones, importes asignados, referencias pendientes y criterios CA-007-01 a CA-007-08. El saldo, la liquidación y los tratamientos fiscales diferidos no forman parte de una ejecución de este alcance.
+
+**Dependencias y fuentes consolidadas:** consultar SPEC-002, SPEC-004 y SPEC-006 para los contratos vigentes de contexto, documentos y pólizas. Las fuentes enlazadas arriba y los límites explícitos de esta spec ya están consolidados; no recargarlos durante una ejecución normal si no cambiaron.
+
+**Reabrir fuentes cuando:** cambie un contrato de dependencia, se resuelva normativamente BR-015 o un pendiente diferido afecte este alcance, aparezca una contradicción o el usuario solicite calcular saldo/liquidación.
 
 ## Comportamiento y criterios de aceptación
 
@@ -69,7 +79,7 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 
 ## Verificación
 
-**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08 en los árboles de trabajo. La spec no se promueve a Implementada porque falta la comprobación interactiva autorizada.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08 en los árboles de trabajo; las comprobaciones técnicas están completas. La spec está en QA para validación visual humana.
 
 | Criterios | Prueba/comprobación | Resultado |
 | --- | --- | --- |
@@ -78,9 +88,11 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 | Autorización | `tests/Feature/Spec007Test.php::test_user_without_company_access_cannot_read_payment_trace` | Pasa: el usuario sin acceso recibe `404`. |
 | Backend | `./vendor/bin/sail artisan test --compact tests/Feature/Spec007Test.php` | Pasa: 6 pruebas, 43 aserciones. |
 | Regresión backend | `./vendor/bin/sail artisan test --compact` | Pasa: 54 pruebas, 440 aserciones. |
-| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm build` | Pasa con Next.js 16.3.4; no se ejecutó navegador ni Playwright. |
+| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm build` | Pasa con Next.js 16.3.4. |
 
 Las pruebas verifican extracción, persistencia, trazabilidad bidireccional y aislamiento. No se prueba cálculo de saldo porque está fuera de este alcance.
+
+**QA humana:** pendiente. Validar visualmente la trazabilidad factura PPD ↔ complemento, los importes aplicados, las referencias pendientes/resueltas y la navegación hacia pólizas y periodos. Sólo su aprobación registrada permite marcar la spec Implementada.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -90,4 +102,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-08:** por decisión de continuidad se reduce el alcance implementable a trazabilidad documental: relaciones CFDI `P`–factura, importes `ImpPagado`, referencias pendientes y navegación hacia pólizas/periodos. El saldo PPD y los tratamientos fiscales permanecen diferidos; la spec pasa a Lista.
-- **2026-09-08:** se implementaron parser CFDI 4.0 tipo `P`, persistencia de asignaciones, resolución posterior de referencias, detalle fiscal bidireccional, interfaz y cobertura automatizada. Permanece pendiente la comprobación interactiva.
+- **2026-09-08:** se implementaron parser CFDI 4.0 tipo `P`, persistencia de asignaciones, resolución posterior de referencias, detalle fiscal bidireccional, interfaz y cobertura automatizada.
+- **2026-09-10:** se reclasificó como QA conforme a DP-004; sólo resta validación visual humana del recorrido preparado.

@@ -1,6 +1,6 @@
 # SPEC-009 — Reportes y exportación
 
-**Estado:** Lista
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md)
 
@@ -14,6 +14,16 @@ No incluye diseñador de reportes, dashboards, comparaciones entre empresas, DIO
 
 - [Alcance §16: reportes y exportación](../docs/planeacion/003%20-%20MVP-Scope.md#16-reportes-incluidos); [§18: recorrido completo](../docs/planeacion/003%20-%20MVP-Scope.md#18-flujo-completo-que-debe-demostrar-el-mvp); [§21: reportería avanzada excluida](../docs/planeacion/003%20-%20MVP-Scope.md#21-fuera-del-mvp).
 - [BR-001](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa), [BR-017](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#19-br-017--las-p%C3%B3lizas-contabilizadas-afectan-la-balanza) (aislamiento y fuente de movimientos contabilizados).
+
+## Contexto de ejecución
+
+**Modo actual:** QA. La implementación y las comprobaciones técnicas están completas; usar esta spec para validar visualmente reportes, botones, descargas y apertura de los tres XLSX.
+
+**Paquete funcional:** esta spec contiene el alcance autoritativo de consultas, exportaciones, columnas, precisión, límites y criterios CA-009-01 a CA-009-06. No ampliar el alcance a dashboards, comparativos, DIOT ni contabilidad electrónica.
+
+**Dependencias y fuentes consolidadas:** consultar SPEC-002, SPEC-004, SPEC-006 y SPEC-008 para los contratos vigentes de contexto, documentos, pólizas y balanza. Las fuentes enlazadas arriba y los contratos de esta spec ya están consolidados; no recargarlos durante una ejecución normal si no cambiaron.
+
+**Reabrir fuentes cuando:** cambie un contrato de dependencia, cambie la precisión o el contenido autorizado, aparezca una contradicción o el usuario solicite un reporte o formato adicional.
 
 ## Comportamiento y criterios de aceptación
 
@@ -51,11 +61,11 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 
 **Evidencia de producto:** implementación realizada el 2026-09-08 en los árboles de trabajo. `tests/Feature/Spec009Test.php` pasó con 6 pruebas y 79 aserciones focalizadas; la suite backend completa pasó con 60 pruebas y 519 aserciones. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron en frontend. `vendor/bin/pint --dirty --format agent` corrigió únicamente el formato de los archivos nuevos y `git diff --check` no reporta errores.
 
-La cobertura verifica los tres MIME/nombres/contenidos XLSX, columnas y orden, precisión decimal, aislamiento por empresa y periodo, DRAFT/POSTED en pólizas, exclusión de DRAFT en balanza, archivos vacíos, autenticación/autorización y el límite de 10,000 filas. La comprobación interactiva de los botones y la apertura manual en Excel siguen pendientes por la restricción vigente de no usar navegador ni Playwright.
+La cobertura verifica los tres MIME/nombres/contenidos XLSX, columnas y orden, precisión decimal, aislamiento por empresa y periodo, DRAFT/POSTED en pólizas, exclusión de DRAFT en balanza, archivos vacíos, autenticación/autorización y el límite de 10,000 filas.
 
 **Revisiones de implementación:** backend parte de `829837d` y frontend de `ca15edd`; la implementación de SPEC-009 permanece como cambio local posterior a esas revisiones. La documentación parte de `4e38ac5` con cambios locales conservados.
 
-Prever comparación de datos consultados/exportados en los tres reportes, apertura del formato elegido en una herramienta compatible, valores decimales e intento de exportación de una empresa no asignada. Completar el recorrido extremo a extremo descrito en el índice.
+**QA humana:** pendiente. Comparar visualmente los datos consultados/exportados en los tres reportes, accionar cada descarga y abrir el XLSX en una herramienta compatible. La autorización, precisión y contenido ya están cubiertos técnicamente; sólo la aprobación humana registrada permite marcar la spec Implementada.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -64,4 +74,5 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance de reportes.
 - **2026-09-08:** se cerró el contrato MVP de tres exportaciones XLSX separadas, columnas estables, contexto por periodo, estados de pólizas, límite de filas y errores observables. SPEC-009 pasa a Lista.
-- **2026-09-08:** se implementaron las tres rutas XLSX, generación nativa sin dependencias, botones de frontend y pruebas de contrato. Permanece pendiente la comprobación interactiva por la restricción de no usar navegador.
+- **2026-09-08:** se implementaron las tres rutas XLSX, generación nativa sin dependencias, botones de frontend y pruebas de contrato.
+- **2026-09-10:** se reclasificó como QA conforme a DP-004; sólo resta validación visual humana de botones, descargas y apertura de archivos.

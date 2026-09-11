@@ -4,23 +4,23 @@ Una spec por funcionalidad, compartida por backend y frontend. Para trabajar usa
 
 ## Orden y dependencias
 
-SPEC-001 a SPEC-009 están **Listas**. Los pendientes de cada una explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado para su definición.
+SPEC-001, SPEC-002, SPEC-005 y SPEC-007 a SPEC-009 están en **QA**: su implementación y comprobaciones técnicas están completas y sólo resta validación visual humana. SPEC-003, SPEC-004 y SPEC-006 están en **Actualización pendiente**: conservan su comportamiento y evidencia anteriores, pero tienen criterios preparados el 2026-09-10 todavía no implementados ni verificados. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
 
 | Spec | Funcionalidad | Dependencias de preparación |
 |---|---|---|
-| [SPEC-001](001-acceso-usuarios-empresas.md) | Acceso, usuarios y empresas — **Lista** | Ninguna |
-| [SPEC-002](002-contexto-contable.md) | Contexto contable — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md) |
-| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [SPEC-005](005-descarga-simulada.md) | Descarga simulada — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md) |
-| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **Lista** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
-| [SPEC-007](007-ppd-complementos.md) | PPD y complementos — **Lista** (trazabilidad documental) | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md) |
-| [SPEC-008](008-balanza-basica.md) | Balanza básica — **Lista** | [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md) |
-| [SPEC-009](009-reportes-exportacion.md) | Reportes y exportación — **Lista** | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) |
+| [SPEC-001](001-acceso-usuarios-empresas.md) | Acceso, usuarios y empresas — **QA** | Ninguna |
+| [SPEC-002](002-contexto-contable.md) | Contexto contable — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md) |
+| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
+| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
+| [SPEC-005](005-descarga-simulada.md) | Descarga simulada — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md) |
+| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
+| [SPEC-007](007-ppd-complementos.md) | PPD y complementos — **QA** (trazabilidad documental) | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md) |
+| [SPEC-008](008-balanza-basica.md) | Balanza básica — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md) |
+| [SPEC-009](009-reportes-exportacion.md) | Reportes y exportación — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) |
 
 Preparar acceso/contexto; después cuentas y documentos; luego pólizas; finalmente PPD/balanza y reportes. La simulación puede prepararse cuando exista el contrato de incorporación de documentos. No se necesita terminar PPD para preparar la balanza básica o los reportes del flujo PUE.
 
-**Integraciones posteriores, sin duplicar contratos:** SPEC-004 consume el indicador derivado de relaciones POSTED definido por SPEC-006; SPEC-005 verifica continuidad con SPEC-006; la trazabilidad de complementos/pagos se completa con SPEC-007. Estas integraciones son necesarias para considerar completas las capacidades correspondientes, aunque la preparación básica de XML ocurra antes. Backend y frontend comparten ID y revisión de spec; los contratos se concretan antes de Lista.
+**Integraciones posteriores, sin duplicar contratos:** SPEC-004 consume el indicador derivado de relaciones POSTED definido por SPEC-006; SPEC-005 verifica continuidad con SPEC-006; la trazabilidad de complementos/pagos se completa con SPEC-007. Estas integraciones son necesarias para considerar completas las capacidades correspondientes, aunque la preparación básica de XML ocurra antes. Backend y frontend comparten ID y revisión de spec; los contratos se concretan antes de Lista o Actualización pendiente.
 
 ## Cobertura del alcance
 
@@ -122,9 +122,11 @@ Variantes: ingreso y egreso PUE, factura PPD pendiente, pago parcial y pagos en 
 
 - Validación local de los 26 Markdown: 389 enlaces relativos, incluidas 165 referencias con ancla, sin destinos ausentes ni enlaces Obsidian pendientes.
 - Comparación de hashes de los nueve originales: sin cambios. Comparación de las copias: contenido preservado salvo la conversión de enlaces documentada en el mapa de fuentes.
-- Revisión actualizada: SPEC-001 a SPEC-009 están en Lista; los criterios conservan sus referencias y las dependencias de preparación no tienen ciclos. Las integraciones posteriores están identificadas aparte.
+- En esa revisión, SPEC-001 a SPEC-009 quedaron en Lista; los criterios conservaron sus referencias y las dependencias de preparación no presentaron ciclos. Las integraciones posteriores quedaron identificadas aparte.
 - Cobertura: las 20 BR tienen correspondencia y conservan exactamente su estado de fuente; los 16 AC están clasificados y AC-F01 a AC-F10 quedan posteriores. Las secciones funcionales §3–17 del alcance tienen responsable; §18–20 se reflejan en el recorrido y sus variantes.
 - Revisión de uso del flujo con una funcionalidad nueva (SPEC-005) y una corrección (duplicados en SPEC-004): cada paso tiene fuente, responsable, preparación y evidencia prevista sin exigir archivos de tareas ni aprobaciones repetidas.
 - Revisión de coherencia: SAT solo simulado, captura contable manual, supuestos etiquetados y decisiones ausentes localizadas por spec. Numeración, edición de POSTED, saldos PPD e iniciales siguen abiertos; no se resolvieron mediante reglas inventadas.
 
 Las pruebas del producto y la demostración con contadores de las specs aún no implementadas **no se ejecutaron**. SPEC-001 conserva su evidencia real en su propia sección de verificación; el resto de esta revisión se refiere a documentación.
+
+**2026-09-10 — Reclasificación documental.** Se incorporaron Actualización pendiente y QA al flujo SDD. Actualización pendiente se aplicó a SPEC-002, SPEC-003, SPEC-004 y SPEC-006 por sus criterios nuevos; SPEC-001, SPEC-005 y SPEC-007 a SPEC-009 pasaron a QA porque sólo resta validación visual humana. La reclasificación no modifica la evidencia histórica ni incluyó pruebas de producto.

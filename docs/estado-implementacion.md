@@ -1,23 +1,52 @@
 # Estado de implementación y continuidad
 
-**Actualizado:** 2026-09-08  
+**Actualizado:** 2026-09-10
 **Propósito:** punto de relevo entre sesiones para el MVP. Este archivo no sustituye las specs ni declara criterios satisfechos sin su evidencia.
 
 ## Estado observado
 
-| Spec | Estado de la spec | Implementación observada | Situación para continuar |
-| --- | --- | --- | --- |
-| SPEC-001 | Lista | Backend y frontend existentes; la evidencia registrada cubre la suite sin navegador. | Falta comprobación integral de interfaz por la restricción de no usar navegador. |
-| SPEC-002 | Lista | Contexto explícito por empresa y periodo existente; integración con pólizas comprobada sin navegador. | Falta únicamente la comprobación interactiva, que permanece bloqueada por la restricción vigente. |
-| SPEC-003 | Lista | Catálogo, uso aislado de cuentas en partidas y protección de código/naturaleza/padre después del primer uso existentes. | CA-003-03/06/10 tienen evidencia backend; falta la comprobación interactiva del catálogo. |
-| SPEC-004 | Lista | Importación parcial CFDI 4.0, original privado, aislamiento, filtro por periodo, indicador `accounted` y detalle fiscal seleccionable existentes. | Backend y frontend verificados sin navegador; falta comprobación interactiva del detalle antes de promoverla a Implementada. |
-| SPEC-005 | Lista | Endpoint de descarga simulada, fixtures deterministas por empresa/periodo, incorporación compartida con SPEC-004 y acción de frontend para iniciar/reintentar. | Backend y frontend verificados sin navegador; falta comprobación interactiva de la acción y continuidad hacia póliza antes de promoverla a Implementada. |
-| SPEC-006 | Lista | Pólizas, partidas, relación muchos-a-muchos con CFDI, balance de `POSTED` y auditoría mínima existentes. El detalle del CFDI ahora expone pólizas, periodos, partidas y cuentas relacionadas. | CA-006-07/11 verificados en backend y frontend sin navegador; falta comprobación interactiva antes de promoverla a Implementada. |
-| SPEC-007 | Lista | Trazabilidad documental CFDI `P` → facturas, importes `ImpPagado`, referencias pendientes y detalle bidireccional hacia pólizas/periodos. No calcula saldo PPD. | Backend y frontend verificados sin navegador; falta comprobación interactiva. El saldo, sobrepagos, diferencias, moneda avanzada y liquidación siguen fuera de alcance. |
-| SPEC-008 | Lista | API `trial-balance`, cálculo por cuenta con partidas `POSTED` y pestaña de balanza integrados en los árboles de trabajo. El saldo inicial deriva de periodos anteriores; no se creó `OpeningBalance` ni migración histórica. | Backend verificado; frontend pasa lint/typecheck/build. Falta comprobación interactiva por la restricción vigente de no usar navegador ni Playwright antes de promoverla a Implementada. |
-| SPEC-009 | Lista | Tres exportaciones XLSX contextuales, generación nativa sin dependencias, botones en documentos/pólizas/balanza y pruebas de contrato implementados en los árboles de trabajo. | Backend y frontend verificados sin navegador; falta comprobación interactiva de los botones y apertura manual en Excel antes de promoverla a Implementada. |
+| Spec     | Estado de la spec       | Implementación observada                                                                                                                                                                                                                 | Situación para continuar                                                                                                                             |
+| -------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SPEC-001 | QA                      | Backend, frontend y comprobaciones técnicas existentes.                                                                                                                                                                                  | QA humana debe validar visualmente acceso, administración, asignaciones y cambio de contraseña.                                                      |
+| SPEC-002 | QA                      | Contexto explícito por empresa y periodo, transición estable y continuidad de pestaña/año/filtros en URL implementados; integración con pólizas comprobada.                                                                              | QA humana debe validar visualmente selección, transición, recuperación por recarga/historial y filtros; después puede pasar a Implementada.          |
+| SPEC-003 | Actualización pendiente | Catálogo, uso aislado de cuentas en partidas y protección de código/naturaleza/padre después del primer uso existentes. CA-003-11/12 preparan la mejora del buscador.                                                                    | Implementar y comprobar técnicamente búsqueda tolerante, limpieza, recuento y jerarquía; después pasa a QA.                                          |
+| SPEC-004 | Actualización pendiente | Importación parcial CFDI 4.0, original privado, aislamiento, filtro por periodo, indicador `accounted` y detalle fiscal seleccionable existentes. CA-004-09/10 documentan limpieza del selector y la incidencia de lote duplicado+nuevo. | Reproducir, corregir y comprobar técnicamente el lote mixto y la limpieza; después pasa a QA.                                                        |
+| SPEC-005 | QA                      | Endpoint, servicio simulado, incorporación compartida, continuidad hacia póliza y acción frontend verificados técnicamente.                                                                                                              | QA humana debe validar visualmente inicio, resultado, reintento y continuidad.                                                                       |
+| SPEC-006 | Actualización pendiente | Pólizas, partidas, relación muchos-a-muchos con CFDI, balance de `POSTED` y auditoría mínima existentes. CA-006-14 prepara la mejora del calendario de fecha.                                                                            | Implementar y comprobar técnicamente el calendario accesible dentro del periodo; después pasa a QA.                                                  |
+| SPEC-007 | QA                      | Trazabilidad documental CFDI `P` → facturas, importes `ImpPagado`, referencias pendientes y detalle bidireccional verificados técnicamente.                                                                                              | QA humana debe validar visualmente trazabilidad y navegación; saldo, sobrepagos, diferencias, moneda avanzada y liquidación siguen fuera de alcance. |
+| SPEC-008 | QA                      | API `trial-balance`, cálculo por cuenta con partidas `POSTED` y pestaña de balanza verificados técnicamente. El saldo inicial deriva de periodos anteriores.                                                                             | QA humana debe validar visualmente lectura, importes y estados de la balanza.                                                                        |
+| SPEC-009 | QA                      | Tres exportaciones XLSX contextuales, generación nativa, botones y pruebas de contrato verificados técnicamente.                                                                                                                         | QA humana debe validar visualmente botones, descargas y apertura de XLSX.                                                                            |
 
-La palabra **Lista** conserva su significado SDD: contrato preparado, no necesariamente terminado. No se promovieron specs a **Implementada** en esta revisión porque las verificaciones sin navegador y los criterios señalados arriba aún no cubren el alcance completo.
+**Actualización pendiente** identifica una funcionalidad existente con cambios preparados que aún no tienen cierre técnico. **QA** identifica implementación y comprobaciones técnicas completas, con sólo validación visual humana pendiente. Ninguna spec pasa a Implementada sin aprobación humana registrada.
+
+## Uso como relevo operativo
+
+Este archivo sirve para localizar el estado, los repositorios, las revisiones y los pendientes de continuidad. No es una segunda fuente de comportamiento ni debe usarse para reconstruir el análisis de Planeación.
+
+Al retomar una implementación, el agente debe abrir primero la spec objetivo y su sección **Contexto de ejecución**. Después consulta aquí únicamente la situación de los árboles, la evidencia disponible y el siguiente criterio pendiente. La spec, sus contratos y sus decisiones vigentes determinan el comportamiento; la documentación histórica de este archivo sólo se reabre cuando es necesaria para verificar una discrepancia o recuperar un dato no registrado en la spec.
+
+## Preparación documental — 2026-09-10
+
+Esta actualización registra observaciones de uso como extensiones de las specs responsables; no crea una spec transversal ni modifica reglas de negocio. No se cambió código de backend o frontend y no se ejecutaron pruebas de producto.
+
+| Observación | Spec y criterio preparado |
+| --- | --- |
+| Mejorar búsqueda del catálogo | SPEC-003, CA-003-11/12: código/nombre, mayúsculas/acentos, jerarquía, recuento, vacío y limpieza. |
+| Evitar saltos al cambiar periodo | SPEC-002, CA-002-07: transición estable sin datos o vacíos del contexto anterior. |
+| Limpiar después de importar XML | SPEC-004, CA-004-09: control de archivos limpio, resultado visible y nueva sesión limpia. |
+| Mantener tabs, página y estado de consulta | SPEC-002, CA-002-08, consumido por las vistas: continuidad recuperable y ajuste sólo si la página deja de existir. |
+| Mejorar calendario de nueva póliza | SPEC-006, CA-006-14: fecha clara en español, teclado, periodo visible y error localizado. |
+| CFDI nuevo no visible tras lote mixto | SPEC-004, CA-004-10: regresión duplicado+nuevo y coherencia entre importación, bandeja y relación en póliza. |
+
+## Cierre técnico de SPEC-002 — 2026-09-10
+
+Se implementaron CA-002-07/08 en el frontend. El cambio conserva el periodo destino visible durante la validación, reserva una superficie estable, deshabilita acciones dependientes y mantiene pestaña, año y filtros de catálogo/CFDI en la URL. El cambio de empresa descarta estado incompatible; la navegación por historial y la recarga lo recuperan dentro de la misma empresa. No se modificó backend.
+
+`pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check` pasaron en `sistema-contable-frontend`. No se ejecutó navegador como criterio de cierre; la spec queda en QA para validación visual humana.
+
+## Reclasificación QA — 2026-09-10
+
+DP-004 retira la comprobación integral de interfaz por navegador del cierre del agente. SPEC-001, SPEC-005 y SPEC-007 a SPEC-009 pasan a QA porque su implementación y comprobaciones técnicas ya están completas. SPEC-003/004/006 permanecen en Actualización pendiente hasta cerrar sus criterios nuevos; SPEC-002 se suma a QA tras cerrar técnicamente CA-002-07/08. La validación visual y la aprobación para llegar a Implementada corresponden a una persona.
 
 ## Evidencia disponible
 
@@ -26,9 +55,9 @@ La palabra **Lista** conserva su significado SDD: contrato preparado, no necesar
 - SPEC-004 añade el detalle fiscal mediante `GET /api/companies/{companyId}/fiscal-documents/{fiscalDocumentId}`; su prueba focalizada pasó con 4 pruebas y 41 aserciones antes de la regresión completa.
 - SPEC-006 añade al detalle del CFDI la colección `accounting_policies` con `period` y `entries.account`; su prueba focalizada pasó con 10 pruebas y 58 aserciones, cubriendo ausencia, multiplicidad, orden, aislamiento, autorización y exclusión de pólizas sin relación.
 - SPEC-007 añade extracción de `DoctoRelacionado`/`ImpPagado`, persistencia de asignaciones documentales y trazabilidad bidireccional; `tests/Feature/Spec007Test.php` pasó con 6 pruebas y 43 aserciones focalizadas.
-- Las pruebas Playwright de SPEC-004/006 existen en frontend, pero no se ejecutaron por la instrucción vigente de no usar navegador ni Playwright.
-- En SPEC-008, el backend pasó `./vendor/bin/sail artisan test --compact` con 35 pruebas y 302 assertions; el frontend pasó `pnpm lint`, `pnpm typecheck` y `pnpm build`. No se ejecutó `pnpm test:e2e` por la restricción vigente de no usar navegador ni Playwright. `git diff --check` no reportó errores de espacios.
-- Tras SPEC-007, la suite backend completa pasó con 54 pruebas y 440 aserciones; el frontend pasó `pnpm lint`, `pnpm typecheck` y `pnpm build`. No se ejecutó `pnpm test:e2e`.
+- La validación visual de SPEC-004/006 queda reservada para QA humana después de cerrar sus criterios nuevos; no forma parte del cierre técnico del agente.
+- En SPEC-008, el backend pasó `./vendor/bin/sail artisan test --compact` con 35 pruebas y 302 assertions; el frontend pasó `pnpm lint`, `pnpm typecheck` y `pnpm build`. `git diff --check` no reportó errores de espacios.
+- Tras SPEC-007, la suite backend completa pasó con 54 pruebas y 440 aserciones; el frontend pasó `pnpm lint`, `pnpm typecheck` y `pnpm build`.
 - Las migraciones de CFDI, pólizas, partidas y la tabla pivote están presentes y el contexto confirma que están aplicadas.
 - SPEC-009 implementa `GET .../reports/fiscal-documents.xlsx`, `GET .../reports/accounting-policies.xlsx` y `GET .../reports/trial-balance.xlsx`, con una hoja, encabezados estables, importes textuales a seis decimales, consulta vacía válida y límite de 10,000 filas.
 - SPEC-009 pasó `./vendor/bin/sail artisan test --compact tests/Feature/Spec009Test.php` con 6 pruebas y 79 aserciones; la suite backend completa pasó con 60 pruebas y 519 aserciones. `vendor/bin/pint --dirty --format agent`, `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check` pasaron.
@@ -41,19 +70,18 @@ La palabra **Lista** conserva su significado SDD: contrato preparado, no necesar
 
 ## Orden recomendado
 
-1. Completar la evidencia visual de SPEC-004, SPEC-006 y SPEC-008 cuando se autorice navegador; los contratos y verificaciones automatizadas están preparados.
-2. Completar la evidencia visual de SPEC-005 cuando se autorice navegador; el contrato y las verificaciones automatizadas están preparados.
-3. Completar la comprobación visual de SPEC-007 cuando se autorice navegador; no promoverla a Implementada mientras falte esa evidencia.
-4. Completar la evidencia interactiva de SPEC-009 cuando se autorice navegador y apertura manual en Excel; después promoverla a Implementada si todos los criterios quedan cubiertos.
+1. Implementar y comprobar técnicamente CA-003-11/12, CA-004-09/10 y CA-006-14; mover cada spec a QA al alcanzar su cierre técnico.
+2. Entregar a QA humana los recorridos visuales de SPEC-001, SPEC-005 y SPEC-007 a SPEC-009.
+3. Registrar aprobación u observaciones humanas en cada spec. Sólo las aprobadas pasan a Implementada.
 
 ## Continuidad de esta sesión — 2026-09-08
 
 - **Brechas cerradas:** protección estructural de cuentas usadas (CA-003-10), aislamiento y atomicidad de cuentas/CFDI en pólizas (CA-003-06 y CA-006-08), contexto frontend no autoritativo (SPEC-002/004), precisión DT-011, autorización/auditoría/edición POSTED de SPEC-006 y continuidad descarga simulada → póliza de SPEC-005.
 - **Cambios realizados:** backend aplica el bloqueo estructural dentro de transacción y bloquea las cuentas consultadas al validar partidas; los recursos suman y serializan decimales como texto. Frontend valida el periodo antes de montar datos protegidos, olvida contextos inválidos y exige `period_id` para la bandeja fiscal. No se añadieron reglas contables, migraciones ni dependencias.
 - **Pruebas ejecutadas:** regresión backend 72 pruebas/650 aserciones; SPEC-003 16/112; SPEC-005 7/62; SPEC-006 15/114; 31 rutas API; Pint; lint, build y typecheck frontend; `git diff --check` en los tres repositorios.
-- **Pruebas no ejecutadas:** navegador, Playwright y E2E por prohibición explícita. Tampoco se ejecutó Pint en modo `--test`, porque las instrucciones del backend ordenan ejecutar el formateador y prohíben expresamente ese modo; `./vendor/bin/sail pint --dirty --format agent` pasó.
-- **Bloqueos restantes:** evidencia visual/interactiva de las nueve specs; apertura manual de XLSX para SPEC-009. BR-015, OQ-004, saldos/liquidación PPD, migración histórica y cierre de periodos permanecen sin resolver y fuera de este cambio.
-- **Siguiente paso recomendado:** conservar todas las specs en Lista y, cuando se autorice navegador, ejecutar la evidencia interactiva en el orden SPEC-002 → SPEC-003 → SPEC-004/005 → SPEC-006/007 → SPEC-008/009.
+- **Comprobación técnica omitida:** no se ejecutó Pint en modo `--test`, porque las instrucciones del backend ordenan ejecutar el formateador y prohíben expresamente ese modo; `./vendor/bin/sail pint --dirty --format agent` pasó.
+- **QA humana pendiente o por programar:** recorridos visuales de las nueve specs y apertura manual de XLSX para SPEC-009. SPEC-003/004/006 deben alcanzar primero su cierre técnico; SPEC-002 ya está preparada para QA. BR-015, OQ-004, saldos/liquidación PPD, migración histórica y cierre de periodos permanecen sin resolver y fuera de este cambio.
+- **Siguiente paso recomendado:** mantener SPEC-003/004/006 en Actualización pendiente hasta su cierre técnico; ejecutar QA humana sobre SPEC-001/002/005/007/008/009 y sobre las demás conforme lleguen a QA.
 
 ## Estado de los repositorios al relevo
 
@@ -67,7 +95,7 @@ Los tres árboles contienen cambios locales que se deben conservar. No usar `git
 
 ## Cómo retomar o compartir
 
-En una nueva sesión, indicar: “Lee `docs/estado-implementacion.md`, conserva los cambios locales y continúa con la evidencia pendiente de SPEC-004/006/008” (o con la spec elegida). Antes de cambiar archivos, revisar el estado actual de cada repositorio:
+En una nueva sesión, indicar: “Lee `docs/estado-implementacion.md`, conserva los cambios locales y continúa con la actualización pendiente elegida; al cierre técnico muévela a QA” (o proporcionar observaciones de QA humana). Antes de cambiar archivos, revisar el estado actual de cada repositorio:
 
 ```sh
 git -C /Users/eduardovazquez/Documents/ChatGPT/sistema-contable status --short --branch

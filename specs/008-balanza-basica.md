@@ -1,6 +1,6 @@
 # SPEC-008 — Balanza básica
 
-**Estado:** Lista
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md)
 
@@ -15,6 +15,16 @@ No incluye balanza electrónica SAT, cierre/reapertura, migración histórica ni
 - [Alcance §16: balanza básica](../docs/planeacion/003%20-%20MVP-Scope.md#16-reportes-incluidos); [§20: éxito del MVP](../docs/planeacion/003%20-%20MVP-Scope.md#20-criterios-de-%C3%A9xito-del-mvp).
 - [BR-001](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa), [BR-017](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#19-br-017--las-p%C3%B3lizas-contabilizadas-afectan-la-balanza) (confirmadas); [AC-014](../docs/planeacion/004%20-%20Escenarios%20contables.md#16-escenario-ac-014--balanza-despu%C3%A9s-de-contabilizar) (necesidad confirmada; presentación según naturaleza pendiente).
 - [OQ-012](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#14-oq-012--openingbalance), [OQ-017](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#19-oq-017--migraci%C3%B3n) (saldos iniciales/migración pendientes y posteriores al primer recorrido).
+
+## Contexto de ejecución
+
+**Modo actual:** QA. La implementación y las comprobaciones técnicas están completas; usar esta spec para validar visualmente lectura, importes, estados vacíos y correspondencia con el periodo seleccionado.
+
+**Paquete funcional:** esta spec contiene el alcance autoritativo de saldo inicial, cargos, abonos, saldo final, inclusión de partidas POSTED, exclusión de borradores y criterios CA-008-01 a CA-008-05. No ampliar el alcance a balanza SAT, migración ni cierre.
+
+**Dependencias y fuentes consolidadas:** consultar SPEC-002, SPEC-003 y SPEC-006 para contexto, cuentas y pólizas. Las fuentes enlazadas arriba y las decisiones/contratos de esta spec ya están consolidados; no recargarlos durante una ejecución normal si no cambiaron.
+
+**Reabrir fuentes cuando:** cambie un contrato de dependencia, se defina la procedencia del saldo inicial, aparezca una contradicción o el usuario solicite migración, cierre o tratamiento fiscal.
 
 ## Comportamiento y criterios de aceptación
 
@@ -52,7 +62,7 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contr
 
 ## Verificación
 
-**Evidencia de producto:** la implementación está vinculada en el árbol de trabajo; la interacción visual queda pendiente porque la instrucción de esta entrega prohíbe navegador y Playwright.
+**Evidencia de producto:** la implementación está vinculada en el árbol de trabajo y las comprobaciones técnicas están completas. La spec está en QA para validación visual humana.
 
 | Criterios | Prueba/comprobación | Resultado |
 |---|---|---|
@@ -61,9 +71,11 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). Los contr
 | CA-008-07 | `tests/Feature/Spec008Test.php::test_trial_balance_returns_not_found_for_unauthenticated_or_foreign_contexts` | Pasa: `401` sin sesión y `404` para empresa o periodo ajenos. |
 | CA-008-05 | `tests/Feature/Spec008Test.php::test_trial_balance_does_not_mix_companies_or_periods` | Pasa: solo se devuelve el catálogo y movimiento de la empresa consultada. |
 | Backend | `./vendor/bin/sail artisan test --compact` | Pasa: 35 pruebas, 302 assertions. |
-| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm build` | Pasa; no se ejecutó `pnpm test:e2e`. |
+| Frontend | `pnpm lint`, `pnpm typecheck`, `pnpm build` | Pasa. |
 
-Las pruebas cubren valores decimales conocidos, `POSTED`/`DRAFT`, dos empresas y varios periodos. La revisión visual/interactiva queda pendiente por la restricción vigente; no se declara la spec Implementada hasta contar con esa evidencia o una decisión explícita de aceptarla.
+Las pruebas cubren valores decimales conocidos, `POSTED`/`DRAFT`, dos empresas y varios periodos.
+
+**QA humana:** pendiente. Validar visualmente encabezados, importes, estados vacíos y lectura de la balanza en el periodo seleccionado; sólo su aprobación registrada permite marcar la spec Implementada.
 
 La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental); la implementación queda en los árboles backend y frontend indicados por el estado de continuidad.
 
@@ -72,3 +84,4 @@ La revisión documental de esta entrega está en el [índice](README.md#verifica
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el cálculo pendiente de balanza.
 - **2026-09-08:** se cerró el alcance mínimo: saldo inicial derivado de periodos anteriores, saldo por naturaleza, filas sin movimiento sin agregados jerárquicos, seis decimales como texto y contrato `trial-balance`. La spec queda Lista y su implementación mínima está añadida; `OpeningBalance` y migración permanecen fuera del MVP.
+- **2026-09-10:** se reclasificó como QA conforme a DP-004; sólo resta validación visual humana del recorrido preparado.

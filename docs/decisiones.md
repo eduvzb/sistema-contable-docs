@@ -17,6 +17,9 @@ Registro único para acuerdos compartidos. Las decisiones limitadas a una funcio
 | DT-009 | Los catálogos fiscales necesarios se conservan versionados con procedencia y fecha y se consumen sin depender de SAT en tiempo de ejecución. SPEC-001 inicia esta regla con `c_RegimenFiscal`. | Instrucción explícita del usuario para SPEC-001, 2026-09-07. |
 | DT-010 | El contexto contable se identifica explícitamente por empresa y periodo en URLs y contratos API; no se conserva una selección autoritativa implícita en la sesión del backend. El frontend puede recordar el último contexto como conveniencia, pero debe validarlo nuevamente contra la API. | Instrucción explícita del usuario para SPEC-002, 2026-09-07. |
 | DT-011 | Los importes contables y fiscales del MVP se almacenan con seis decimales y se representan como texto en contratos JSON para no perder precisión; no se aplica conversión monetaria avanzada. | Decisión explícita al preparar SPEC-004 y SPEC-006, 2026-09-08. |
+| DP-003 | El ciclo SDD incluye el estado `Actualización pendiente` para una funcionalidad existente cuyo cambio de comportamiento ya está preparado, pero aún no cuenta con implementación y comprobaciones técnicas completas. Conserva separadas la evidencia anterior y la pendiente. | Instrucción explícita del usuario, 2026-09-10. |
+| DP-004 | El ciclo SDD incluye el estado `QA`: implementación y comprobaciones técnicas completas, con sólo la validación visual humana pendiente. La comprobación integral de interfaz por navegador no es responsabilidad ni criterio de cierre del agente; únicamente una persona aprueba QA y mueve la spec a Implementada. | Instrucción explícita del usuario, 2026-09-10. |
+| DP-005 | Cada tarea usa una rama `codex/SPEC-NNN` creada desde `main` en cada repositorio afectado. El árbol debe estar limpio, `origin` debe existir y la rama no puede existir localmente ni en remoto; de lo contrario, la tarea se bloquea. Cada repositorio termina con un único commit descriptivo (`SPEC-NNN: verbo en imperativo`) y publica la rama con `git push -u origin codex/SPEC-NNN`. El cierre espera a todos los repositorios afectados y no incluye PR ni merge automático. | Instrucción explícita del usuario, 2026-09-10. |
 
 ## Registro de cambios
 
@@ -24,3 +27,6 @@ Registro único para acuerdos compartidos. Las decisiones limitadas a una funcio
 - **2026-09-07:** se registraron DT-006 a DT-009 al preparar SPEC-001: versiones, autenticación SPA, roles/acceso y catálogo fiscal local.
 - **2026-09-07:** se registró DT-010 al preparar SPEC-002: contexto explícito y memoria local no autoritativa.
 - **2026-09-08:** se registró DT-011 para compartir precisión y representación de importes entre documentos fiscales y pólizas.
+- **2026-09-10:** se registró DP-003 y se amplió el flujo SDD con `Actualización pendiente` para distinguir claramente las specs reclasificadas por cambios posteriores.
+- **2026-09-10:** se registró DP-004: QA humana sustituye la comprobación integral por navegador dentro del trabajo del agente y separa el cierre técnico de la aprobación visual.
+- **2026-09-10:** se registró DP-005 y se amplió el flujo SDD con preflight de ramas, commit final y publicación remota por repositorio afectado.

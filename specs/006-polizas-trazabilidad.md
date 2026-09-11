@@ -1,6 +1,6 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-**Estado:** Lista
+**Estado:** Actualización pendiente
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md)
 
@@ -8,7 +8,7 @@
 
 Crear, consultar y modificar pólizas con partidas manuales; guardarlas como borrador y contabilizarlas balanceadas. Conservar documentos relacionados, cuentas, empresa, periodo y autoría básica.
 
-Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcionales y múltiples, trazabilidad bidireccional, ingresos/egresos PUE y representación manual del registro inicial PPD. No incluye selección automática de cuentas, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa. La edición posterior a contabilización requiere una decisión antes de Lista.
+Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcionales y múltiples, trazabilidad bidireccional, ingresos/egresos PUE y representación manual del registro inicial PPD. No incluye selección automática de cuentas, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa. La edición posterior a contabilización se limita por las decisiones cerradas de esta spec.
 
 ## Fuentes
 
@@ -16,6 +16,16 @@ Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcion
 - [BR-002](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#4-br-002--el-contador-trabaja-dentro-de-un-periodo), [BR-003](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#5-br-003--cada-empresa-tiene-su-propio-cat%C3%A1logo-de-cuentas), [BR-004](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#6-br-004--cada-partida-utiliza-una-cuenta-contable), [BR-005](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#7-br-005--una-p%C3%B3liza-contabilizada-debe-estar-balanceada), [BR-006](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#8-br-006--una-p%C3%B3liza-incompleta-puede-guardarse-como-borrador), [BR-007](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#9-br-007--una-p%C3%B3liza-puede-relacionarse-con-varios-xml), [BR-008](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#10-br-008--un-xml-puede-relacionarse-con-varias-p%C3%B3lizas), [BR-009](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#11-br-009--una-p%C3%B3liza-puede-existir-sin-xml), [BR-016](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#18-br-016--el-contador-selecciona-manualmente-las-cuentas-contables), [BR-018](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#20-br-018--debe-existir-trazabilidad-desde-el-xml), [BR-019](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#21-br-019--debe-existir-trazabilidad-desde-la-p%C3%B3liza). BR-006 es SUPUESTO MVP; las demás están confirmadas en su alcance.
 - [AC-001](../docs/planeacion/004%20-%20Escenarios%20contables.md#3-escenario-ac-001--ingreso-pue), [AC-002](../docs/planeacion/004%20-%20Escenarios%20contables.md#4-escenario-ac-002--egreso-pue), [AC-006](../docs/planeacion/004%20-%20Escenarios%20contables.md#8-escenario-ac-006--varios-xml-en-una-misma-p%C3%B3liza), [AC-007](../docs/planeacion/004%20-%20Escenarios%20contables.md#9-escenario-ac-007--un-xml-relacionado-con-varias-p%C3%B3lizas), [AC-008](../docs/planeacion/004%20-%20Escenarios%20contables.md#10-escenario-ac-008--p%C3%B3liza-sin-cfdi), [AC-011](../docs/planeacion/004%20-%20Escenarios%20contables.md#13-escenario-ac-011--p%C3%B3liza-descuadrada-en-borrador), [AC-012](../docs/planeacion/004%20-%20Escenarios%20contables.md#14-escenario-ac-012--consulta-de-trazabilidad-desde-un-cfdi), [AC-013](../docs/planeacion/004%20-%20Escenarios%20contables.md#15-escenario-ac-013--consulta-de-trazabilidad-desde-una-p%C3%B3liza). AC-001/002/008 tienen detalles pendientes; AC-011 es supuesto.
 - [OQ-002](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#4-oq-002--borradores-de-p%C3%B3lizas-descuadradas), [OQ-008](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#10-oq-008--estados-adicionales-de-accountingpolicy), [OQ-010](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#12-oq-010--tipos-adicionales-de-p%C3%B3liza), [OQ-013](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#15-oq-013--supplier-y-customer-como-entidades); [Análisis §10: numeración todavía abierta](../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#10-p%C3%B3lizas-contables).
+
+## Contexto de ejecución
+
+**Modo actual:** Actualización pendiente. Implementar y comprobar únicamente CA-006-14: calendario accesible de fecha en creación y edición, dentro del periodo, con teclado, periodo visible, error localizado y conservación del formulario.
+
+**Paquete funcional:** esta spec contiene el alcance autoritativo de pólizas, partidas, balance, estados, relaciones CFDI, auditoría, contratos y criterios. Consultar SPEC-001/002/003/004 sólo para los contratos vigentes que este cambio consume.
+
+**Fuentes consolidadas:** las fuentes enlazadas arriba, las decisiones locales y los contratos preparados ya consolidan el comportamiento contable para esta actualización. No recargar Planeación durante la ejecución normal ni reinterpretar las reglas de pólizas fuera de CA-006-14.
+
+**Reabrir fuentes cuando:** cambie una regla contable o un contrato de dependencia, aparezca contradicción, un pendiente afecte la fecha dentro del periodo o el usuario solicite modificar el comportamiento.
 
 ## Comportamiento y criterios de aceptación
 
@@ -37,7 +47,8 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 | CA-006-10 | Se registra un ingreso/egreso PUE con cuentas y partidas elegidas por el contador. | El XML queda trazable a la póliza y sus cuentas; no se deciden automáticamente asientos ni tratamiento fiscal. |
 | CA-006-11 | Se consulta la trazabilidad desde una póliza o un XML con permisos suficientes. | Se muestran documentos, pólizas, partidas/cuentas y periodos asociados; complementos y pagos se integran según SPEC-007. |
 | CA-006-12 | Un usuario sin acceso intenta consultar, modificar o contabilizar una póliza de otra empresa. | No puede realizar la operación ni obtener sus datos. |
-| CA-006-13 | El contador modifica manualmente cuentas o partidas de una póliza cuya edición está permitida. | Los cambios válidos se conservan y pueden consultarse, manteniendo las validaciones y auditoría aplicables. La política de edición de POSTED debe resolverse antes de Lista. |
+| CA-006-13 | El contador modifica manualmente cuentas o partidas de una póliza cuya edición está permitida. | Los cambios válidos se conservan y pueden consultarse, manteniendo las validaciones y auditoría aplicables, incluida la exigencia de que una póliza POSTED continúe balanceada. |
+| CA-006-14 | El usuario selecciona la fecha al crear o editar una póliza. | El control de calendario hace visibles el día, mes y año en español, permite elegir o escribir la fecha con teclado y comunica el periodo contable permitido. Los días fuera del periodo no se pueden elegir; si se introduce manualmente una fecha inválida, el error aparece junto al control sin perder el resto de la captura. |
 
 ## Decisiones cerradas
 
@@ -46,6 +57,7 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 - `POSTED` puede editarse, pero cualquier actualización debe continuar balanceada y conserva su estado. La creación y actualización conservan creador, último editor y marcas de tiempo.
 - Las relaciones de CFDI son opcionales, solo pueden usar documentos de la misma empresa y pueden cruzar periodos. La relación es con la póliza, no con cada partida.
 - La columna Día del editor es la fecha de la póliza derivada para cada renglón; no se almacena como atributo de partida.
+- La fecha de la póliza usa un control de calendario accesible y legible en español, limitado visualmente al periodo seleccionado. La validación autoritativa de pertenencia al periodo permanece en backend; mejorar el control no cambia el contrato ni introduce una regla contable nueva.
 
 ## Pendientes y decisiones
 
@@ -56,7 +68,7 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 ## Plan técnico y contratos
 
 - Backend: contratos de póliza/partidas, contabilización y relaciones con CFDI, dentro de una transacción; valida contexto, cuentas y empresa mediante SPEC-002/003/004.
-- Frontend: modal ancho con encabezado, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. Las reglas vienen del backend.
+- Frontend: modal ancho con encabezado, calendario de fecha con contexto de periodo y error próximo al control, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. El calendario debe ser operable con puntero y teclado, conservar el resto del formulario ante un error y no exige una dependencia específica. Las reglas vienen del backend.
 - SPEC-004 consume las relaciones `POSTED` para su indicador; SPEC-007 agrega pagos y SPEC-008 consume las partidas contabilizadas sin duplicar contratos.
 
 ### Contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos
@@ -73,13 +85,15 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 
 ## Verificación
 
-**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 42 pruebas y 350 aserciones; la suite incluye 10 pruebas y 58 aserciones focalizadas en SPEC-006, con CFDI sin pólizas, una y varias pólizas entre periodos, partidas/cuentas, pólizas sin CFDI, aislamiento entre empresas y usuario sin acceso. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron. No se ejecutó navegador, Playwright ni E2E por la restricción vigente.
+**Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 42 pruebas y 350 aserciones; la suite incluye 10 pruebas y 58 aserciones focalizadas en SPEC-006, con CFDI sin pólizas, una y varias pólizas entre periodos, partidas/cuentas, pólizas sin CFDI, aislamiento entre empresas y usuario sin acceso. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron.
 
 **Evidencia de continuidad 2026-09-08:** `./vendor/bin/sail artisan test --compact tests/Feature/Spec006Test.php` pasó con 15 pruebas y 114 aserciones. Cubre rechazo y rollback de cuenta o CFDI de otra empresa, `404` al consultar/modificar/contabilizar sin autorización, conservación de `created_by`, cambio correcto de `updated_by`, marcas de tiempo, edición balanceada de `POSTED` y serialización exacta de `999999999999.999999` a seis decimales tanto desde póliza como desde detalle fiscal. La regresión completa pasó con 72 pruebas y 650 aserciones.
 
 **Revisiones de implementación:** backend parte de `868b20eaaa24c387e7e80f97a5798f024a4582e4` y frontend de `597bdc5f71c2ee071ce173ddc81167f2a7461bd7`; estas correcciones permanecen como cambios locales posteriores a esos commits. La documentación parte de `4e38ac5cc0b7dd2cd6900f49cb8b7ed48b127410` con cambios locales conservados. Al confirmar esta revisión documental, su hash real debe registrarse en `SPEC_REVISION` de ambos consumidores.
 
-La suite cubre DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, cuentas/XML de otra empresa, autorización, auditoría mínima y edición válida de POSTED. Permanecen pendientes los recorridos interactivos y los escenarios manuales de ingreso/egreso que exigen navegador.
+La suite cubre DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, cuentas/XML de otra empresa, autorización, auditoría mínima y edición válida de POSTED. CA-006-14 fue preparado documentalmente el 2026-09-10 y todavía no cuenta con implementación ni evidencia técnica.
+
+**QA humana:** no iniciada. Al cerrar técnicamente CA-006-14, validar visualmente selección por puntero, captura por teclado, límites del periodo y conservación del formulario tras error; sólo la aprobación humana registrada permite marcar la spec Implementada.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -90,5 +104,7 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado. Se conservan supuestos y pendientes; no se declara comportamiento implementado.
 - **2026-09-08:** se prepara la implementación con editor tabular: numeración por empresa–periodo–tipo, fecha dentro del periodo, DRAFT sin partidas, POSTED balanceada editable y relaciones CFDI por póliza. Pasa a Lista; la evidencia se registra después de implementar.
 - **2026-09-08:** se implementaron pólizas, partidas y relaciones con CFDI, junto con la evidencia automatizada aplicable.
-- **2026-09-08:** se cerró el contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos; se implementó en el detalle del CFDI con aislamiento por empresa y cobertura automatizada. Permanece pendiente la comprobación interactiva por la restricción de no usar navegador.
+- **2026-09-08:** se cerró el contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos; se implementó en el detalle del CFDI con aislamiento por empresa y cobertura automatizada.
 - **2026-09-08:** se eliminó el uso de `float` en recursos de importes y totales, y se amplió la cobertura de aislamiento, atomicidad, autorización, auditoría y edición balanceada de pólizas contabilizadas.
+- **2026-09-10:** por observación explícita del usuario se preparó CA-006-14 para mejorar el calendario de fecha en nueva póliza y edición. Se reclasificó como Actualización pendiente; no se modificó código ni se registró evidencia de implementación.
+- **2026-09-10:** conforme a DP-004, el cierre técnico de CA-006-14 llevará la spec a QA; la validación visual será responsabilidad humana.

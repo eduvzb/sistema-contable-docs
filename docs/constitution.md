@@ -21,7 +21,3 @@ Una fuente inferior no modifica silenciosamente una superior. La precedencia no 
 Las contradicciones se resuelven en la fuente responsable antes de implementar el comportamiento afectado. El [mapa de fuentes](fuentes.md) distingue alcance, reglas, supuestos y material de apoyo.
 
 Cambiar un principio es excepcional: debe identificarse el principio, explicar por qué dejó de ser adecuado y dejar constancia del cambio. Las necesidades puntuales no justifican modificar esta constitución.
-
-## Registro
-
-- **2026-09-07 — Simplificación autorizada:** se condensaron los siete principios sin cambiar su sentido; se conservaron jerarquía, gobierno y límites de las excepciones. El detalle operativo queda en el [flujo SDD](flujo-spec.md) y las elecciones técnicas en [decisiones](decisiones.md). Motivo: evitar repetición y hacer aplicable la constitución en cada cambio.
