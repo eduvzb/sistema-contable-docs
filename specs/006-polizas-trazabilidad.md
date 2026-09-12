@@ -1,6 +1,6 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-**Estado:** Actualización pendiente
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md)
 
@@ -19,11 +19,11 @@ Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcion
 
 ## Contexto de ejecución
 
-**Modo actual:** Actualización pendiente. Implementar y comprobar únicamente CA-006-14: calendario accesible de fecha en creación y edición, dentro del periodo, con teclado, periodo visible, error localizado y conservación del formulario.
+**Modo actual:** QA. CA-006-14 modificado y CA-006-15 a CA-006-18 están implementados y comprobados técnicamente en frontend; el PR [front #7](https://github.com/eduvzb/sistema-contable-front/pull/7) permanece abierto. Sólo falta la validación visual humana del calendario, captura y ancho de escritorio. La evidencia anterior conserva validez para el comportamiento no modificado.
 
 **Paquete funcional:** esta spec contiene el alcance autoritativo de pólizas, partidas, balance, estados, relaciones CFDI, auditoría, contratos y criterios. Consultar SPEC-001/002/003/004 sólo para los contratos vigentes que este cambio consume.
 
-**Fuentes consolidadas:** las fuentes enlazadas arriba, las decisiones locales y los contratos preparados ya consolidan el comportamiento contable para esta actualización. No recargar Planeación durante la ejecución normal ni reinterpretar las reglas de pólizas fuera de CA-006-14.
+**Fuentes consolidadas:** las fuentes enlazadas arriba, las decisiones locales y los contratos preparados ya consolidan el comportamiento contable para esta actualización. No recargar Planeación durante la ejecución normal ni reinterpretar las reglas de pólizas fuera de CA-006-14 a CA-006-18.
 
 **Reabrir fuentes cuando:** cambie una regla contable o un contrato de dependencia, aparezca contradicción, un pendiente afecte la fecha dentro del periodo o el usuario solicite modificar el comportamiento.
 
@@ -48,7 +48,20 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 | CA-006-11 | Se consulta la trazabilidad desde una póliza o un XML con permisos suficientes. | Se muestran documentos, pólizas, partidas/cuentas y periodos asociados; complementos y pagos se integran según SPEC-007. |
 | CA-006-12 | Un usuario sin acceso intenta consultar, modificar o contabilizar una póliza de otra empresa. | No puede realizar la operación ni obtener sus datos. |
 | CA-006-13 | El contador modifica manualmente cuentas o partidas de una póliza cuya edición está permitida. | Los cambios válidos se conservan y pueden consultarse, manteniendo las validaciones y auditoría aplicables, incluida la exigencia de que una póliza POSTED continúe balanceada. |
-| CA-006-14 | El usuario selecciona la fecha al crear o editar una póliza. | El control de calendario hace visibles el día, mes y año en español, permite elegir o escribir la fecha con teclado y comunica el periodo contable permitido. Los días fuera del periodo no se pueden elegir; si se introduce manualmente una fecha inválida, el error aparece junto al control sin perder el resto de la captura. |
+| CA-006-14 | El usuario selecciona la fecha al crear o editar una póliza. | El control hace visibles el día, mes y año en español y permite elegir o escribir la fecha con teclado. El calendario muestra únicamente el periodo contable aplicable y no permite elegir días fuera de él; si se introduce manualmente una fecha inválida, el error aparece junto al control sin perder el resto de la captura. No se muestra el copy permanente “Periodo contable: … Solo puedes elegir fechas de este periodo. Usa Tab y Enter para elegir una fecha”. |
+| CA-006-15 | El usuario abre el calendario de fecha durante la creación o edición. | El calendario aparece superpuesto sobre los demás elementos, permanece visible y operable dentro del área disponible, y abrirlo o cerrarlo no desplaza contenido, cambia las dimensiones del editor ni agrega scroll horizontal o vertical. |
+| CA-006-16 | El usuario abre la creación de una póliza nueva. | El editor inicia con exactamente una partida vacía lista para capturar. Al editar una póliza se muestran sus partidas conservadas y no se agrega una partida vacía implícita. |
+| CA-006-17 | En una partida capturada, el usuario termina un cargo o abono y presiona `Enter`. | Si la partida tiene una cuenta operable y exactamente uno de cargo o abono contiene un importe positivo válido, queda disponible una sola partida vacía posterior: se agrega al final cuando no existe y el foco pasa a su control de cuenta. `Enter` no guarda ni contabiliza la póliza. Si la partida no es válida, no se agrega otra y la captura actual se conserva para corregirla. |
+| CA-006-18 | El usuario captura una póliza en un viewport de escritorio de al menos 1280 píxeles CSS de ancho. | Puede ver y operar los campos, totales y acciones del editor sin scroll horizontal en el diálogo ni en la tabla de partidas. En anchos menores, el contenido sigue siendo operable y puede recurrir a desplazamiento horizontal sin quedar cortado. |
+
+### Análisis de hallazgos 2026-09-12
+
+| Hallazgo | Comportamiento actual que falla o puede mejorar | Comportamiento esperado | Impacto documental | Componentes |
+|---|---|---|---|---|
+| El calendario expande el editor y genera scroll; además muestra un copy que debe retirarse. | El calendario vive dentro de un contenedor desplazable y el texto de ayuda ocupa espacio permanente, por lo que abrirlo puede alterar el layout. | El calendario se superpone sin cambiar dimensiones ni scroll según CA-006-14/15; se elimina el copy indicado sin retirar los errores localizados ni las etiquetas accesibles. | Se modifica CA-006-14 y se agrega CA-006-15; se ajusta la decisión local del calendario. | Frontend. La validación autoritativa de fecha del backend no cambia. |
+| La creación inicia sin partidas. | El usuario debe accionar “Agregar partida” antes de comenzar la captura. | Una póliza nueva abre con una partida vacía; la edición no altera las partidas persistidas, según CA-006-16. | Se agrega CA-006-16 y una decisión local. | Frontend. El payload y las reglas DRAFT/POSTED no cambian. |
+| `Enter` en cargo o abono no continúa la captura. | Terminar un importe no crea ni enfoca el siguiente renglón. | Una partida válida al final crea exactamente un renglón vacío y mueve el foco según CA-006-17, sin disparar el guardado. | Se agrega CA-006-17 y se define qué significa “partida válida” para esta interacción. | Frontend. El backend sigue validando autoritativamente al guardar. |
+| El editor requiere scroll horizontal durante la captura normal. | El diálogo disponible es menor que el ancho mínimo de la tabla, por lo que campos y acciones quedan fuera de vista. | En escritorio desde 1280 px se ve la captura completa sin scroll horizontal; en anchos menores se preserva operabilidad según CA-006-18. | Se agrega CA-006-18 y una decisión local de presentación. | Frontend. |
 
 ## Decisiones cerradas
 
@@ -57,7 +70,10 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 - `POSTED` puede editarse, pero cualquier actualización debe continuar balanceada y conserva su estado. La creación y actualización conservan creador, último editor y marcas de tiempo.
 - Las relaciones de CFDI son opcionales, solo pueden usar documentos de la misma empresa y pueden cruzar periodos. La relación es con la póliza, no con cada partida.
 - La columna Día del editor es la fecha de la póliza derivada para cada renglón; no se almacena como atributo de partida.
-- La fecha de la póliza usa un control de calendario accesible y legible en español, limitado visualmente al periodo seleccionado. La validación autoritativa de pertenencia al periodo permanece en backend; mejorar el control no cambia el contrato ni introduce una regla contable nueva.
+- La fecha de la póliza usa un control de calendario accesible y legible en español, limitado visualmente al periodo seleccionado y presentado como una capa que no altera el layout. El periodo se comunica dentro del calendario, por su contenido y etiquetas accesibles, y mediante errores cuando corresponda; no se conserva un texto instructivo permanente. La validación autoritativa de pertenencia al periodo permanece en backend.
+- Una póliza nueva presenta una partida vacía inicial. La creación automática de la siguiente partida es sólo una ayuda de captura: exige cuenta operable y un único importe positivo válido, evita duplicar renglones vacíos y no sustituye la validación al guardar.
+- El editor aprovecha el ancho disponible en escritorio para mantener visible una fila completa durante la captura normal; la adaptación a pantallas menores no elimina campos ni acciones.
+- La actualización frontend se verifica conforme a DT-012 con Vitest, entorno `jsdom`, React Testing Library y simulación de interacción de usuario. Las pruebas se expresan mediante roles, etiquetas, foco, contenido y efectos observables; no acoplan la cobertura a estado interno ni sustituyen con snapshots los criterios de comportamiento. Playwright y las pruebas integrales por navegador no son requisito de cierre de esta actualización.
 
 ## Pendientes y decisiones
 
@@ -68,7 +84,8 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 ## Plan técnico y contratos
 
 - Backend: contratos de póliza/partidas, contabilización y relaciones con CFDI, dentro de una transacción; valida contexto, cuentas y empresa mediante SPEC-002/003/004.
-- Frontend: modal ancho con encabezado, calendario de fecha con contexto de periodo y error próximo al control, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. El calendario debe ser operable con puntero y teclado, conservar el resto del formulario ante un error y no exige una dependencia específica. Las reglas vienen del backend.
+- Frontend: editor ancho con encabezado, calendario de fecha superpuesto y error próximo al control, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. El calendario debe ser operable con puntero y teclado y conservar el resto del formulario ante un error. La creación inicia con una partida vacía; `Enter` en el importe de una última partida válida prepara y enfoca la siguiente sin enviar el formulario. Las reglas vienen del backend.
+- Pruebas frontend: incorporar la configuración mínima de Vitest con `jsdom`, React Testing Library, `@testing-library/user-event` y matchers de `@testing-library/jest-dom`, ejecutable mediante `pnpm test`. Cubrir `AccountingPolicyEditor` en su frontera de componente, sustituyendo la API y demás dependencias externas necesarias para observar el comportamiento sin levantar backend ni navegador.
 - SPEC-004 consume las relaciones `POSTED` para su indicador; SPEC-007 agrega pagos y SPEC-008 consume las partidas contabilizadas sin duplicar contratos.
 
 ### Contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos
@@ -89,11 +106,28 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 
 **Evidencia de continuidad 2026-09-08:** `./vendor/bin/sail artisan test --compact tests/Feature/Spec006Test.php` pasó con 15 pruebas y 114 aserciones. Cubre rechazo y rollback de cuenta o CFDI de otra empresa, `404` al consultar/modificar/contabilizar sin autorización, conservación de `created_by`, cambio correcto de `updated_by`, marcas de tiempo, edición balanceada de `POSTED` y serialización exacta de `999999999999.999999` a seis decimales tanto desde póliza como desde detalle fiscal. La regresión completa pasó con 72 pruebas y 650 aserciones.
 
-**Revisiones de implementación:** backend parte de `868b20eaaa24c387e7e80f97a5798f024a4582e4` y frontend de `597bdc5f71c2ee071ce173ddc81167f2a7461bd7`; estas correcciones permanecen como cambios locales posteriores a esos commits. La documentación parte de `4e38ac5cc0b7dd2cd6900f49cb8b7ed48b127410` con cambios locales conservados. Al confirmar esta revisión documental, su hash real debe registrarse en `SPEC_REVISION` de ambos consumidores.
+**Evidencia histórica de la versión de CA-006-14 preparada el 2026-09-10:** el frontend implementó un campo editable `DD/MM/AAAA`, calendario en español limitado al periodo seleccionado, operación por teclado, ayuda contextual del periodo, validación localizada junto al control y conservación del resto de la captura ante una fecha inválida. La fecha seleccionada se transforma al `AAAA-MM-DD` que ya consume el backend; no se modificó el contrato ni la validación autoritativa del backend. Comprobaciones frontend ejecutadas: `pnpm lint`, `pnpm typecheck` y `pnpm build`, todas aprobadas. Implementación: frontend, rama `codex/SPEC-006`, commit `d7287c1d50a9eaf9aa55968f1596aebfa9fda23c` (`SPEC-006: mejora el calendario de pólizas`), remoto `origin`, PR [#3](https://github.com/eduvzb/sistema-contable-front/pull/3), fusionado en `main` mediante el merge commit `80cf438eefdb517c41e27a9d394fbf9202e43ce6`. Backend no fue afectado.
 
-La suite cubre DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, cuentas/XML de otra empresa, autorización, auditoría mínima y edición válida de POSTED. CA-006-14 fue preparado documentalmente el 2026-09-10 y todavía no cuenta con implementación ni evidencia técnica.
+**Cierre técnico 2026-09-12:** CA-006-14 modificado y CA-006-15 a CA-006-18 se implementaron en frontend. El calendario es una capa superpuesta y se retiró el copy permanente; la creación inicia con una partida vacía; `Enter` en un cargo o abono válido prepara y enfoca la siguiente partida sin guardar; y el editor aprovecha el ancho de escritorio. `pnpm test` aprobó 2 archivos y 9 pruebas; `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check` aprobaron. Implementación: rama `codex/fix/SPEC-006/policy-editor-capture`, commit `c8837791fda157154436073f9a3890fea78a5eb3` (`SPEC-006: mejora la captura de pólizas`), actualizado con `main` en `7947c0044c775cb17050fe8f6b157e92dd85d9ee`, remoto `origin` y PR [front #7](https://github.com/eduvzb/sistema-contable-front/pull/7) abierto. Backend no fue afectado.
 
-**QA humana:** no iniciada. Al cerrar técnicamente CA-006-14, validar visualmente selección por puntero, captura por teclado, límites del periodo y conservación del formulario tras error; sólo la aprobación humana registrada permite marcar la spec Implementada.
+**Revisiones de implementación:** backend parte de `868b20eaaa24c387e7e80f97a5798f024a4582e4`; la actualización frontend está en `7947c0044c775cb17050fe8f6b157e92dd85d9ee`, publicada en `origin/codex/fix/SPEC-006/policy-editor-capture` mediante PR [#7](https://github.com/eduvzb/sistema-contable-front/pull/7) abierto. La documentación conserva cambios locales compartidos; su revisión real debe registrarse en `SPEC_REVISION` de ambos consumidores al confirmarla.
+
+La suite cubre DRAFT desbalanceada, rechazo de POSTED desbalanceada, póliza balanceada, ausencia y multiplicidad de XML, cuentas/XML de otra empresa, autorización, auditoría mínima y edición válida de POSTED. La versión anterior de CA-006-14 cuenta con implementación y evidencia técnica frontend; no se ejecutó una comprobación integral de interfaz por navegador como criterio de cierre. Un intento puntual del recorrido existente no alcanzó el editor porque reutilizó un servidor preexistente sin el estado de prueba esperado; se conserva como incidencia de entorno, no como evidencia de producto.
+
+**Cierre técnico:** CA-006-14 modificado y CA-006-15 a CA-006-18 cuentan con implementación y comprobaciones técnicas. La evidencia anterior permanece vigente para contratos, reglas contables y comportamiento no modificado.
+
+La cobertura frontend ejecutada sustituye las pruebas de integración por navegador para esta actualización:
+
+| Criterios | Pruebas de componentes y comportamiento ejecutadas |
+|---|---|
+| CA-006-14/15 | Renderizar creación y edición; abrir/cerrar el calendario por botón y teclado; comprobar mes/año y días disponibles; seleccionar y escribir fecha; mostrar el error localizado conservando el resto de la captura; verificar que el copy retirado no esté presente. La superposición real y la ausencia de cambios de layout se reservan a QA visual. |
+| CA-006-16 | Comprobar que creación inicia con exactamente una partida vacía y que edición presenta únicamente las partidas recibidas, sin agregar otra implícita. |
+| CA-006-17 | Simular `Enter` en cargo y abono para los casos válido, inválido y con renglón vacío posterior; comprobar que existe como máximo una nueva partida, que el foco pasa a su cuenta y que no se invocan guardado, contabilización ni API. |
+| CA-006-18 | Comprobar a nivel de componente que todos los campos, totales y acciones continúan renderizados y accesibles. La ausencia efectiva de scroll horizontal a 1280 px y la operabilidad responsiva se validan visualmente porque `jsdom` no calcula layout. |
+
+No se ejecutó ni se exige Playwright o una prueba integral de interfaz por navegador. QA humana debe validar calendario superpuesto y sin copy, captura por teclado, partida inicial y continuación con `Enter`, ancho sin scroll horizontal en escritorio, límites del periodo y conservación del formulario tras error, tanto al crear como al editar cuando aplique. Su aprobación registrada permitirá marcar la spec como Implementada.
+
+**Evidencia histórica de bloqueo 2026-09-10:** el primer preflight SDD se detuvo antes de crear ramas o modificar backend/frontend. Ambos árboles estaban limpios en `main`; sin embargo, `git ls-remote --heads origin main refs/heads/codex/SPEC-006` no pudo resolver `github.com` en backend ni frontend, y `gh auth status` reportó inválido el token de `eduvzb`. Conforme a `docs/flujo-spec.md`, no se crearon ramas, commits, pushes ni PRs en ese intento. El diagnóstico del código confirmó que el backend ya validaba `entry_date` contra el periodo y que el editor frontend todavía usaba un `<input type="date">`; no se declaró implementación ni evidencia técnica nueva.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -108,3 +142,9 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-08:** se eliminó el uso de `float` en recursos de importes y totales, y se amplió la cobertura de aislamiento, atomicidad, autorización, auditoría y edición balanceada de pólizas contabilizadas.
 - **2026-09-10:** por observación explícita del usuario se preparó CA-006-14 para mejorar el calendario de fecha en nueva póliza y edición. Se reclasificó como Actualización pendiente; no se modificó código ni se registró evidencia de implementación.
 - **2026-09-10:** conforme a DP-004, el cierre técnico de CA-006-14 llevará la spec a QA; la validación visual será responsabilidad humana.
+- **2026-09-10:** el preflight para implementar CA-006-14 quedó bloqueado por resolución de `github.com` y autenticación inválida de `gh`; no se modificaron backend/frontend ni se alteró el estado de la spec.
+- **2026-09-10:** se implementó CA-006-14 en frontend, se aprobaron lint, typecheck y build, y se publicó el PR [#3](https://github.com/eduvzb/sistema-contable-front/pull/3). SPEC-006 pasa a QA; la validación visual humana queda pendiente.
+- **2026-09-12:** se verificó que el PR [#3](https://github.com/eduvzb/sistema-contable-front/pull/3) fue fusionado en `main` (`80cf438`); se actualiza únicamente el relevo documental y se conserva pendiente la validación visual humana.
+- **2026-09-12:** se prepararon las observaciones posteriores de interfaz: CA-006-14 se modifica para retirar el copy permanente; CA-006-15 a CA-006-18 definen superposición del calendario, partida inicial, continuación con `Enter` y ancho de captura. La spec vuelve a Actualización pendiente; no se modificó código ni se registró evidencia técnica nueva.
+- **2026-09-12:** por decisión explícita del usuario, la comprobación automatizada de CA-006-14 a CA-006-18 se prepara como pruebas de componentes y comportamiento con Vitest + React Testing Library en lugar de pruebas de integración por navegador. DT-012 generaliza esta política para el frontend y la validación de layout real permanece en QA humana.
+- **2026-09-12:** se implementaron y comprobaron técnicamente CA-006-14 modificado y CA-006-15 a CA-006-18 en frontend. `pnpm test` (2 archivos, 9 pruebas), lint, typecheck, build y `git diff --check` aprobaron; se publicó el PR [front #7](https://github.com/eduvzb/sistema-contable-front/pull/7). La spec pasa a QA y queda pendiente exclusivamente la validación visual humana.

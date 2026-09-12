@@ -4,16 +4,16 @@ Una spec por funcionalidad, compartida por backend y frontend. Para trabajar usa
 
 ## Orden y dependencias
 
-SPEC-001, SPEC-002, SPEC-005 y SPEC-007 a SPEC-009 están en **QA**: su implementación y comprobaciones técnicas están completas y sólo resta validación visual humana. SPEC-003, SPEC-004 y SPEC-006 están en **Actualización pendiente**: conservan su comportamiento y evidencia anteriores, pero tienen criterios preparados el 2026-09-10 todavía no implementados ni verificados. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
+Todas las specs están en **QA**: su implementación y comprobaciones técnicas están completas y sólo resta validación visual humana. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
 
 | Spec | Funcionalidad | Dependencias de preparación |
 |---|---|---|
 | [SPEC-001](001-acceso-usuarios-empresas.md) | Acceso, usuarios y empresas — **QA** | Ninguna |
 | [SPEC-002](002-contexto-contable.md) | Contexto contable — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md) |
-| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
+| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
+| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
 | [SPEC-005](005-descarga-simulada.md) | Descarga simulada — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md) |
-| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
+| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
 | [SPEC-007](007-ppd-complementos.md) | PPD y complementos — **QA** (trazabilidad documental) | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md) |
 | [SPEC-008](008-balanza-basica.md) | Balanza básica — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md) |
 | [SPEC-009](009-reportes-exportacion.md) | Reportes y exportación — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) |
@@ -130,3 +130,13 @@ Variantes: ingreso y egreso PUE, factura PPD pendiente, pago parcial y pagos en 
 Las pruebas del producto y la demostración con contadores de las specs aún no implementadas **no se ejecutaron**. SPEC-001 conserva su evidencia real en su propia sección de verificación; el resto de esta revisión se refiere a documentación.
 
 **2026-09-10 — Reclasificación documental.** Se incorporaron Actualización pendiente y QA al flujo SDD. Actualización pendiente se aplicó a SPEC-002, SPEC-003, SPEC-004 y SPEC-006 por sus criterios nuevos; SPEC-001, SPEC-005 y SPEC-007 a SPEC-009 pasaron a QA porque sólo resta validación visual humana. La reclasificación no modifica la evidencia histórica ni incluyó pruebas de producto.
+
+**2026-09-10 — Cierre técnico de SPEC-003.** CA-003-11/12 quedaron implementados y comprobados técnicamente en frontend; la spec pasó a QA. La validación visual humana de búsqueda, limpieza, recuento y jerarquía sigue pendiente.
+
+**2026-09-12 — Actualización de relevo de SPEC-006.** CA-006-14 quedó implementado y comprobado técnicamente en frontend en `d7287c1`; el PR [#3](https://github.com/eduvzb/sistema-contable-front/pull/3) fue fusionado en `main` (`80cf438`). SPEC-006 queda en QA; la validación visual humana sigue pendiente.
+
+**2026-09-12 — Preparación de hallazgos de acceso, contexto y pólizas.** SPEC-001 vuelve a Actualización pendiente por CA-001-17 (destino directo desde `/`); SPEC-002, por CA-002-09 (selector de empresa con búsqueda); y SPEC-006, por CA-006-14 modificado y CA-006-15 a CA-006-18 (calendario superpuesto sin copy permanente, partida inicial, continuación con `Enter` y ancho de captura). Son cambios de frontend sin modificación de contratos backend ni reglas de negocio; no se implementó ni se registró evidencia técnica nueva.
+
+**2026-09-12 — Cierre técnico de SPEC-002.** CA-002-09 quedó implementado y comprobado técnicamente en frontend; `pnpm test` (3 pruebas), typecheck, lint y build aprobaron. Se publicó el PR [front #5](https://github.com/eduvzb/sistema-contable-front/pull/5); la spec pasa a QA para validación visual humana.
+
+**2026-09-12 — Cierre técnico de SPEC-006.** CA-006-14 modificado y CA-006-15 a CA-006-18 quedaron implementados y comprobados técnicamente en frontend. `pnpm test` (2 archivos, 9 pruebas), lint, typecheck, build y `git diff --check` aprobaron. Se publicó el PR [front #7](https://github.com/eduvzb/sistema-contable-front/pull/7); la spec pasa a QA para validación visual humana.

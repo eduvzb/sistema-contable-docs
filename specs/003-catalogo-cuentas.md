@@ -1,6 +1,6 @@
 # SPEC-003 — Catálogo de cuentas
 
-**Estado:** Actualización pendiente
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md)
 
@@ -18,7 +18,7 @@ No incluye mapeo automático al catálogo SAT, patrones ni migración histórica
 
 ## Contexto de ejecución
 
-**Modo actual:** Actualización pendiente. Implementar y comprobar únicamente CA-003-11/12: búsqueda tolerante, limpieza, recuento, estado vacío y conservación de la jerarquía. No reabrir ni repetir la implementación ya evidenciada de los demás criterios salvo una regresión.
+**Modo actual:** QA. La implementación y las comprobaciones técnicas de CA-003-11/12 están completas; sólo resta la validación visual humana de búsqueda tolerante, limpieza, recuento, estado vacío y conservación de la jerarquía.
 
 **Paquete funcional:** esta spec contiene el alcance autoritativo del catálogo, sus reglas de aislamiento, jerarquía, importación, edición, contratos y criterios. Consultar SPEC-001 para autorización y SPEC-002 para empresa/periodo cuando el código lo requiera.
 
@@ -104,11 +104,17 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). SPEC-006 
 | CA-003-06/10; aislamiento de partidas y protección posterior al primer uso | `./vendor/bin/sail artisan test --compact tests/Feature/Spec003Test.php`: 16 pruebas y 112 aserciones aprobadas. Rechaza con `422` cambios de código, naturaleza o padre sin alterar los datos originales; permite nombre y estado. La cobertura de pólizas rechaza cuentas ajenas y confirma rollback completo. |
 | Regresión completa posterior a la integración | `./vendor/bin/sail artisan test --compact`: 72 pruebas y 650 aserciones aprobadas. |
 
-El rechazo de cuentas inactivas/agrupadoras en nuevas partidas (parte de CA-003-03), el aislamiento al registrar partidas (CA-003-06) y el bloqueo estructural después del primer uso (CA-003-10) están comprobados en backend. La spec está en **Actualización pendiente** porque CA-003-11/12 todavía requieren implementación y comprobación técnica.
+El rechazo de cuentas inactivas/agrupadoras en nuevas partidas (parte de CA-003-03), el aislamiento al registrar partidas (CA-003-06) y el bloqueo estructural después del primer uso (CA-003-10) están comprobados en backend. La spec está en **QA** porque CA-003-11/12 ya cuentan con implementación y comprobación técnica; sólo resta la validación visual humana.
 
-CA-003-03/06/10 ya cuentan con cobertura de integración automatizada mediante SPEC-006. CA-003-11/12 fueron preparados documentalmente el 2026-09-10 y todavía no cuentan con implementación ni evidencia.
+CA-003-03/06/10 ya cuentan con cobertura de integración automatizada mediante SPEC-006. CA-003-11/12 fueron implementados en frontend y comprobados técnicamente el 2026-09-10.
 
-**QA humana:** no iniciada. Al cerrar técnicamente CA-003-11/12, validar visualmente búsqueda, limpieza, recuento y jerarquía; sólo la aprobación humana registrada permite marcar la spec Implementada.
+**2026-09-10 — Cierre técnico de CA-003-11/12:** el frontend normaliza código, nombre y término con Unicode NFD para ignorar mayúsculas y acentos; cuenta sólo las coincidencias directas, conserva los ancestros necesarios al renderizar la jerarquía, muestra el recuento contextual y ofrece estados vacíos con acciones para limpiar la búsqueda o restablecer filtros. La limpieza actualiza la continuidad de URL con `router.replace`, conserva la vista y devuelve el foco al campo de búsqueda. No cambió el contrato API ni el backend.
+
+| CA-003-11/12 | `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check` en `sistema-contable-frontend`: aprobados. Implementación en `src/components/company-workspace.tsx`; rama `codex/SPEC-003`, commit `f9f30d6fbacba0ef1db090532530f07d5a43f390`, publicada en `origin/codex/SPEC-003`. |
+
+Con este cierre técnico, la spec pasa a **QA**. No se ejecutó una comprobación integral por navegador; la validación visual humana debe confirmar búsqueda por código/nombre con diferencias de mayúsculas y acentos, recuento, ancestros visibles, estado sin resultados, limpieza y recuperación del foco.
+
+**QA humana:** no iniciada. Sólo la aprobación humana registrada permite marcar la spec Implementada.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -121,3 +127,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-08:** se hizo autoritativo el bloqueo de código, naturaleza y padre después de la primera partida, conservando editables nombre y estado; se añadió cobertura de aislamiento y atomicidad.
 - **2026-09-10:** por observación explícita del usuario se prepararon CA-003-11/12 para mejorar la búsqueda del catálogo, su limpieza, recuento y comprensión jerárquica. Se reclasificó como Actualización pendiente; no se modificó código ni se registró evidencia de implementación.
 - **2026-09-10:** conforme a DP-004, el cierre técnico de CA-003-11/12 llevará la spec a QA; la validación visual será responsabilidad humana.
+- **2026-09-10:** se implementaron y comprobaron técnicamente CA-003-11/12 en frontend; la rama `codex/SPEC-003` se publicó con el commit `f9f30d6fbacba0ef1db090532530f07d5a43f390`. La spec pasa a QA y conserva pendiente la aprobación visual humana.

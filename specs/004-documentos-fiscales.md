@@ -1,6 +1,6 @@
 # SPEC-004 — Documentos fiscales
 
-**Estado:** Actualización pendiente
+**Estado:** QA
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md)
 
@@ -19,7 +19,7 @@ Incluye la bandeja de documentos y su situación contable derivada de pólizas. 
 
 ## Contexto de ejecución
 
-**Modo actual:** Actualización pendiente. Implementar y comprobar únicamente CA-004-09/10: limpieza del selector de XML y regresión del lote mixto duplicado+nuevo con reconciliación visible. Preservar la evidencia anterior y no ampliar el alcance fiscal.
+**Modo actual:** QA. CA-004-09/10 están implementados y comprobados técnicamente: limpieza del selector de XML, regresión del lote mixto duplicado+nuevo y reconciliación visible. Sólo queda la validación visual humana; no se amplía el alcance fiscal.
 
 **Paquete funcional:** esta spec contiene el alcance autoritativo de importación, conservación, duplicados, consulta, filtros, estados, contratos y criterios. Consultar SPEC-001 para autorización y SPEC-002 para contexto explícito; consultar SPEC-006 sólo para el contrato de relación ya definido.
 
@@ -80,13 +80,15 @@ Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contra
 
 **Continuidad de contexto 2026-09-08:** la bandeja ya no emite consultas sin `period_id`: sólo se monta después de validar explícitamente el periodo contra la empresa y limpia documentos/detalle al perderlo. `pnpm lint`, `pnpm build` y `pnpm typecheck` pasan.
 
-**Revisiones de implementación:** backend `7427840516423bb59f122e6db33eb890ba3bcbb8`; frontend `2020e0194c3ba998aa29a412005019ca8734bd15`.
+**Revisiones de implementación:** backend `23ddf6dd05ea08472fa48e7134beea0953f40377` ([PR #1](https://github.com/eduvzb/sistema-contable-back/pull/1), fusionado); frontend `4b43488718611e0b9e5088c2f1a7acacc6e3a24c` ([PR #2](https://github.com/eduvzb/sistema-contable-front/pull/2), fusionado). Las revisiones anteriores permanecen en la evidencia histórica de producto.
 
-Prever pruebas de conservación del original, extracción, duplicado reintentado dentro de la misma empresa, lote mixto según contrato, aislamiento de archivos y regresión DRAFT/POSTED. Para CA-004-09/10, comprobar un lote compuesto por un UUID existente y uno nuevo: respuesta por archivo, persistencia única, consulta inmediata del periodo correspondiente, limpieza del selector, explicación cuando los filtros lo oculten y disponibilidad coherente al relacionarlo en SPEC-006. El cálculo del indicador debe probarse al integrar SPEC-006.
+**Evidencia técnica de CA-004-09/10 — 2026-09-10:** CA-004-09 quedó cubierto en `src/components/fiscal-document-inbox.tsx`: el valor nativo del selector se limpia tras una respuesta completa y al cerrar/reabrir la sesión; la bandeja protege la reconciliación contra respuestas obsoletas y muestra documentos importados fuera del periodo o filtros visibles. CA-004-10 quedó cubierto por `Spec004Test::test_mixed_batch_reports_each_duplicate_once_and_reconciles_the_new_document`: el lote informa un duplicado y una incorporación, conserva exactamente dos documentos y ambos aparecen en la consulta autoritativa del periodo. `./vendor/bin/sail artisan test --compact tests/Feature/Spec004Test.php` pasó con 5 pruebas y 52 aserciones; la suite completa pasó con 73 pruebas y 661 aserciones; `vendor/bin/pint --dirty --format agent`, `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron.
 
-**Incidencia documentada 2026-09-10:** en una prueba manual, un lote con un CFDI previamente registrado y otro nuevo informó un rechazo y una incorporación; el nuevo no apareció en la bandeja, aunque sí estaba disponible al crear una póliza y un nuevo intento lo reconoció como duplicado para el RFC. Esto evidencia una divergencia de presentación o reconciliación, no autoriza duplicar el registro ni cambiar BR-010. CA-004-10 define la regresión pendiente; no se diagnosticó ni corrigió código en esta actualización.
+No se ejecutó una comprobación integral de interfaz por navegador, conforme a DP-004. QA humana debe recorrer la selección limpia, el resultado mixto, la bandeja reconciliada, los mensajes de periodo/filtros y la disponibilidad coherente al relacionar el CFDI en una póliza.
 
-**QA humana:** no iniciada. Al cerrar técnicamente CA-004-09/10, validar visualmente selección limpia, resultado del lote, bandeja y disponibilidad coherente al relacionar el CFDI; sólo la aprobación humana registrada permite marcar la spec Implementada.
+**Incidencia histórica documentada 2026-09-10:** en una prueba manual, un lote con un CFDI previamente registrado y otro nuevo informó un rechazo y una incorporación; el nuevo no apareció en la bandeja, aunque sí estaba disponible al crear una póliza y un nuevo intento lo reconoció como duplicado para el RFC. Esto evidenció una divergencia de presentación o reconciliación, no autorizó duplicar el registro ni cambiar BR-010. La regresión quedó corregida y comprobada en la evidencia de cierre técnico anterior.
+
+**QA humana:** pendiente. Validar visualmente selección limpia, resultado del lote, bandeja y disponibilidad coherente al relacionar el CFDI; sólo la aprobación humana registrada permite marcar la spec Implementada.
 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
@@ -101,3 +103,4 @@ Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, 
 - **2026-09-08:** se eliminó la variante de carga de bandeja sin periodo y se condicionó su montaje a un contexto empresa/periodo validado por backend.
 - **2026-09-10:** por observaciones explícitas del usuario se prepararon CA-004-09/10: limpieza del selector de XML y regresión del lote mixto duplicado+nuevo con reconciliación visible. Se reclasificó como Actualización pendiente y se registró la incidencia observada sin modificar código ni atribuirle todavía una causa.
 - **2026-09-10:** conforme a DP-004, el cierre técnico de CA-004-09/10 llevará la spec a QA; la validación visual será responsabilidad humana.
+- **2026-09-10:** se implementaron y comprobaron técnicamente CA-004-09/10; se publicaron y fusionaron backend `23ddf6d` en [PR #1](https://github.com/eduvzb/sistema-contable-back/pull/1) y frontend `4b43488` en [PR #2](https://github.com/eduvzb/sistema-contable-front/pull/2). La spec pasa a QA; la aprobación visual humana sigue pendiente.

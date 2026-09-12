@@ -22,9 +22,9 @@ Quedan fuera registro público, invitaciones por correo, edición de perfiles, b
 
 ## Contexto de ejecución
 
-**Modo actual:** QA. La implementación y las comprobaciones técnicas están completas; esta spec se usa para validar visualmente el recorrido descrito en `Verificación`, no para iniciar otra implementación.
+**Modo actual:** QA. CA-001-17 está implementado, documentado y entregado en el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4). La aprobación final sigue correspondiendo a QA humana.
 
-**Paquete funcional:** esta spec contiene el alcance autoritativo de acceso, roles, empresas, contadores, asignaciones, autenticación, contratos, errores y criterios CA-001-01 a CA-001-16. Para una actualización futura, trabajar sólo los criterios nuevos o modificados y conservar la evidencia existente.
+**Paquete funcional:** esta spec contiene el alcance autoritativo de acceso, roles, empresas, contadores, asignaciones, autenticación, contratos, errores y criterios CA-001-01 a CA-001-17. En esta actualización, trabajar sólo CA-001-17 y conservar la evidencia existente.
 
 **Dependencias y fuentes consolidadas:** no depende de otra spec funcional; las decisiones compartidas y las fuentes enlazadas arriba ya están reflejadas en el comportamiento, decisiones locales y contratos de este documento. No recargar esas fuentes durante una ejecución normal si no cambiaron.
 
@@ -60,6 +60,13 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 | CA-001-14 | Se retira una empresa a un contador que mantiene sesión abierta. | Su siguiente petición deja de listar y no puede consultar la empresa retirada. |
 | CA-001-15 | Se ejecuta `app:admin` sin administrador y luego cuando ya existe; o se usa `--reset-password`. | Se crea solo el primero; ejecuciones posteriores no crean otro y el modo de recuperación restablece únicamente al administrador existente. |
 | CA-001-16 | El usuario cierra sesión. | La sesión actual se invalida y la respuesta es `204`; las peticiones protegidas posteriores responden `401`. |
+| CA-001-17 | Un usuario abre la ruta raíz `/`. | La interfaz resuelve su estado de acceso y realiza una sola navegación de reemplazo al destino aplicable: `/login` si no está autenticado, `/password` si debe cambiar su contraseña o `/companies` si puede operar. No muestra una pantalla protegida intermedia ni agrega `/companies` al historial antes de enviar a un usuario no autenticado a `/login`. |
+
+### Análisis de hallazgo 2026-09-12
+
+| Hallazgo | Comportamiento actual que falla | Comportamiento esperado | Impacto documental | Componentes |
+|---|---|---|---|---|
+| La ruta raíz pasa por `/companies` antes de `/login`. | `/` envía incondicionalmente a `/companies`; esa pantalla consulta la sesión y sólo después redirige a `/login`, produciendo una transición protegida innecesaria. | La ruta raíz decide el destino a partir del estado de acceso y reemplaza la navegación una sola vez según CA-001-17. | Se agrega CA-001-17 y una decisión local; no cambia el contrato de autenticación ni requiere una decisión compartida. | Frontend. El backend conserva `GET /api/me` y sus respuestas vigentes. |
 
 ## Decisiones locales
 
@@ -69,6 +76,7 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 - Sesiones y limitación de intentos se respaldan en PostgreSQL mediante capacidades de Laravel. El guardado de asignaciones y la invalidación de sesiones son transaccionales.
 - La interfaz es en español, semántica y accesible, con estados de carga, vacío y error, validación junto a campos, paleta neutra y acento índigo. No incluye dashboard contable.
 - La comprobación de RFC es estructural, no prueba existencia, vigencia ni situación fiscal. El régimen almacenado debe pertenecer al catálogo versionado, pero no se limita por tipo de persona en esta spec.
+- La ruta raíz es un punto de entrada neutral: su destino depende del estado de acceso y se resuelve sin encadenar rutas protegidas. No se introduce una página inicial nueva.
 
 ## Entorno y arquitectura
 
@@ -106,7 +114,7 @@ Recursos y listas se envuelven en `data`. Las listas se ordenan por nombre y lue
 
 - Preparar una revisión Git de esta documentación antes del código y referenciarla desde ambos repositorios.
 - Crear migraciones, modelos, enum de roles, catálogo fiscal, requests, resources, policies, middleware, controladores, rutas y comando `app:admin` en el backend.
-- Crear cliente HTTP con credenciales/CSRF, guardas de navegación y pantallas de acceso, cambio de contraseña, empresas y administración de contadores en el frontend.
+- Crear cliente HTTP con credenciales/CSRF, guardas de navegación y pantallas de acceso, cambio de contraseña, empresas y administración de contadores en el frontend. Para CA-001-17, reutilizar el estado de sesión vigente al decidir el destino de `/` y reemplazar la entrada del historial sin pasar por otra pantalla protegida.
 - Mantener secretos fuera de Git e incluir `.env.example`, Docker/Sail e instrucciones reproducibles.
 
 ## Verificación
@@ -124,8 +132,14 @@ Comprobaciones ejecutadas el 2026-09-07:
 - `pnpm lint`: aprobado.
 - `pnpm typecheck`: aprobado.
 - `pnpm build`: build de producción aprobado con Next.js 16.3.4.
+- Revisión de diff y `git diff --check`: aprobados para el cambio de CA-001-17.
+- No se ejecutaron ni se exigieron pruebas integrales de interfaz por navegador para este cierre; su configuración existente no forma parte de la evidencia. La validación visual queda a cargo de QA humana.
 
-**QA humana:** pendiente. Validar visualmente el recorrido administrador → empresa → contador → asignación → cambio de contraseña → consulta → retirada. La implementación y las comprobaciones técnicas están completas; la aprobación humana debe registrarse antes de marcar la spec Implementada.
+**Ejecución 2026-09-12:** CA-001-17 quedó implementado en el frontend. `src/app/page.tsx` consulta `GET /api/me` y realiza una sola navegación de reemplazo hacia `/login`, `/password` o `/companies`; durante la consulta sólo muestra un estado neutral. La evidencia anterior permanece vigente. La comprobación visual de los destinos corresponde a QA humana.
+
+**Entrega a QA:** disponible. QA humana debe validar la entrada por `/` en los tres estados de acceso, la ausencia de paso por `/companies` para usuarios no autenticados, el comportamiento del botón atrás y el recorrido administrador → empresa → contador → asignación → cambio de contraseña → consulta → retirada.
+
+**Estado de entrega 2026-09-12:** el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4) quedó fusionado en `main` como `d2b7e06`. La restauración del comando de pruebas está publicada para revisión en el MR [front #6](https://github.com/eduvzb/sistema-contable-front/pull/6), commit `98283d5`.
 
 ## Cambios
 
@@ -133,3 +147,7 @@ Comprobaciones ejecutadas el 2026-09-07:
 - **2026-09-07:** alcance, contratos, entorno y criterios completados por instrucción explícita del usuario; SPEC-001 pasa a Lista. Se preservan los criterios CA-001-01 a CA-001-07 y se agregan CA-001-08 a CA-001-16.
 - **2026-09-07:** backend y frontend implementados en `codex/spec-001`; comprobaciones técnicas registradas.
 - **2026-09-10:** se reclasificó como QA conforme a DP-004; sólo resta validación visual humana del recorrido preparado.
+- **2026-09-12:** se preparó CA-001-17 para que la ruta raíz resuelva directamente el destino según la sesión, sin transición intermedia por `/companies`; vuelve a Actualización pendiente. No se modificó código ni se registró evidencia técnica nueva.
+- **2026-09-12:** se implementó CA-001-17 en el frontend con resolución por `GET /api/me` y navegación de reemplazo. Se ejecutaron lint, typecheck, build y revisión de diff. No se ejecutaron ni exigieron pruebas integrales de interfaz por navegador para ese cierre; DT-012 aplica prospectivamente y no invalida esta evidencia histórica.
+- **2026-09-12:** revisión documental de SPEC-001: criterios, contexto de ejecución, dependencias, contratos y recorrido de QA coherentes; se entrega a QA mediante el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4).
+- **2026-09-12:** tras revisar la integración de #4 sobre `main` con #5 ya fusionado, se restablece el script `pnpm test` mediante el PR correctivo [front #6](https://github.com/eduvzb/sistema-contable-front/pull/6), para conservar la ejecución reproducible de Vitest. Pasaron `pnpm test` (1 archivo, 3 pruebas), `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check`. No modifica el comportamiento de CA-001-17 ni incorpora pruebas integrales por navegador.

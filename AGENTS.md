@@ -15,6 +15,7 @@ Este repositorio contiene documentación y specs compartidas del sistema contabl
 - Reutiliza la spec al corregir un incumplimiento; actualízala antes de cambiar comportamiento. Documentación y refactors sin efecto observable no requieren otra spec.
 - Las instrucciones explícitas del usuario cuentan como decisiones: regístralas donde correspondan, sin pedir confirmaciones repetidas.
 - Preserva integridad, aislamiento, trazabilidad e historial necesario. Consulta las decisiones técnicas para responsabilidades y precisión monetaria.
+- Para comportamiento interactivo nuevo o modificado en Next/React, agrega pruebas de componentes y comportamiento con Vitest y React Testing Library conforme a DT-012. No sustituyas esa cobertura con snapshots ni con pruebas integrales por navegador.
 - Registra problemas ajenos al alcance sin resolverlos dentro del mismo cambio.
 
 ## Al terminar

@@ -45,17 +45,21 @@ Incluir errores relevantes y regresiones; agregar autorización/integridad donde
 
 Cambio mínimo por componente, contratos que define/consume y comprobaciones previstas. Resolver operaciones, datos, autorización y errores necesarios antes de Lista. No inventar esquemas para completar el documento.
 
+Si se agrega o modifica comportamiento interactivo en Next/React, especificar las pruebas de componentes y comportamiento requeridas por DT-012: escenarios observables con Vitest, `jsdom`, React Testing Library, `user-event` y `jest-dom`, ejecutables mediante `pnpm test`. Separar expresamente las propiedades de layout real que sólo puede validar QA visual humana. No exigir snapshots ni pruebas integrales por navegador como sustituto.
+
 ## Verificación
 
 **Evidencia de producto:** pendiente; no ejecutada.
 
 **Entrega Git:**
 
-| Repositorio | Rama | Commit | Remoto |
-|---|---|---|---|
-| Pendiente | `codex/SPEC-NNN` | Pendiente | `origin` |
+La documentación de esta spec puede actualizarse en la rama actual del repositorio de specs; no requiere una rama, commit ni publicación propios como parte de una ejecución de backend/frontend. La tabla sólo registra revisiones Git de los repositorios de implementación afectados.
 
-Al verificar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencia a implementación. No rellenar resultados por anticipado.
+| Repositorio de implementación | Rama | Commit | Remoto | PR (URL/estado) |
+|---|---|---|---|---|
+| Pendiente | `codex/<tipo>/SPEC-NNN/<slug>` | Pendiente | `origin` | Pendiente |
+
+Al verificar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencia a implementación. Al entregar a QA, registrar la URL y el estado del PR creado o reutilizado por cada repositorio de implementación afectado. No rellenar resultados ni URLs por anticipado.
 
 **QA humana:** no iniciada. Cuando implementación y comprobaciones técnicas estén completas, cambiar el estado a QA y describir aquí los recorridos visuales entregados a la persona responsable. Registrar su aprobación u observaciones; no sustituirla con una comprobación integral por navegador realizada por el agente.
 

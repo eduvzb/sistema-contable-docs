@@ -24,16 +24,3 @@ Aplicar la [jerarquía constitucional](constitution.md). Dentro de Planeación, 
 
 ## Diferencias identificadas
 
-- **Descarga:** el análisis inicial la deja abierta; alcance §6, BR-020 y AC-016 ya incluyen la simulación y excluyen SAT real. SPEC-005 sigue esa delimitación explícita.
-- **Pólizas y estados:** las entidades candidatas del análisis/glosario no agregan estados ni tipos. OQ-008 y OQ-010 delimitan el MVP a DRAFT/POSTED e INGRESO/EGRESO/DIARIO. SPEC-006 conserva BR-006 como supuesto.
-- **Migración y saldos:** el glosario contempla migración inicial; alcance y OQ-012/OQ-017 posponen su diseño. La balanza sí incluye saldo inicial, pero su origen y presentación requieren preparación en SPEC-008. No se asume saldo cero.
-- **Cierres:** alcance menciona ABIERTO/CERRADO, pero OQ-016 pospone el flujo formal. SPEC-002 no inventa restricciones ni transiciones de cierre.
-- **Provisión e IVA:** AC-009/AC-010 explican necesidades; OQ-006/OQ-007 y el alcance excluyen automatizarlas. Las partidas manuales no se convierten en tratamientos fiscales prescritos.
-- **Preguntas no bloqueantes:** OQ afirma que se puede iniciar la definición del MVP. Esto permite redactar specs; no resuelve detalles de implementación ausentes. Cada spec distingue validación posterior de decisiones necesarias para quedar Lista.
-- **Asincronía:** los ejemplos del glosario no obligan a agregar colas; DT-005 conserva infraestructura bajo demanda.
-
-## Referencias no localizadas
-
-- `PENDING_NORMATIVE_REVIEW` está enlazado desde Inicio, pero no existe entre los archivos proporcionados. Su enlace apunta a esta nota; no se ha realizado ni inventado esa revisión. OQ §23 conserva los temas pendientes.
-- Las referencias a un documento de «modelo de dominio» no corresponden a un archivo independiente disponible. El análisis §29 contiene un modelo inicial de entidades candidatas; no se presenta como diseño aprobado.
-- El enlace `Conceptos/005 - Reglas de negocio` no tenía archivo en esa subcarpeta. Se resolvió al único documento existente con ese nombre, conservando su etiqueta.
