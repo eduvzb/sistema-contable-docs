@@ -27,17 +27,6 @@ Al retomar una implementación, el agente debe abrir primero la spec objetivo y 
 
 El repositorio de specs no participa en la publicación Git de una ejecución de backend/frontend: conserva su rama actual y puede mantener cambios documentales locales. Las ramas prospectivas `codex/<tipo>/SPEC-NNN/<slug>`, commits finales, `push` y PR de la tarea corresponden sólo a los repositorios de implementación afectados. Una misma spec puede tener tareas concurrentes: el preflight elige una `RAMA_TRABAJO` común y libre, con sufijo `-2`, `-3`, etc. cuando sea necesario. Al pasar una nueva tarea a QA, se deben registrar las URLs/estados de sus PR; las specs que ya estaban en QA no requieren PR retroactivo ni se deben inventar URLs.
 
-## Evidencia disponible
-
-SPEC-004: backend focalizado 5/5 pruebas y 52 aserciones; suite backend completa 73/73 pruebas y 661 aserciones; Pint, lint, typecheck y build frontend aprobados. No se ejecutó navegador; queda QA humana.
-
-SPEC-006: actualización frontend en `7947c00`; `pnpm test` (2 archivos, 9 pruebas), `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check` aprobados. PR [front #7](https://github.com/eduvzb/sistema-contable-front/pull/7) abierto. No se ejecutó navegador; la validación de layout y recorrido visual corresponde a QA humana.
-
-Los hallazgos preparados el 2026-09-12 afectan únicamente al frontend. La revisión documental de CA-001-17 confirmó que sus criterios, dependencias, contratos y recorrido de QA son coherentes. El cambio quedó publicado en el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4). DT-012 exige prospectivamente pruebas de componentes y comportamiento con Vitest/React Testing Library para comportamiento Next/React nuevo o modificado: aplica a CA-002-09 y CA-006-14 a CA-006-18, sin invalidar evidencia histórica. Las pruebas integrales por navegador existentes no son requisito de cierre; la validación de layout real queda reservada a QA humana y las pruebas backend/API conservan su alcance.
-
-## Estado de los repositorios al relevo
-
-Backend está en `main`, limpio y sincronizado con `origin/main`. Frontend está en `codex/fix/SPEC-006/policy-editor-capture`, commit `7947c00`, publicado en el PR [front #7](https://github.com/eduvzb/sistema-contable-front/pull/7). El PR previo de SPEC-006 [#3](https://github.com/eduvzb/sistema-contable-front/pull/3) fue fusionado en `origin/main` (`80cf438`). El repositorio de specs conserva cambios documentales locales sin commit ni publicación.
 
 ## Cómo retomar o compartir
 
