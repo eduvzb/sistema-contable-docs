@@ -1,6 +1,6 @@
 # SPEC-001 — Acceso, usuarios y empresas
 
-**Estado:** QA
+**Estado:** Actualización pendiente
 **Usuario:** Administrador y contador  
 **Dependencias:** Ninguna funcionalidad previa; decisiones compartidas DT-001 a DT-009.
 
@@ -8,7 +8,7 @@
 
 Permitir que un administrador inicial creado desde consola gestione empresas, contadores y sus asignaciones; permitir que ambos roles inicien sesión y consulten únicamente el alcance autorizado. El administrador tiene acceso operativo a todas las empresas. El contador accede solo a las asignadas.
 
-Incluye autenticación, cambio obligatorio de contraseña temporal, alta y consulta de empresas, alta y consulta de contadores, restablecimiento de contraseñas y reemplazo de asignaciones. Los datos fiscales de empresa se limitan a RFC, razón social y un régimen fiscal. Empresa/ejercicio/periodo, XML y operaciones contables corresponden a las specs siguientes.
+Incluye autenticación, cambio obligatorio de contraseña temporal, alta y consulta de empresas, alta y consulta de contadores, restablecimiento de contraseñas y reemplazo de asignaciones. Los datos de empresa incluyen RFC, razón social, nombre comercial, tipo de persona derivado, régimen fiscal y versión de plantilla de cuentas. Empresa/ejercicio/periodo, XML y operaciones contables corresponden a las specs siguientes; la copia del catálogo inicial se concreta en SPEC-003.
 
 Quedan fuera registro público, invitaciones por correo, edición de perfiles, bajas, creación de otros administradores desde la interfaz, roles adicionales, límites comerciales y administración de múltiples despachos.
 
@@ -17,14 +17,15 @@ Quedan fuera registro público, invitaciones por correo, edición de perfiles, b
 - [Alcance §3: actores](../docs/planeacion/003%20-%20MVP-Scope.md#3-usuarios-incluidos); [§4: empresas](../docs/planeacion/003%20-%20MVP-Scope.md#4-empresas); [§18: inicio del recorrido](../docs/planeacion/003%20-%20MVP-Scope.md#18-flujo-completo-que-debe-demostrar-el-mvp).
 - [Análisis §5: administrador y contador](../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#5-actores-del-sistema) y [OQ-011](../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#13-oq-011--organization-expl%C3%ADcita) (un despacho como supuesto provisional; Organization no es obligatoria).
 - [BR-001](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa) (aislamiento confirmado).
+- [BR-021](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#23-br-021--la-empresa-conserva-nombre-comercial-y-tipo-de-persona-derivado) y [BR-022](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#24-br-022--cada-empresa-nueva-recibe-una-copia-independiente-de-la-plantilla-general) (identidad comercial, derivación del tipo e integración con el catálogo inicial).
 - [Análisis §6: datos de empresa](../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#6-empresas), limitado a los datos fiscales incluidos por el alcance del MVP.
 - [Catálogo CFDI 4.0 del SAT](https://www.sat.gob.mx/minisitio/Factura/emite_quenecesitoparafacturar.htm), del que se conserva una copia versionada de `c_RegimenFiscal` en el backend.
 
 ## Contexto de ejecución
 
-**Modo actual:** QA. CA-001-17 está implementado, documentado y entregado en el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4). La aprobación final sigue correspondiendo a QA humana.
+**Modo actual:** Actualización pendiente. CA-001-01 a CA-001-17 conservan su implementación y evidencia histórica; CA-001-18/19 y la ampliación del contrato de empresa están preparados documentalmente, todavía sin implementación ni comprobación de producto.
 
-**Paquete funcional:** esta spec contiene el alcance autoritativo de acceso, roles, empresas, contadores, asignaciones, autenticación, contratos, errores y criterios CA-001-01 a CA-001-17. En esta actualización, trabajar sólo CA-001-17 y conservar la evidencia existente.
+**Paquete funcional:** esta spec contiene el alcance autoritativo de acceso, roles, empresas, contadores, asignaciones, autenticación, contratos, errores y criterios CA-001-01 a CA-001-19. En la siguiente implementación trabajar CA-001-18/19, coordinar la atomicidad de creación con SPEC-003 y conservar la evidencia existente.
 
 **Dependencias y fuentes consolidadas:** no depende de otra spec funcional; las decisiones compartidas y las fuentes enlazadas arriba ya están reflejadas en el comportamiento, decisiones locales y contratos de este documento. No recargar esas fuentes durante una ejecución normal si no cambiaron.
 
@@ -38,7 +39,9 @@ El comando interactivo `app:admin` crea el primer administrador con contraseña 
 
 Un contador con contraseña temporal debe cambiarla antes de consultar empresas u operar. Mientras tanto solo puede consultar su identidad, cambiar su contraseña y cerrar sesión. El cambio exige contraseña actual, nueva contraseña y confirmación; la nueva contraseña tiene entre 12 y 128 caracteres. Las contraseñas se almacenan con Argon2id. El restablecimiento invalida sesiones existentes y vuelve a exigir el cambio inicial.
 
-Una empresa tiene RFC único, razón social y un régimen fiscal. El RFC se normaliza a mayúsculas sin espacios exteriores y debe cumplir una comprobación estructural básica de 12 o 13 caracteres; no se consulta su situación ante SAT. La razón social es obligatoria y admite hasta 255 caracteres. El régimen se elige por código y nombre desde la copia versionada del catálogo `c_RegimenFiscal`; el backend valida que exista en ella y conserva procedencia y fecha del catálogo.
+Una empresa tiene RFC único, razón social, nombre comercial y un régimen fiscal. El RFC se normaliza a mayúsculas sin espacios exteriores y debe cumplir una comprobación estructural básica de 12 o 13 caracteres; no se consulta su situación ante SAT. La razón social y el nombre comercial son obligatorios, se recortan y admiten hasta 255 caracteres; sólo el RFC es único. La razón social se presenta como nombre principal y el nombre comercial como dato secundario.
+
+`taxpayer_type` se calcula siempre a partir del RFC normalizado: 12 caracteres producen `PERSONA_MORAL` y 13, `PERSONA_FISICA`. No se captura ni se persiste y no filtra el catálogo de regímenes. El régimen se elige por código y nombre desde la copia versionada de `c_RegimenFiscal`; el backend valida que exista en ella y conserva procedencia y fecha del catálogo. `account_template_version` identifica la plantilla copiada conforme a SPEC-003. Para empresas existentes, la transición de datos establece `commercial_name = legal_name` y `account_template_version = null` sin generar cuentas.
 
 Las asignaciones se reemplazan como conjunto dentro de una transacción, sin duplicados. Retirar una asignación surte efecto desde la siguiente petición. Un contador sin asignaciones recibe una lista vacía. Consultar una empresa inexistente o no autorizada produce el mismo `404`.
 
@@ -61,6 +64,8 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 | CA-001-15 | Se ejecuta `app:admin` sin administrador y luego cuando ya existe; o se usa `--reset-password`. | Se crea solo el primero; ejecuciones posteriores no crean otro y el modo de recuperación restablece únicamente al administrador existente. |
 | CA-001-16 | El usuario cierra sesión. | La sesión actual se invalida y la respuesta es `204`; las peticiones protegidas posteriores responden `401`. |
 | CA-001-17 | Un usuario abre la ruta raíz `/`. | La interfaz resuelve su estado de acceso y realiza una sola navegación de reemplazo al destino aplicable: `/login` si no está autenticado, `/password` si debe cambiar su contraseña o `/companies` si puede operar. No muestra una pantalla protegida intermedia ni agrega `/companies` al historial antes de enviar a un usuario no autenticado a `/login`. |
+| CA-001-18 | El administrador crea una empresa con nombre comercial válido o intenta omitirlo, enviarlo sólo con espacios o superar 255 caracteres. | El valor válido se recorta y se conserva sin exigir unicidad; los casos inválidos reciben `422` y no dejan empresa ni catálogo parcial. La interfaz presenta la razón social como nombre principal y el nombre comercial como dato secundario. |
+| CA-001-19 | Se captura un RFC estructuralmente válido de 12 o 13 caracteres durante el alta o se consulta una empresa nueva o existente. | La interfaz y el recurso muestran respectivamente `PERSONA_MORAL` o `PERSONA_FISICA`, calculado a partir del RFC normalizado y sin persistirlo ni filtrar regímenes. El recurso incluye `commercial_name` y `account_template_version`; las empresas existentes exponen nombre comercial igual a razón social y versión `null`. |
 
 ### Análisis de hallazgo 2026-09-12
 
@@ -71,11 +76,13 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 ## Decisiones locales
 
 - El volumen inicial usa listas completas, ordenadas por nombre y después ID, sin paginación.
-- `users` conserva nombre, correo único, hash, rol y `must_change_password`; `companies`, RFC único, razón social y código de régimen; `company_user`, claves foráneas y unicidad usuario–empresa.
+- `users` conserva nombre, correo único, hash, rol y `must_change_password`; `companies`, RFC único, razón social, nombre comercial, código de régimen y versión nullable de plantilla; `company_user`, claves foráneas y unicidad usuario–empresa. `taxpayer_type` no se persiste.
 - Se usan Eloquent, Form Requests, Policies y API Resources, sin paquetes de roles ni capa de repositorios.
 - Sesiones y limitación de intentos se respaldan en PostgreSQL mediante capacidades de Laravel. El guardado de asignaciones y la invalidación de sesiones son transaccionales.
 - La interfaz es en español, semántica y accesible, con estados de carga, vacío y error, validación junto a campos, paleta neutra y acento índigo. No incluye dashboard contable.
 - La comprobación de RFC es estructural, no prueba existencia, vigencia ni situación fiscal. El régimen almacenado debe pertenecer al catálogo versionado, pero no se limita por tipo de persona en esta spec.
+- La razón social es el identificador visible principal de la empresa. El nombre comercial es obligatorio, secundario y no único. El tipo de persona se muestra como dato calculado y nunca como campo editable.
+- La compatibilidad de datos existentes fija nombre comercial igual a razón social y versión de plantilla `null`; no ejecuta una carga retroactiva del catálogo. SPEC-003 define la copia `GENERAL_V1` para altas nuevas y su transacción compartida.
 - La ruta raíz es un punto de entrada neutral: su destino depende del estado de acceso y se resuelve sin encadenar rutas protegidas. No se introduce una página inicial nueva.
 
 ## Entorno y arquitectura
@@ -104,8 +111,8 @@ Las rutas autenticadas usan `auth:sanctum`. Un middleware de cambio obligatorio 
 | Listar/crear contadores | `GET /api/users`, `POST /api/users` | Admin; creación `{name,email}`; `200`/`201`. |
 | Restablecer contraseña | `POST /api/users/{user}/temporary-password` | Admin y destino contador; `200` con contraseña temporal. |
 | Consultar/reemplazar asignaciones | `GET /api/users/{user}/companies`, `PUT /api/users/{user}/companies` | Admin y destino contador; `{company_ids:[]}`; `200`/`204`. |
-| Listar/crear empresas | `GET /api/companies`, `POST /api/companies` | Usuario habilitado para listar; solo admin crea con `{rfc,legal_name,tax_regime_code}`; `200`/`201`. |
-| Consultar empresa | `GET /api/companies/{company}` | Admin o contador asignado; `200`/`404`. |
+| Listar/crear empresas | `GET /api/companies`, `POST /api/companies` | Usuario habilitado para listar; solo admin crea con `{rfc,legal_name,commercial_name,tax_regime_code}`; `200`/`201`. El alta nueva integra la copia atómica de SPEC-003. |
+| Consultar empresa | `GET /api/companies/{company}` | Admin o contador asignado; `200`/`404`. El recurso de empresa incluye `commercial_name`, `taxpayer_type` y `account_template_version`. |
 | Consultar regímenes | `GET /api/tax-regimes` | Usuario habilitado; `200`. |
 
 Recursos y listas se envuelven en `data`. Las listas se ordenan por nombre y luego ID. Errores observables: `401` sin autenticación o credenciales incorrectas, `403` sin permiso o con cambio pendiente, `404` para empresa inaccesible/inexistente, `419` para CSRF, `422` para validación y `429` para límite de ingreso. Asignaciones y restablecimientos dirigidos a un administrador se rechazan en backend.
@@ -113,9 +120,15 @@ Recursos y listas se envuelven en `data`. Las listas se ordenan por nombre y lue
 ## Plan de implementación
 
 - Preparar una revisión Git de esta documentación antes del código y referenciarla desde ambos repositorios.
-- Crear migraciones, modelos, enum de roles, catálogo fiscal, requests, resources, policies, middleware, controladores, rutas y comando `app:admin` en el backend.
-- Crear cliente HTTP con credenciales/CSRF, guardas de navegación y pantallas de acceso, cambio de contraseña, empresas y administración de contadores en el frontend. Para CA-001-17, reutilizar el estado de sesión vigente al decidir el destino de `/` y reemplazar la entrada del historial sin pasar por otra pantalla protegida.
+- Crear migraciones, modelos, enum de roles, catálogo fiscal, requests, resources, policies, middleware, controladores, rutas y comando `app:admin` en el backend. Para CA-001-18/19, agregar la transición compatible de nombre comercial, derivar el tipo desde el RFC normalizado y coordinar la transacción de alta con SPEC-003.
+- Crear cliente HTTP con credenciales/CSRF, guardas de navegación y pantallas de acceso, cambio de contraseña, empresas y administración de contadores en el frontend. Para CA-001-17, reutilizar el estado de sesión vigente al decidir el destino de `/`; para CA-001-18/19, mostrar tipo de persona durante el alta y nombre comercial como información secundaria.
 - Mantener secretos fuera de Git e incluir `.env.example`, Docker/Sail e instrucciones reproducibles.
+
+### Pruebas previstas para la actualización
+
+- Backend: validar obligatoriedad, recorte, longitud y ausencia de unicidad del nombre comercial; comprobar normalización del RFC, derivación de `taxpayer_type`, recursos nuevos y transición compatible de empresas existentes. La copia exacta y atómica del catálogo se prueba con SPEC-003.
+- Frontend: con Vitest y React Testing Library, comprobar el tipo de persona durante el alta y la presentación secundaria del nombre comercial sin sustituir la razón social.
+- QA humana: validar jerarquía visual de razón social/nombre comercial y legibilidad del tipo derivado.
 
 ## Verificación
 
@@ -141,6 +154,8 @@ Comprobaciones ejecutadas el 2026-09-07:
 
 **Estado de entrega 2026-09-12:** el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4) quedó fusionado en `main` como `d2b7e06`. La restauración del comando de pruebas está publicada para revisión en el MR [front #6](https://github.com/eduvzb/sistema-contable-front/pull/6), commit `98283d5`.
 
+**Preparación documental 2026-09-12:** CA-001-18/19 y los contratos ampliados quedan pendientes de implementación. En esta tarea no se modificaron backend/frontend ni se ejecutaron pruebas de producto; toda la evidencia anterior se conserva y no acredita estos criterios nuevos.
+
 ## Cambios
 
 - **2026-09-07:** primera redacción a partir de Planeación y del plan SDD autorizado.
@@ -151,3 +166,4 @@ Comprobaciones ejecutadas el 2026-09-07:
 - **2026-09-12:** se implementó CA-001-17 en el frontend con resolución por `GET /api/me` y navegación de reemplazo. Se ejecutaron lint, typecheck, build y revisión de diff. No se ejecutaron ni exigieron pruebas integrales de interfaz por navegador para ese cierre; DT-012 aplica prospectivamente y no invalida esta evidencia histórica.
 - **2026-09-12:** revisión documental de SPEC-001: criterios, contexto de ejecución, dependencias, contratos y recorrido de QA coherentes; se entrega a QA mediante el MR [front #4](https://github.com/eduvzb/sistema-contable-front/pull/4).
 - **2026-09-12:** tras revisar la integración de #4 sobre `main` con #5 ya fusionado, se restablece el script `pnpm test` mediante el PR correctivo [front #6](https://github.com/eduvzb/sistema-contable-front/pull/6), para conservar la ejecución reproducible de Vitest. Pasaron `pnpm test` (1 archivo, 3 pruebas), `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check`. No modifica el comportamiento de CA-001-17 ni incorpora pruebas integrales por navegador.
+- **2026-09-12:** se prepararon CA-001-18/19 para nombre comercial obligatorio, tipo de persona derivado y ampliación del recurso de empresa; la integración atómica de `GENERAL_V1` se remite a SPEC-003. La spec vuelve a Actualización pendiente sin cambios de código ni pruebas de producto nuevas.
