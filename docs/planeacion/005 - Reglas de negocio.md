@@ -210,13 +210,13 @@ Los casos de sustitución o corrección quedan para una fase posterior.
 
 ---
 
-# 13. BR-011 — El XML original debe conservarse
+# 13. BR-011 — El XML original no se conserva
 
 **Estado:** CONFIRMADA COMO REGLA DEL MVP
 
-Cuando un XML se incorpora al sistema, debe conservarse para mantener trazabilidad.
+Cuando un XML se incorpora al sistema, se extraen, validan y conservan sus datos fiscales normalizados, relaciones y trazabilidad contable. El archivo original no se copia a almacenamiento durable ni se conserva como BLOB.
 
-El sistema puede extraer y organizar sus datos, pero no debe perder el documento original.
+La carga multipart puede usar el archivo temporal que administra la plataforma durante la solicitud; éste no constituye una conservación durable. Los XML históricos existentes permanecen fuera del alcance de esta regla hasta una limpieza autorizada, pero tampoco se exponen mediante el producto.
 
 ---
 
