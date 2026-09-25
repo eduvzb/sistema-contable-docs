@@ -19,7 +19,7 @@ Incluye la bandeja de documentos y su situación contable derivada de pólizas. 
 
 ## Contexto de ejecución
 
-**Modo actual:** Actualización pendiente. Esta entrega modifica CA-004-01 y el contrato de recuperación: los XML nuevos se procesan sin almacenamiento durable y la descarga del original deja de existir. Trabajar la persistencia, migración y pruebas backend; no requiere cambio interactivo de frontend porque éste no consume la descarga.
+**Modo actual:** Actualización pendiente. La nueva entrega incorpora CA-004-11 para que la primera importación conserve el desglose fiscal estructurado que consume SPEC-006. El XML original continúa descartándose. La evidencia histórica de importación permanece separada de esta actualización.
 
 **Paquete funcional:** esta spec contiene el alcance autoritativo de importación, conservación, duplicados, consulta, filtros, estados, contratos y criterios. Consultar SPEC-001 para autorización y SPEC-002 para contexto explícito; consultar SPEC-006 sólo para el contrato de relación ya definido.
 
@@ -45,6 +45,7 @@ La importación es responsable de la incorporación que reutiliza SPEC-005. El i
 | CA-004-08 | El XML contiene moneda y tipo de cambio. | Se conservan los datos existentes; no se ejecuta lógica contable avanzada de moneda extranjera. |
 | CA-004-09 | Termina un intento de importación, incluido un lote con archivos importados y rechazados. | El resultado por archivo permanece visible para revisión, pero la selección nativa de archivos queda vacía y permite iniciar otro intento —incluso seleccionando nuevamente el mismo archivo— sin conservar adjuntos anteriores. Al cerrar y reabrir el diálogo inicia una sesión limpia. |
 | CA-004-10 | Ya existe un CFDI y se vuelve a importar junto con otro nuevo de la misma empresa. | El existente se informa como duplicado una sola vez, el nuevo se incorpora una sola vez y la bandeja se reconcilia con la consulta autoritativa. Si el nuevo corresponde al periodo y filtros visibles queda localizable sin recargar manualmente; si queda fuera, el resultado explica qué periodo o filtro impide verlo. Crear una póliza y reintentar la importación reflejan la misma existencia del documento. |
+| CA-004-11 | Se importa por primera vez un CFDI 4.0 con descuento, impuestos federales trasladados o retenidos, o impuestos locales en complemento. | Se conservan subtotal, descuento, total y cada impuesto con clave o nombre, naturaleza e importe decimal de seis posiciones, sin conservar el XML original. La consulta entrega ese desglose a SPEC-006 sin volver a cargar el archivo. |
 
 ## Decisiones cerradas
 
@@ -55,6 +56,7 @@ La importación es responsable de la incorporación que reutiliza SPEC-005. El i
 - Después de una respuesta completa del lote se limpia el control de archivos, no el resultado que el usuario todavía está revisando. Cerrar el diálogo descarta resultado, errores y selección de esa sesión.
 - La confirmación de importación y la bandeja no pueden divergir silenciosamente. Tras un lote se vuelve a consultar el periodo activo; los documentos importados que no pertenezcan al periodo o queden ocultos por filtros/paginación se identifican en el resultado, sin reclasificarlos como rechazados ni alterar su fecha fiscal.
 - Subtotal, impuestos, total y tipo de cambio se conservan con seis decimales y se representan por API como texto. No se calcula conversión monetaria.
+- El desglose se extrae del XML durante su primera incorporación: cada impuesto federal o local conserva tipo, naturaleza e importe; `tax_total` permanece por compatibilidad, pero no alimenta propuestas de partidas. Los CFDI existentes son datos de prueba autorizados para reinicio conforme a SPEC-006.
 
 ## Pendientes y decisiones
 
@@ -66,6 +68,7 @@ La importación es responsable de la incorporación que reutiliza SPEC-005. El i
 
 - Backend: extracción en la solicitud y consulta aislada por empresa; persiste sólo datos normalizados, expone incorporación parcial, listado por periodo y el indicador derivado de pólizas `POSTED`. `original_path` permanece opcional sólo para inventariar archivos históricos; no se expone mediante API.
 - Contrato de consulta: `GET /api/companies/{companyId}/fiscal-documents?period_id={periodId}` entrega la bandeja filtrada por mes y ejercicio de `issued_at`; cada elemento conserva el resumen y los campos fiscales extraídos. `GET /api/companies/{companyId}/fiscal-documents/{fiscalDocumentId}` entrega el mismo documento completo para consultar UUID, RFC emisor/receptor, fecha, serie, folio, subtotal, impuestos, total, método/forma de pago, moneda, tipo de cambio, tipo de comprobante, dirección y `accounted`.
+- El contrato agrega `discount` decimal y `tax_lines[]` con `code`, `name`, `nature` (`TRANSFER`/`WITHHOLDING`), `scope` (`FEDERAL`/`LOCAL`) y `amount`, todos los importes como texto con seis decimales. No expone XML crudo.
 - Frontend: carga múltiple, resultado por archivo, limpieza real del selector después de cada respuesta, reconciliación de la bandeja vigente y explicación de documentos importados fuera de la vista actual. Conserva filtros y página compatibles conforme a SPEC-002, con detalle seleccionable del CFDI, sin añadir descarga SAT ni automatizaciones fiscales. El detalle presenta los campos del contrato existente, sin recalcular importes ni convertir moneda.
 - Ejemplos de archivos compatibles para desarrollo: [ejemplos de XML CFDI](../docs/ejemplos/README.md).
 - La política de lote se cerró como parcial. No requiere workers ni infraestructura adicional (DT-005).
@@ -73,6 +76,8 @@ La importación es responsable de la incorporación que reutiliza SPEC-005. El i
 Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contrato de consulta de esta brecha queda cerrado; cualquier ampliación posterior debe actualizar esta spec antes de modificar consumidores.
 
 ## Verificación
+
+**Actualización CA-004-11 pendiente (2026-09-23):** únicamente se preparó la spec. No se modificó código, no se ejecutaron pruebas de esta actualización y no se ha comprobado la extracción detallada de impuestos y descuentos.
 
 **Evidencia de producto:** implementación backend y frontend realizada el 2026-09-08. `./vendor/bin/sail artisan test --compact` pasó con 31 pruebas y 263 aserciones; SPEC-004 cubre lote mixto, UUID duplicado, RFC ajeno, filtro por periodo, aislamiento, descarga autorizada e indicador contabilizado derivado. `pnpm lint`, `pnpm typecheck` y `pnpm build` pasaron en frontend.
 
@@ -95,6 +100,8 @@ No se ejecutó una comprobación integral de interfaz por navegador, conforme a 
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
 ## Cambios
+
+- **2026-09-23:** por instrucción explícita del usuario se prepara CA-004-11 para conservar datos fiscales estructurados desde la primera importación, sin conservar el XML original. La implementación y su comprobación quedan pendientes.
 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar el alcance de documentos.
 

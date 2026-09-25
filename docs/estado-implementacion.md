@@ -1,7 +1,9 @@
 # Estado de implementación y continuidad
 
-**Actualizado:** 2026-09-14
+**Actualizado:** 2026-09-23
 **Propósito:** punto de relevo entre sesiones para el MVP. Este archivo no sustituye las specs ni declara criterios satisfechos sin su evidencia.
+
+**Actualización documental 2026-09-23:** SPEC-004 y SPEC-006 quedan en Actualización pendiente por CA-004-11 y CA-006-19 modificado/CA-006-20 a CA-006-24. La tabla siguiente conserva la evidencia histórica anterior; la nueva extracción fiscal, la ventana de CFDI y las partidas propuestas no tienen implementación ni comprobaciones. Por instrucción del usuario, esta sesión termina con la spec y no ejecuta código de producto.
 
 ## Estado observado
 

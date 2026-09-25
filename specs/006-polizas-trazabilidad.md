@@ -1,14 +1,14 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-**Estado:** QA
+**Estado:** Actualización pendiente
 **Usuario:** Administrador o contador con empresa accesible  
 **Dependencias:** [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md)
 
 ## Propósito y alcance
 
-Crear, consultar y modificar pólizas con partidas manuales; guardarlas como borrador y contabilizarlas balanceadas. Conservar documentos relacionados, cuentas, empresa, periodo y autoría básica.
+Crear, consultar y modificar pólizas con partidas manuales o propuestas desde CFDI; guardarlas como borrador y contabilizarlas balanceadas. Conservar documentos relacionados, cuentas, empresa, periodo y autoría básica.
 
-Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcionales y múltiples, trazabilidad bidireccional, ingresos/egresos PUE y representación manual del registro inicial PPD. No incluye selección automática de cuentas, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa. La edición posterior a contabilización se limita por las decisiones cerradas de esta spec.
+Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcionales y múltiples, trazabilidad bidireccional, ingresos/egresos PUE, representación manual del registro inicial PPD y una propuesta editable de partidas desde datos fiscales. No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa. La edición posterior a contabilización se limita por las decisiones cerradas de esta spec.
 
 ## Fuentes
 
@@ -19,7 +19,7 @@ Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcion
 
 ## Contexto de ejecución
 
-**Modo actual:** QA. CA-006-19 está implementado y comprobado técnicamente en frontend en `b8d16a6`; el PR [front #15](https://github.com/eduvzb/sistema-contable-front/pull/15) está abierto. Sólo falta validación visual humana de la lista filtrable de CFDI. La evidencia anterior conserva validez para el comportamiento no modificado.
+**Modo actual:** Actualización pendiente. CA-006-20 a CA-006-24 agregan selección en ventana, propuesta de partidas y memoria de cuentas; CA-004-11 aporta el desglose fiscal. La evidencia anterior conserva validez para el comportamiento no modificado.
 
 **Paquete funcional:** esta spec contiene el alcance autoritativo de pólizas, partidas, balance, estados, relaciones CFDI, auditoría, contratos y criterios. Consultar SPEC-001/002/003/004 sólo para los contratos vigentes que este cambio consume.
 
@@ -53,7 +53,12 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 | CA-006-16 | El usuario abre la creación de una póliza nueva. | El editor inicia con exactamente una partida vacía lista para capturar. Al editar una póliza se muestran sus partidas conservadas y no se agrega una partida vacía implícita. |
 | CA-006-17 | En una partida capturada, el usuario termina un cargo o abono y presiona `Enter`. | Si la partida tiene una cuenta operable y exactamente uno de cargo o abono contiene un importe positivo válido, queda disponible una sola partida vacía posterior: se agrega al final cuando no existe y el foco pasa a su control de cuenta. `Enter` no guarda ni contabiliza la póliza. Si la partida no es válida, no se agrega otra y la captura actual se conserva para corregirla. |
 | CA-006-18 | El usuario captura una póliza en un viewport de escritorio de al menos 1280 píxeles CSS de ancho. | Puede ver y operar los campos, totales y acciones del editor sin scroll horizontal en el diálogo ni en la tabla de partidas. En anchos menores, el contenido sigue siendo operable y puede recurrir a desplazamiento horizontal sin quedar cortado. |
-| CA-006-19 | El usuario busca CFDI al crear o editar una póliza. | Puede filtrar localmente los CFDI ya cargados de la empresa por coincidencia parcial en UUID, RFC, razón social, serie o folio, sin distinguir mayúsculas, minúsculas ni acentos. La lista muestra fecha, tipo, UUID, contraparte y vínculos existentes; permite seleccionar varios CFDI mediante casillas, conserva selecciones ocultas temporalmente por la búsqueda y muestra recuento o estado sin resultados. Todos los CFDI elegibles, incluidos los relacionados con otras pólizas o de otros periodos, siguen disponibles. |
+| CA-006-19 | El usuario busca CFDI al crear o editar una póliza. | Puede filtrar localmente los CFDI ya cargados para el periodo elegido por coincidencia parcial en UUID, RFC, razón social, serie o folio, sin distinguir mayúsculas, minúsculas ni acentos. La lista muestra fecha, tipo, UUID, contraparte y vínculos existentes; permite seleccionar varios CFDI mediante casillas, conserva selecciones ocultas temporalmente por la búsqueda y muestra recuento o estado sin resultados. Los CFDI relacionados con otras pólizas siguen disponibles; los vínculos preexistentes de otros periodos se conservan al editar. |
+| CA-006-20 | Se abre «CFDI relacionados» en una póliza del periodo. | Una ventana presenta los CFDI emitidos en ese periodo, con búsqueda y selección múltiple; conserva el orden de selección y muestra relaciones anteriores aunque correspondan a otro periodo. «Continuar» no guarda la póliza. La búsqueda y selección previa de CA-006-19 se mantienen dentro de la ventana para los CFDI del periodo. |
+| CA-006-21 | Se continúa con uno o varios CFDI `I` o `E` en MXN cuyos datos fiscales cuadran. | Se prellenan bloques consecutivos de partidas por CFDI en el orden elegido: total, subtotal, descuento e impuestos presentes por tipo y naturaleza, con importes y lado cargo/abono según dirección y tipo. Las cuentas no conocidas quedan vacías y cada importe puede corregirse antes de guardar. |
+| CA-006-22 | Un CFDI seleccionado no cuadra con su total, es tipo `P` o usa otra moneda. | El UUID y motivo son visibles. Un descuadre detiene la generación de ese CFDI sin ajuste ficticio; `P` y moneda distinta de MXN permiten relación y captura manual, sin generación. Los demás CFDI válidos pueden continuar. |
+| CA-006-23 | El contador asigna cuentas a partidas generadas y guarda una póliza válida DRAFT o POSTED. | Se conserva el origen opcional de cada partida y una sugerencia por empresa, emisor, dirección, tipo, PUE/PPD y componente; al volver a seleccionar un CFDI equivalente se proponen esas cuentas con sus propios importes. En conflictos de una misma póliza prevalece la última partida. |
+| CA-006-24 | Varios CFDI del mismo emisor están en la misma captura y el contador asigna una cuenta al primer bloque. | Las partidas equivalentes posteriores aún vacías reciben esa cuenta sin alterar importes ni elecciones manuales. Una póliza contabilizada sigue exigiendo cuentas válidas y balance autoritativo. |
 
 ### Análisis de hallazgos 2026-09-12
 
@@ -75,7 +80,9 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 - La fecha de la póliza usa un control de calendario accesible y legible en español, limitado visualmente al periodo seleccionado y presentado como una capa que no altera el layout. El periodo se comunica dentro del calendario, por su contenido y etiquetas accesibles, y mediante errores cuando corresponda; no se conserva un texto instructivo permanente. La validación autoritativa de pertenencia al periodo permanece en backend.
 - Una póliza nueva presenta una partida vacía inicial. La creación automática de la siguiente partida es sólo una ayuda de captura: exige cuenta operable y un único importe positivo válido, evita duplicar renglones vacíos y no sustituye la validación al guardar.
 - El editor aprovecha el ancho disponible en escritorio para mantener visible una fila completa durante la captura normal; la adaptación a pantallas menores no elimina campos ni acciones.
-- La relación de CFDI se localiza en frontend sobre la colección ya autorizada y cargada de la empresa. La búsqueda es parcial e insensible a mayúsculas, minúsculas y acentos en UUID, RFC, razón social, serie y folio; no busca por fecha o importe, no pagina ni genera solicitudes adicionales. Las casillas no excluyen CFDI ya relacionados y una selección permanece al cambiar temporalmente el filtro.
+- La relación de CFDI se localiza en frontend sobre la colección ya autorizada y cargada del periodo. La búsqueda es parcial e insensible a mayúsculas, minúsculas y acentos en UUID, RFC, razón social, serie y folio; no busca por fecha o importe, no pagina ni genera solicitudes adicionales. Las casillas no excluyen CFDI ya relacionados y una selección permanece al cambiar temporalmente el filtro.
+- La nueva selección usa exclusivamente CFDI emitidos en el periodo elegido; los vínculos previos de otros periodos se conservan y muestran al editar. El orden de selección define los bloques generados. La memoria de cuentas no aplica automáticamente tratamiento fiscal ni contabiliza la póliza.
+- Para `I` emitido se propone cargo a total y descuento, abono a subtotal y traslados, y cargo a retenciones; recibido invierte los lados y `E` invierte la orientación de `I`. Cada impuesto y naturaleza presente forma partida propia; los importes cero no la crean. La reconciliación usa seis decimales exactos y rechaza sólo el CFDI descuadrado.
 - La actualización frontend se verifica conforme a DT-012 con Vitest, entorno `jsdom`, React Testing Library y simulación de interacción de usuario. Las pruebas se expresan mediante roles, etiquetas, foco, contenido y efectos observables; no acoplan la cobertura a estado interno ni sustituyen con snapshots los criterios de comportamiento. Playwright y las pruebas integrales por navegador no son requisito de cierre de esta actualización.
 
 ## Pendientes y decisiones
@@ -83,6 +90,7 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 - **Resuelto para esta entrega:** numeración, fecha/periodo, mínimos DRAFT/POSTED, precisión decimal, cuentas operables, edición POSTED y relación de CFDI por póliza.
 - **Supuesto para validar:** DRAFT puede estar incompleta/descuadrada (BR-006/OQ-002/AC-011). Se mantiene la exigencia de balance para POSTED.
 - **Posterior:** estados CANCELLED/REVERSED, tipos adicionales, cierre, provisiones automáticas y auditoría histórica de campos. No inventar bloqueo ni permiso de edición POSTED para resolver su pendiente.
+- **Reinicio autorizado de datos de prueba:** en todos los entornos, mediante operación única con respaldo y recuento previos, eliminar los CFDI existentes y las pólizas de prueba que los referencian con sus partidas; conservar empresas, periodos, cuentas y pólizas no vinculadas. No ejecutar este borrado desde una migración repetible.
 
 ## Plan técnico y contratos
 
@@ -90,6 +98,7 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 - Frontend: editor ancho con encabezado, calendario de fecha superpuesto y error próximo al control, tabla de partidas, relaciones CFDI, totales y acciones separadas para borrador/contabilización. La relación CFDI usa la colección ya cargada, un filtro local accesible y casillas que preservan sus IDs al cambiar la búsqueda. El calendario debe ser operable con puntero y teclado y conservar el resto del formulario ante un error. La creación inicia con una partida vacía; `Enter` en el importe de una última partida válida prepara y enfoca la siguiente sin enviar el formulario. Las reglas vienen del backend.
 - Pruebas frontend: incorporar la configuración mínima de Vitest con `jsdom`, React Testing Library, `@testing-library/user-event` y matchers de `@testing-library/jest-dom`, ejecutable mediante `pnpm test`. Cubrir `AccountingPolicyEditor` en su frontera de componente, sustituyendo la API y demás dependencias externas necesarias para observar el comportamiento sin levantar backend ni navegador.
 - SPEC-004 consume las relaciones `POSTED` para su indicador; SPEC-007 agrega pagos y SPEC-008 consume las partidas contabilizadas sin duplicar contratos.
+- `POST /api/companies/{companyId}/accounting-periods/{periodId}/accounting-policy-entry-previews` recibe `fiscal_document_ids` ordenados y devuelve partidas propuestas por CFDI, componentes de origen, cuentas sugeridas y errores identificados por UUID. No persiste pólizas. Los contratos de guardar póliza agregan origen opcional por partida (`source_fiscal_document_id`, `source_component_key`), validado contra los documentos relacionados y la empresa; el origen se devuelve al consultar. Guardar actualiza la memoria de cuentas en la misma transacción.
 
 ### Contrato de trazabilidad inversa CFDI → pólizas → partidas → cuentas → periodos
 
@@ -104,6 +113,8 @@ El contrato se autoriza con el acceso a la empresa del CFDI. Un usuario sin acce
 Aplican las [decisiones técnicas compartidas](../docs/decisiones.md). El contrato de trazabilidad inversa de esta brecha queda cerrado; cualquier ampliación posterior debe actualizar esta spec antes de modificar consumidores.
 
 ## Verificación
+
+**Actualización CA-006-19 a CA-006-24 pendiente (2026-09-23):** únicamente se preparó la spec. No se modificó código de producto, no se ejecutaron pruebas de esta actualización y los recorridos de QA descritos siguen pendientes. La evidencia histórica siguiente corresponde a versiones anteriores del editor.
 
 **Evidencia CA-006-19, 2026-09-14:** frontend en la rama `codex/feat/SPEC-006/cfdi-policy-search`, commit `b8d16a679bbd9c931caa50282ea12dd07657f3f3`, publicado en `origin` y entregado en el PR [front #15](https://github.com/eduvzb/sistema-contable-front/pull/15). `pnpm test` pasó con 6 archivos y 25 pruebas; `pnpm lint`, `pnpm typecheck`, `pnpm build` y `git diff --check` aprobaron. Las pruebas del editor cubren búsqueda por UUID, RFC, contraparte, serie y folio sin distinción de mayúsculas o acentos, recuento, estado vacío, vínculos existentes, conservación de selección al filtrar y envío de todos los IDs seleccionados al guardar.
 
@@ -138,6 +149,8 @@ No se ejecutó ni se exige Playwright o una prueba integral de interfaz por nave
 Al implementar, registrar criterios cubiertos, prueba/comprobación, resultado, revisión de spec y referencias a backend/frontend. La revisión documental de esta entrega está en el [índice](README.md#verificaci%C3%B3n-documental).
 
 ## Cambios
+
+- **2026-09-23:** por instrucción explícita del usuario se modifica CA-006-19 y se preparan CA-006-20 a CA-006-24 para la ventana de selección por periodo, la propuesta editable por CFDI, la memoria de cuentas y el reinicio único de datos de prueba. La implementación y las comprobaciones quedan pendientes.
 
 - **2026-09-07:** se alineó el acceso operativo global del administrador con DT-008/SPEC-001, sin cambiar reglas de pólizas.
 

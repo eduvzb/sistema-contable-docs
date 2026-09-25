@@ -4,16 +4,16 @@ Una spec por funcionalidad, compartida por backend y frontend. Para trabajar usa
 
 ## Orden y dependencias
 
-Todas las specs están en **QA**: su implementación y comprobaciones técnicas están completas y sólo resta validación visual humana. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
+SPEC-004 y SPEC-006 están en **Actualización pendiente** por la generación asistida de partidas desde CFDI; las demás permanecen en **QA**. La nueva actualización no tiene implementación ni evidencia técnica. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
 
 | Spec | Funcionalidad | Dependencias de preparación |
 |---|---|---|
 | [SPEC-001](001-acceso-usuarios-empresas.md) | Acceso, usuarios y empresas — **QA** | Ninguna |
 | [SPEC-002](002-contexto-contable.md) | Contexto contable — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md) |
 | [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
+| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
 | [SPEC-005](005-descarga-simulada.md) | Descarga simulada — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md) |
-| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
+| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
 | [SPEC-007](007-ppd-complementos.md) | PPD y complementos — **QA** (trazabilidad documental) | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md) |
 | [SPEC-008](008-balanza-basica.md) | Balanza básica — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md) |
 | [SPEC-009](009-reportes-exportacion.md) | Reportes y exportación — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) |

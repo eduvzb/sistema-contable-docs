@@ -400,7 +400,7 @@ El MVP debe distinguir documentos PUE.
 
 En esta fase el sistema debe permitir que el contador registre manualmente las cuentas y partidas correspondientes.
 
-No es necesario automatizar todavía el asiento contable.
+La ampliación autorizada en SPEC-006 permite prellenar partidas desde importes fiscales estructurados; el contador elige o revisa las cuentas, corrige el asiento y decide cuándo guardarlo o contabilizarlo.
 
 ---
 
@@ -561,6 +561,8 @@ Las siguientes funcionalidades quedan fuera de esta primera versión.
 - reglas automáticas avanzadas;
 - inteligencia artificial;
 - clasificación automática por conceptos.
+
+Excepción posterior autorizada: SPEC-006 prellena importes y recuerda cuentas elegidas por el contador para un emisor y componente equivalentes. No contabiliza al pulsar «Continuar» ni decide el tratamiento fiscal de la cuenta.
 
 ## SAT
 
