@@ -1,6 +1,6 @@
 # Ejemplos de XML CFDI
 
-Estos archivos son fixtures documentales para probar la importación de CFDI 4.0 en el MVP. Están alineados con [SPEC-004](../../specs/004-documentos-fiscales.md) y [SPEC-007](../../specs/007-ppd-complementos.md).
+Estos archivos son fixtures documentales para probar la importación de CFDI 4.0 en el MVP. Están alineados con [SPEC-004](../../specs/004-documentos-fiscales/spec.md) y [SPEC-007](../../specs/007-ppd-complementos/spec.md).
 
 | Archivo | Escenario | Empresa del ejemplo |
 |---|---|---|

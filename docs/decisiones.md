@@ -9,7 +9,7 @@ Registro único para acuerdos compartidos. Las decisiones limitadas a una funcio
 | DT-003 | Backend: negocio, validación autoritativa, autorización, persistencia y contratos API. Frontend: presentación, interacción, flujos y estado de interfaz; puede representar reglas del backend sin convertirse en autoridad independiente. | AGENTS.md original. |
 | DT-004 | Los valores monetarios usan decimales adecuados; no usar punto flotante cuando pueda perderse precisión. Precisión, escala, redondeo y representación API se concretan al preparar las specs afectadas y se registran aquí si son compartidos. | AGENTS.md original; detalle todavía no decidido. |
 | DT-005 | Preferir capacidades naturales del framework. Dependencias, Redis, colas, cachés y workers requieren una necesidad concreta; no son infraestructura obligatoria por defecto. | AGENTS.md original. |
-| DP-001 | Documentación vigente centralizada aquí; una spec por funcionalidad, con preparación progresiva y verificación en el mismo archivo. | Plan autorizado por el usuario. |
+| DP-001 | Documentación vigente centralizada aquí, una carpeta por funcionalidad: `spec.md` es la única autoridad del estado y comportamiento; `plan.md` contiene contratos y enfoque técnico; `tasks-backend.md` y `tasks-frontend.md` contienen sólo trabajo técnico pendiente; `verificacion.md` conserva evidencia y QA por entrega. El índice de estados se genera desde `spec.md`. La preparación sigue siendo progresiva. | Plan autorizado por el usuario el 2026-09-24; reemplaza la verificación en el mismo archivo acordada originalmente. |
 | DP-002 | El MVP vigente lo delimitan alcance, reglas y decisiones provisionales de Planeación según el [mapa de fuentes](fuentes.md). El análisis inicial y las guías no agregan funcionalidades. | Plan autorizado y documentos de Planeación. |
 | DT-006 | La primera implementación usa Laravel 13 con PHP 8.4 y Sanctum en backend, PostgreSQL 18 mediante Sail, y Next.js 16 con TypeScript, App Router, Tailwind CSS y pnpm sobre Node 22 en frontend. Los bloqueos fijan versiones instaladas. | Instrucción explícita del usuario para SPEC-001, 2026-09-07. |
 | DT-007 | La aplicación propia usa el modo SPA de Sanctum con sesión en cookie HttpOnly, protección CSRF y frontend/API bajo dominio compartido; Laravel es la autoridad de autenticación y autorización. | Instrucción explícita del usuario para SPEC-001 y documentación oficial de Sanctum. |
@@ -25,6 +25,7 @@ Registro único para acuerdos compartidos. Las decisiones limitadas a una funcio
 
 ## Registro de cambios
 
+- **2026-09-24:** se actualizó DP-001 para separar definición funcional, plan, tareas por repositorio y evidencia, y para evitar estados manuales contradictorios. No cambia reglas de negocio, contratos del producto ni el ciclo de QA.
 - **2026-09-07:** se trasladaron DT-001 a DT-005 desde AGENTS.md sin introducir arquitectura adicional. Se registraron DP-001 y DP-002 y la simplificación constitucional autorizada. Los detalles aún no definidos permanecen pendientes; no se aprobaron reglas contables nuevas.
 - **2026-09-07:** se registraron DT-006 a DT-009 al preparar SPEC-001: versiones, autenticación SPA, roles/acceso y catálogo fiscal local.
 - **2026-09-07:** se registró DT-010 al preparar SPEC-002: contexto explícito y memoria local no autoritativa.

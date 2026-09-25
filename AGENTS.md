@@ -6,7 +6,7 @@ Este repositorio contiene documentación y specs compartidas del sistema contabl
 
 1. Localiza la funcionalidad en el [índice de specs](specs/README.md).
 2. Respeta la [constitución](docs/constitution.md) y las [decisiones vigentes](docs/decisiones.md).
-3. Lee la spec y su sección **Contexto de ejecución**. Durante ideación, preparación o cambio de comportamiento, consulta sus fuentes concretas; durante implementación de una spec `Lista` o `Actualización pendiente`, usa la spec como paquete funcional y reabre fuentes sólo según los disparadores definidos en el flujo. El [mapa de fuentes](docs/fuentes.md) indica su autoridad. No es necesario leer toda Planeación.
+3. Lee primero `specs/NNN-nombre/spec.md`: es la única autoridad de estado y comportamiento. Para preparar o implementar, abre su `plan.md` y las tareas pendientes de backend o frontend según el repositorio afectado; para comprobar o retomar evidencia, abre `verificacion.md`. Durante ideación, preparación o cambio de comportamiento, consulta las fuentes concretas de la spec; durante implementación reábrela sólo según los disparadores del [flujo](docs/flujo-spec.md). El [mapa de fuentes](docs/fuentes.md) indica su autoridad. No es necesario leer toda Planeación.
 4. Sigue el [flujo SDD](docs/flujo-spec.md): aclara los bloqueantes de esa spec y registra el comportamiento esperado antes de implementar. No inventes reglas de negocio.
 
 ## Durante el trabajo
@@ -21,6 +21,7 @@ Este repositorio contiene documentación y specs compartidas del sistema contabl
 ## Al terminar
 
 - Verifica los criterios de aceptación y las regresiones relevantes. Las reglas de negocio requieren pruebas de comportamiento esperado y errores, no de detalles internos.
-- Actualiza en la spec la evidencia real, las referencias a implementación y los pendientes. No declares comprobaciones que no se ejecutaron.
+- Actualiza la evidencia real y las referencias a implementación en `verificacion.md`; conserva en `spec.md` los criterios y el único estado vigente. Marca tareas completadas sólo tras comprobar su «Hecho cuando». No declares comprobaciones que no se ejecutaron.
 - Cuando implementación y comprobaciones técnicas estén completas, marca la spec como QA. No realices ni exijas una comprobación integral de interfaz por navegador: la validación visual corresponde a una persona.
 - Marca la spec como Implementada únicamente cuando la aprobación de QA humana esté registrada conforme al flujo.
+- Regenera el índice con `python3 scripts/spec_index.py --write` si cambia un estado y ejecuta `python3 scripts/spec_index.py --check` al cerrar el trabajo documental.

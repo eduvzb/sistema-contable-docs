@@ -1,22 +1,24 @@
 # Specs del MVP
 
-Una spec por funcionalidad, compartida por backend y frontend. Para trabajar usa el [flujo SDD](../docs/flujo-spec.md) y la [plantilla](_plantilla.md).
+Una carpeta por funcionalidad, compartida por backend y frontend. `spec.md` contiene el único estado vigente; `plan.md`, tareas por repositorio y `verificacion.md` completan el paquete. Para trabajar usa el [flujo SDD](../docs/flujo-spec.md) y las [plantillas](_plantilla/spec.md).
 
 ## Orden y dependencias
 
-SPEC-004 y SPEC-006 están en **Actualización pendiente** por la generación asistida de partidas desde CFDI; las demás permanecen en **QA**. La nueva actualización no tiene implementación ni evidencia técnica. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
+La tabla se genera desde el campo `Estado` de cada `spec.md`. Ejecuta `python3 scripts/spec_index.py --write` al cambiar una spec y `python3 scripts/spec_index.py --check` antes de cerrar la tarea. Los pendientes de cada spec explican qué falta antes de Implementada; no significan que todo el MVP esté bloqueado.
 
-| Spec | Funcionalidad | Dependencias de preparación |
-|---|---|---|
-| [SPEC-001](001-acceso-usuarios-empresas.md) | Acceso, usuarios y empresas — **QA** | Ninguna |
-| [SPEC-002](002-contexto-contable.md) | Contexto contable — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md) |
-| [SPEC-003](003-catalogo-cuentas.md) | Catálogo de cuentas — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [SPEC-004](004-documentos-fiscales.md) | Documentos fiscales — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [SPEC-005](005-descarga-simulada.md) | Descarga simulada — **QA** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md) |
-| [SPEC-006](006-polizas-trazabilidad.md) | Pólizas y trazabilidad — **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-004](004-documentos-fiscales.md) |
-| [SPEC-007](007-ppd-complementos.md) | PPD y complementos — **QA** (trazabilidad documental) | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md) |
-| [SPEC-008](008-balanza-basica.md) | Balanza básica — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md) |
-| [SPEC-009](009-reportes-exportacion.md) | Reportes y exportación — **QA** | [SPEC-002](002-contexto-contable.md), [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) |
+<!-- BEGIN SPEC STATUS -->
+| Spec | Funcionalidad | Estado | Dependencias de preparación |
+|---|---|---|---|
+| [SPEC-001](001-acceso-usuarios-empresas/spec.md) | Acceso, usuarios y empresas | **Actualización pendiente** | Ninguna funcionalidad previa; decisiones compartidas DT-001 a DT-009. |
+| [SPEC-002](002-contexto-contable/spec.md) | Contexto contable | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md) |
+| [SPEC-003](003-catalogo-cuentas/spec.md) | Catálogo de cuentas | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
+| [SPEC-004](004-documentos-fiscales/spec.md) | Documentos fiscales | **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
+| [SPEC-005](005-descarga-simulada/spec.md) | Descarga simulada | **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md) |
+| [SPEC-006](006-polizas-trazabilidad/spec.md) | Pólizas y trazabilidad | **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md), [SPEC-003](003-catalogo-cuentas/spec.md), [SPEC-004](004-documentos-fiscales/spec.md) |
+| [SPEC-007](007-ppd-complementos/spec.md) | PPD y complementos | **QA** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [SPEC-008](008-balanza-basica/spec.md) | Balanza básica | **QA** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-003](003-catalogo-cuentas/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [SPEC-009](009-reportes-exportacion/spec.md) | Reportes y exportación | **QA** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-008](008-balanza-basica/spec.md) |
+<!-- END SPEC STATUS -->
 
 Preparar acceso/contexto; después cuentas y documentos; luego pólizas; finalmente PPD/balanza y reportes. La simulación puede prepararse cuando exista el contrato de incorporación de documentos. No se necesita terminar PPD para preparar la balanza básica o los reportes del flujo PUE.
 
@@ -28,21 +30,21 @@ Cada sección funcional del MVP tiene responsable; esta tabla enlaza a la fuente
 
 | Sección del alcance | Responsable |
 |---|---|
-| [§3](../docs/planeacion/003%20-%20MVP-Scope.md#3-usuarios-incluidos) | [SPEC-001](001-acceso-usuarios-empresas.md) |
-| [§4](../docs/planeacion/003%20-%20MVP-Scope.md#4-empresas) | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) |
-| [§5](../docs/planeacion/003%20-%20MVP-Scope.md#5-periodos-contables) | [SPEC-002](002-contexto-contable.md) |
-| [§6](../docs/planeacion/003%20-%20MVP-Scope.md#6-importaci%C3%B3n-y-obtenci%C3%B3n-de-xml) | [SPEC-004](004-documentos-fiscales.md), [SPEC-005](005-descarga-simulada.md) |
-| [§7](../docs/planeacion/003%20-%20MVP-Scope.md#7-consulta-de-documentos-fiscales) | [SPEC-004](004-documentos-fiscales.md) |
-| [§8](../docs/planeacion/003%20-%20MVP-Scope.md#8-cat%C3%A1logo-de-cuentas) | [SPEC-003](003-catalogo-cuentas.md) |
-| [§9](../docs/planeacion/003%20-%20MVP-Scope.md#9-p%C3%B3lizas-contables) | [SPEC-006](006-polizas-trazabilidad.md) |
-| [§10](../docs/planeacion/003%20-%20MVP-Scope.md#10-partidas-contables) | [SPEC-006](006-polizas-trazabilidad.md) |
-| [§11](../docs/planeacion/003%20-%20MVP-Scope.md#11-relaci%C3%B3n-xml--p%C3%B3liza) | [SPEC-006](006-polizas-trazabilidad.md) |
-| [§12](../docs/planeacion/003%20-%20MVP-Scope.md#12-ingresos) | [SPEC-006](006-polizas-trazabilidad.md) |
-| [§13](../docs/planeacion/003%20-%20MVP-Scope.md#13-egresos) | [SPEC-006](006-polizas-trazabilidad.md) |
-| [§14](../docs/planeacion/003%20-%20MVP-Scope.md#14-pue) | [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md) |
-| [§15](../docs/planeacion/003%20-%20MVP-Scope.md#15-ppd-y-complementos-de-pago) | [SPEC-007](007-ppd-complementos.md) |
-| [§16](../docs/planeacion/003%20-%20MVP-Scope.md#16-reportes-incluidos) | [SPEC-008](008-balanza-basica.md), [SPEC-009](009-reportes-exportacion.md) |
-| [§17](../docs/planeacion/003%20-%20MVP-Scope.md#17-auditor%C3%ADa-m%C3%ADnima) | [SPEC-006](006-polizas-trazabilidad.md) |
+| [§3](../docs/planeacion/003%20-%20MVP-Scope.md#3-usuarios-incluidos) | [SPEC-001](001-acceso-usuarios-empresas/spec.md) |
+| [§4](../docs/planeacion/003%20-%20MVP-Scope.md#4-empresas) | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
+| [§5](../docs/planeacion/003%20-%20MVP-Scope.md#5-periodos-contables) | [SPEC-002](002-contexto-contable/spec.md) |
+| [§6](../docs/planeacion/003%20-%20MVP-Scope.md#6-importaci%C3%B3n-y-obtenci%C3%B3n-de-xml) | [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-005](005-descarga-simulada/spec.md) |
+| [§7](../docs/planeacion/003%20-%20MVP-Scope.md#7-consulta-de-documentos-fiscales) | [SPEC-004](004-documentos-fiscales/spec.md) |
+| [§8](../docs/planeacion/003%20-%20MVP-Scope.md#8-cat%C3%A1logo-de-cuentas) | [SPEC-003](003-catalogo-cuentas/spec.md) |
+| [§9](../docs/planeacion/003%20-%20MVP-Scope.md#9-p%C3%B3lizas-contables) | [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [§10](../docs/planeacion/003%20-%20MVP-Scope.md#10-partidas-contables) | [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [§11](../docs/planeacion/003%20-%20MVP-Scope.md#11-relaci%C3%B3n-xml--p%C3%B3liza) | [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [§12](../docs/planeacion/003%20-%20MVP-Scope.md#12-ingresos) | [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [§13](../docs/planeacion/003%20-%20MVP-Scope.md#13-egresos) | [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [§14](../docs/planeacion/003%20-%20MVP-Scope.md#14-pue) | [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
+| [§15](../docs/planeacion/003%20-%20MVP-Scope.md#15-ppd-y-complementos-de-pago) | [SPEC-007](007-ppd-complementos/spec.md) |
+| [§16](../docs/planeacion/003%20-%20MVP-Scope.md#16-reportes-incluidos) | [SPEC-008](008-balanza-basica/spec.md), [SPEC-009](009-reportes-exportacion/spec.md) |
+| [§17](../docs/planeacion/003%20-%20MVP-Scope.md#17-auditor%C3%ADa-m%C3%ADnima) | [SPEC-006](006-polizas-trazabilidad/spec.md) |
 
 [El recorrido §18](../docs/planeacion/003%20-%20MVP-Scope.md#18-flujo-completo-que-debe-demostrar-el-mvp), [los escenarios mínimos §19](../docs/planeacion/003%20-%20MVP-Scope.md#19-escenarios-m%C3%ADnimos-a-probar) y [los criterios de éxito §20](../docs/planeacion/003%20-%20MVP-Scope.md#20-criterios-de-%C3%A9xito-del-mvp) se comprueban mediante las specs y el recorrido integrado de abajo. Los objetivos §1/2 y el resumen §27 se concretan mediante esta cobertura.
 
@@ -54,47 +56,47 @@ Los estados se copian de las fuentes sin promover supuestos a confirmaciones. La
 
 | Regla | Estado de la fuente | Spec responsable / criterio |
 |---|---|---|
-| [BR-001](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa) | CONFIRMADA | [SPEC-001](001-acceso-usuarios-empresas.md), [SPEC-002](002-contexto-contable.md) — CA-001-05; CA-002-02/04 y criterios de aislamiento de cada función |
-| [BR-002](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#4-br-002--el-contador-trabaja-dentro-de-un-periodo) | CONFIRMADA | [SPEC-002](002-contexto-contable.md), [SPEC-006](006-polizas-trazabilidad.md) — CA-002-03; CA-006-01 |
-| [BR-003](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#5-br-003--cada-empresa-tiene-su-propio-cat%C3%A1logo-de-cuentas) | CONFIRMADA | [SPEC-003](003-catalogo-cuentas.md), [SPEC-006](006-polizas-trazabilidad.md) — CA-003-06; CA-006-08 |
-| [BR-004](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#6-br-004--cada-partida-utiliza-una-cuenta-contable) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-01 |
-| [BR-005](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#7-br-005--una-p%C3%B3liza-contabilizada-debe-estar-balanceada) | CONFIRMADA COMO REGLA DEL MVP | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-03/04 |
-| [BR-006](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#8-br-006--una-p%C3%B3liza-incompleta-puede-guardarse-como-borrador) | SUPUESTO MVP | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-02 |
-| [BR-007](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#9-br-007--una-p%C3%B3liza-puede-relacionarse-con-varios-xml) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-06 |
-| [BR-008](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#10-br-008--un-xml-puede-relacionarse-con-varias-p%C3%B3lizas) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad.md), [SPEC-007](007-ppd-complementos.md) — CA-006-07; CA-007-04/08 |
-| [BR-009](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#11-br-009--una-p%C3%B3liza-puede-existir-sin-xml) | CONFIRMADA COMO NECESIDAD DEL MODELO | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-05 |
-| [BR-010](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#12-br-010--el-mismo-cfdi-no-debe-importarse-dos-veces) | SUPUESTO MVP | [SPEC-004](004-documentos-fiscales.md) — CA-004-03 |
-| [BR-011](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#13-br-011--el-xml-original-no-se-conserva) | CONFIRMADA COMO REGLA DEL MVP | [SPEC-004](004-documentos-fiscales.md) — CA-004-01 |
-| [BR-012](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#14-br-012--pue-y-ppd-se-tratan-como-escenarios-diferentes) | CONFIRMADA COMO NECESIDAD FUNCIONAL | [SPEC-004](004-documentos-fiscales.md), [SPEC-006](006-polizas-trazabilidad.md), [SPEC-007](007-ppd-complementos.md) — CA-004-04; CA-006-10; CA-007-01 |
-| [BR-013](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#15-br-013--una-factura-ppd-puede-tener-varios-pagos) | CONFIRMADA | [SPEC-007](007-ppd-complementos.md) — CA-007-03/04 |
-| [BR-014](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#16-br-014--los-pagos-pueden-ocurrir-en-distintos-periodos) | CONFIRMADA | [SPEC-007](007-ppd-complementos.md) — CA-007-04/08 |
-| [BR-015](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#17-br-015--los-complementos-deben-conservar-su-relaci%C3%B3n-con-la-factura) | PENDIENTE DE VALIDACIÓN NORMATIVA | [SPEC-007](007-ppd-complementos.md) — CA-007-02/05 |
-| [BR-016](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#18-br-016--el-contador-selecciona-manualmente-las-cuentas-contables) | CONFIRMADA PARA MVP | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-01/10 |
-| [BR-017](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#19-br-017--las-p%C3%B3lizas-contabilizadas-afectan-la-balanza) | CONFIRMADA | [SPEC-008](008-balanza-basica.md) — CA-008-02/03/04 |
-| [BR-018](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#20-br-018--debe-existir-trazabilidad-desde-el-xml) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-07/11 |
-| [BR-019](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#21-br-019--debe-existir-trazabilidad-desde-la-p%C3%B3liza) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad.md) — CA-006-06/11 |
-| [BR-020](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#22-br-020--la-descarga-autom%C3%A1tica-se-simula-en-el-mvp) | CONFIRMADA PARA MVP | [SPEC-005](005-descarga-simulada.md) — CA-005-01/02/04/06 |
+| [BR-001](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa) | CONFIRMADA | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) — CA-001-05; CA-002-02/04 y criterios de aislamiento de cada función |
+| [BR-002](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#4-br-002--el-contador-trabaja-dentro-de-un-periodo) | CONFIRMADA | [SPEC-002](002-contexto-contable/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-002-03; CA-006-01 |
+| [BR-003](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#5-br-003--cada-empresa-tiene-su-propio-cat%C3%A1logo-de-cuentas) | CONFIRMADA | [SPEC-003](003-catalogo-cuentas/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-003-06; CA-006-08 |
+| [BR-004](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#6-br-004--cada-partida-utiliza-una-cuenta-contable) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-01 |
+| [BR-005](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#7-br-005--una-p%C3%B3liza-contabilizada-debe-estar-balanceada) | CONFIRMADA COMO REGLA DEL MVP | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-03/04 |
+| [BR-006](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#8-br-006--una-p%C3%B3liza-incompleta-puede-guardarse-como-borrador) | SUPUESTO MVP | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-02 |
+| [BR-007](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#9-br-007--una-p%C3%B3liza-puede-relacionarse-con-varios-xml) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-06 |
+| [BR-008](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#10-br-008--un-xml-puede-relacionarse-con-varias-p%C3%B3lizas) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-007](007-ppd-complementos/spec.md) — CA-006-07; CA-007-04/08 |
+| [BR-009](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#11-br-009--una-p%C3%B3liza-puede-existir-sin-xml) | CONFIRMADA COMO NECESIDAD DEL MODELO | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-05 |
+| [BR-010](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#12-br-010--el-mismo-cfdi-no-debe-importarse-dos-veces) | SUPUESTO MVP | [SPEC-004](004-documentos-fiscales/spec.md) — CA-004-03 |
+| [BR-011](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#13-br-011--el-xml-original-no-se-conserva) | CONFIRMADA COMO REGLA DEL MVP | [SPEC-004](004-documentos-fiscales/spec.md) — CA-004-01 |
+| [BR-012](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#14-br-012--pue-y-ppd-se-tratan-como-escenarios-diferentes) | CONFIRMADA COMO NECESIDAD FUNCIONAL | [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-007](007-ppd-complementos/spec.md) — CA-004-04; CA-006-10; CA-007-01 |
+| [BR-013](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#15-br-013--una-factura-ppd-puede-tener-varios-pagos) | CONFIRMADA | [SPEC-007](007-ppd-complementos/spec.md) — CA-007-03/04 |
+| [BR-014](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#16-br-014--los-pagos-pueden-ocurrir-en-distintos-periodos) | CONFIRMADA | [SPEC-007](007-ppd-complementos/spec.md) — CA-007-04/08 |
+| [BR-015](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#17-br-015--los-complementos-deben-conservar-su-relaci%C3%B3n-con-la-factura) | PENDIENTE DE VALIDACIÓN NORMATIVA | [SPEC-007](007-ppd-complementos/spec.md) — CA-007-02/05 |
+| [BR-016](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#18-br-016--el-contador-selecciona-manualmente-las-cuentas-contables) | CONFIRMADA PARA MVP | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-01/10 |
+| [BR-017](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#19-br-017--las-p%C3%B3lizas-contabilizadas-afectan-la-balanza) | CONFIRMADA | [SPEC-008](008-balanza-basica/spec.md) — CA-008-02/03/04 |
+| [BR-018](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#20-br-018--debe-existir-trazabilidad-desde-el-xml) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-07/11 |
+| [BR-019](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#21-br-019--debe-existir-trazabilidad-desde-la-p%C3%B3liza) | CONFIRMADA | [SPEC-006](006-polizas-trazabilidad/spec.md) — CA-006-06/11 |
+| [BR-020](../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#22-br-020--la-descarga-autom%C3%A1tica-se-simula-en-el-mvp) | CONFIRMADA PARA MVP | [SPEC-005](005-descarga-simulada/spec.md) — CA-005-01/02/04/06 |
 
 ## Correspondencia de escenarios
 
 | Escenario | Tratamiento en el MVP |
 |---|---|
-| [AC-001](../docs/planeacion/004%20-%20Escenarios%20contables.md#3-escenario-ac-001--ingreso-pue) | [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) — ingreso PUE manual, CA-006-10 y CA-008-02. |
-| [AC-002](../docs/planeacion/004%20-%20Escenarios%20contables.md#4-escenario-ac-002--egreso-pue) | [SPEC-006](006-polizas-trazabilidad.md), [SPEC-008](008-balanza-basica.md) — egreso PUE manual, CA-006-10 y CA-008-02. |
-| [AC-003](../docs/planeacion/004%20-%20Escenarios%20contables.md#5-escenario-ac-003--factura-ppd-pendiente-de-pago-o-cobro) | [SPEC-007](007-ppd-complementos.md) — factura pendiente, CA-007-01. |
-| [AC-004](../docs/planeacion/004%20-%20Escenarios%20contables.md#6-escenario-ac-004--pago-parcial-de-factura-ppd) | [SPEC-007](007-ppd-complementos.md) — pago parcial, CA-007-03; cálculo general pendiente. |
-| [AC-005](../docs/planeacion/004%20-%20Escenarios%20contables.md#7-escenario-ac-005--m%C3%BAltiples-pagos-en-distintos-periodos) | [SPEC-007](007-ppd-complementos.md) — periodos distintos, CA-007-04/08. |
-| [AC-006](../docs/planeacion/004%20-%20Escenarios%20contables.md#8-escenario-ac-006--varios-xml-en-una-misma-p%C3%B3liza) | [SPEC-006](006-polizas-trazabilidad.md) — varios XML, CA-006-06. |
-| [AC-007](../docs/planeacion/004%20-%20Escenarios%20contables.md#9-escenario-ac-007--un-xml-relacionado-con-varias-p%C3%B3lizas) | [SPEC-006](006-polizas-trazabilidad.md) — varias pólizas, CA-006-07. |
-| [AC-008](../docs/planeacion/004%20-%20Escenarios%20contables.md#10-escenario-ac-008--p%C3%B3liza-sin-cfdi) | [SPEC-006](006-polizas-trazabilidad.md) — sin CFDI, CA-006-05; no agrega tipo CIERRE/AJUSTE. |
-| [AC-009](../docs/planeacion/004%20-%20Escenarios%20contables.md#11-escenario-ac-009--provisi%C3%B3n) | [SPEC-006](006-polizas-trazabilidad.md), [SPEC-007](007-ppd-complementos.md) — solo representación manual; automatización de provisión excluida por OQ-006. |
-| [AC-010](../docs/planeacion/004%20-%20Escenarios%20contables.md#12-escenario-ac-010--iva-pendiente-y-pago-posterior) | [SPEC-006](006-polizas-trazabilidad.md), [SPEC-007](007-ppd-complementos.md) — registro manual sin prescribir tratamiento; automatización de IVA excluida por OQ-007. |
-| [AC-011](../docs/planeacion/004%20-%20Escenarios%20contables.md#13-escenario-ac-011--p%C3%B3liza-descuadrada-en-borrador) | [SPEC-006](006-polizas-trazabilidad.md) — borrador descuadrado, CA-006-02/03. |
-| [AC-012](../docs/planeacion/004%20-%20Escenarios%20contables.md#14-escenario-ac-012--consulta-de-trazabilidad-desde-un-cfdi) | [SPEC-006](006-polizas-trazabilidad.md), [SPEC-007](007-ppd-complementos.md) — desde XML, CA-006-07/11 y CA-007-08. |
-| [AC-013](../docs/planeacion/004%20-%20Escenarios%20contables.md#15-escenario-ac-013--consulta-de-trazabilidad-desde-una-p%C3%B3liza) | [SPEC-006](006-polizas-trazabilidad.md) — desde póliza, CA-006-06/11. |
-| [AC-014](../docs/planeacion/004%20-%20Escenarios%20contables.md#16-escenario-ac-014--balanza-despu%C3%A9s-de-contabilizar) | [SPEC-008](008-balanza-basica.md) — balanza, CA-008-01/02/03/04. |
-| [AC-015](../docs/planeacion/004%20-%20Escenarios%20contables.md#17-escenario-ac-015--documento-duplicado) | [SPEC-004](004-documentos-fiscales.md) — duplicado, CA-004-03. |
-| [AC-016](../docs/planeacion/004%20-%20Escenarios%20contables.md#18-escenario-ac-016--descarga-simulada-de-xml) | [SPEC-005](005-descarga-simulada.md) — simulación, CA-005-01/02/04/06. |
+| [AC-001](../docs/planeacion/004%20-%20Escenarios%20contables.md#3-escenario-ac-001--ingreso-pue) | [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-008](008-balanza-basica/spec.md) — ingreso PUE manual, CA-006-10 y CA-008-02. |
+| [AC-002](../docs/planeacion/004%20-%20Escenarios%20contables.md#4-escenario-ac-002--egreso-pue) | [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-008](008-balanza-basica/spec.md) — egreso PUE manual, CA-006-10 y CA-008-02. |
+| [AC-003](../docs/planeacion/004%20-%20Escenarios%20contables.md#5-escenario-ac-003--factura-ppd-pendiente-de-pago-o-cobro) | [SPEC-007](007-ppd-complementos/spec.md) — factura pendiente, CA-007-01. |
+| [AC-004](../docs/planeacion/004%20-%20Escenarios%20contables.md#6-escenario-ac-004--pago-parcial-de-factura-ppd) | [SPEC-007](007-ppd-complementos/spec.md) — pago parcial, CA-007-03; cálculo general pendiente. |
+| [AC-005](../docs/planeacion/004%20-%20Escenarios%20contables.md#7-escenario-ac-005--m%C3%BAltiples-pagos-en-distintos-periodos) | [SPEC-007](007-ppd-complementos/spec.md) — periodos distintos, CA-007-04/08. |
+| [AC-006](../docs/planeacion/004%20-%20Escenarios%20contables.md#8-escenario-ac-006--varios-xml-en-una-misma-p%C3%B3liza) | [SPEC-006](006-polizas-trazabilidad/spec.md) — varios XML, CA-006-06. |
+| [AC-007](../docs/planeacion/004%20-%20Escenarios%20contables.md#9-escenario-ac-007--un-xml-relacionado-con-varias-p%C3%B3lizas) | [SPEC-006](006-polizas-trazabilidad/spec.md) — varias pólizas, CA-006-07. |
+| [AC-008](../docs/planeacion/004%20-%20Escenarios%20contables.md#10-escenario-ac-008--p%C3%B3liza-sin-cfdi) | [SPEC-006](006-polizas-trazabilidad/spec.md) — sin CFDI, CA-006-05; no agrega tipo CIERRE/AJUSTE. |
+| [AC-009](../docs/planeacion/004%20-%20Escenarios%20contables.md#11-escenario-ac-009--provisi%C3%B3n) | [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-007](007-ppd-complementos/spec.md) — solo representación manual; automatización de provisión excluida por OQ-006. |
+| [AC-010](../docs/planeacion/004%20-%20Escenarios%20contables.md#12-escenario-ac-010--iva-pendiente-y-pago-posterior) | [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-007](007-ppd-complementos/spec.md) — registro manual sin prescribir tratamiento; automatización de IVA excluida por OQ-007. |
+| [AC-011](../docs/planeacion/004%20-%20Escenarios%20contables.md#13-escenario-ac-011--p%C3%B3liza-descuadrada-en-borrador) | [SPEC-006](006-polizas-trazabilidad/spec.md) — borrador descuadrado, CA-006-02/03. |
+| [AC-012](../docs/planeacion/004%20-%20Escenarios%20contables.md#14-escenario-ac-012--consulta-de-trazabilidad-desde-un-cfdi) | [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-007](007-ppd-complementos/spec.md) — desde XML, CA-006-07/11 y CA-007-08. |
+| [AC-013](../docs/planeacion/004%20-%20Escenarios%20contables.md#15-escenario-ac-013--consulta-de-trazabilidad-desde-una-p%C3%B3liza) | [SPEC-006](006-polizas-trazabilidad/spec.md) — desde póliza, CA-006-06/11. |
+| [AC-014](../docs/planeacion/004%20-%20Escenarios%20contables.md#16-escenario-ac-014--balanza-despu%C3%A9s-de-contabilizar) | [SPEC-008](008-balanza-basica/spec.md) — balanza, CA-008-01/02/03/04. |
+| [AC-015](../docs/planeacion/004%20-%20Escenarios%20contables.md#17-escenario-ac-015--documento-duplicado) | [SPEC-004](004-documentos-fiscales/spec.md) — duplicado, CA-004-03. |
+| [AC-016](../docs/planeacion/004%20-%20Escenarios%20contables.md#18-escenario-ac-016--descarga-simulada-de-xml) | [SPEC-005](005-descarga-simulada/spec.md) — simulación, CA-005-01/02/04/06. |
 
 [AC-F01 a AC-F10](../docs/planeacion/004%20-%20Escenarios%20contables.md#19-escenarios-posteriores-al-mvp) quedan posteriores al MVP. Los estados y pendientes de cada escenario permanecen en la fuente y se reflejan en las specs: representar el flujo no valida cuentas ni tratamiento fiscal.
 
@@ -118,6 +120,10 @@ Variantes: ingreso y egreso PUE, factura PPD pendiente, pago parcial y pagos en 
 
 ## Verificación documental
 
+Las entradas fechadas de esta sección son históricas; el estado vigente se consulta únicamente en la tabla generada arriba y en el `spec.md` correspondiente.
+
+**2026-09-24 — Migración de estructura.** Las nueve funcionalidades quedaron separadas en spec, plan, tareas de backend/frontend y verificación. Se compararon los 104 IDs de criterios con la revisión anterior: todos se conservaron; sólo CA-001-18/19, CA-004-11 y CA-006-19 a CA-006-24 se reformularon en estilo EARS sin cambiar el resultado esperado. El índice se genera desde los estados de `spec.md`; `python3 scripts/spec_index.py --check` valida estructura y destinos de enlaces locales. Esta migración no modifica backend/frontend ni aporta pruebas de producto nuevas.
+
 **2026-09-07 — Revisión documental completada.** Esta comprobación no cambia las specs a Lista o Implementada ni acredita reglas fiscales.
 
 - Validación local de los 26 Markdown: 389 enlaces relativos, incluidas 165 referencias con ancla, sin destinos ausentes ni enlaces Obsidian pendientes.
@@ -127,7 +133,7 @@ Variantes: ingreso y egreso PUE, factura PPD pendiente, pago parcial y pagos en 
 - Revisión de uso del flujo con una funcionalidad nueva (SPEC-005) y una corrección (duplicados en SPEC-004): cada paso tiene fuente, responsable, preparación y evidencia prevista sin exigir archivos de tareas ni aprobaciones repetidas.
 - Revisión de coherencia: SAT solo simulado, captura contable manual, supuestos etiquetados y decisiones ausentes localizadas por spec. Numeración, edición de POSTED, saldos PPD e iniciales siguen abiertos; no se resolvieron mediante reglas inventadas.
 
-Las pruebas del producto y la demostración con contadores de las specs aún no implementadas **no se ejecutaron**. SPEC-001 conserva su evidencia real en su propia sección de verificación; el resto de esta revisión se refiere a documentación.
+Las pruebas del producto y la demostración con contadores de las specs aún no implementadas **no se ejecutaron** en esa revisión. SPEC-001 conserva su evidencia real en [verificación](001-acceso-usuarios-empresas/verificacion.md); el resto de este apartado se refiere a documentación histórica.
 
 **2026-09-10 — Reclasificación documental.** Se incorporaron Actualización pendiente y QA al flujo SDD. Actualización pendiente se aplicó a SPEC-002, SPEC-003, SPEC-004 y SPEC-006 por sus criterios nuevos; SPEC-001, SPEC-005 y SPEC-007 a SPEC-009 pasaron a QA porque sólo resta validación visual humana. La reclasificación no modifica la evidencia histórica ni incluyó pruebas de producto.
 
