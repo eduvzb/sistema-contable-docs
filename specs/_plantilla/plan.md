@@ -18,8 +18,8 @@ Errores observables, aislamiento por empresa, atomicidad y regresiones aplicable
 
 ## Estrategia de pruebas
 
-Pruebas de comportamiento backend y regresiones pertinentes. Para interacción nueva o modificada en Next/React, usar Vitest y React Testing Library conforme a DT-012; reservar layout real para QA visual humana. No registrar resultados no ejecutados aquí.
+Pruebas de comportamiento backend y regresiones pertinentes. Para interacción nueva o modificada en Next/React, usar Vitest y React Testing Library; reservar layout real para QA visual humana. No registrar resultados no ejecutados aquí.
 
-## Decisiones técnicas y pendientes
+## Riesgos y bloqueantes técnicos
 
-Decisiones necesarias para implementar y cuestiones técnicas que bloquean el alcance. Las tareas se dividen entre [backend](tasks-backend.md) y [frontend](tasks-frontend.md); los resultados viven en [verificacion.md](verificacion.md).
+Anotar únicamente contratos, migraciones o cuestiones técnicas aún pendientes para esta entrega. Las tareas se dividen entre [backend](tasks-backend.md) y [frontend](tasks-frontend.md); los resultados viven en [verificacion.md](verificacion.md).

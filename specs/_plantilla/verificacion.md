@@ -1,6 +1,6 @@
 # Verificación — SPEC-NNN
 
-El estado y los criterios vigentes están sólo en [spec.md](spec.md). La evidencia de una revisión anterior no acredita criterios añadidos o modificados después.
+El [estado de trabajo y los criterios](spec.md) se contrastan con código y pruebas. Git conserva las entregas anteriores.
 
 ## Entrega actual
 
@@ -11,11 +11,3 @@ El estado y los criterios vigentes están sólo en [spec.md](spec.md). La eviden
 ## QA humana
 
 Recorridos visuales pendientes. Registrar aprobación u observaciones con fecha; la aprobación es requisito para Implementada.
-
-## Evidencia histórica
-
-Fechas, criterios, comandos, resultados y referencias de entregas anteriores. Identificar la versión del criterio cuando haya cambiado.
-
-## Historial documental
-
-- AAAA-MM-DD: motivo, decisión o fuente y CA afectados. Git conserva las revisiones anteriores.

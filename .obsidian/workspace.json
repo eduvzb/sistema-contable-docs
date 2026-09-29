@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "4abaef1c7af9afc4",
+        "id": "80d48a4ab9bc94ba",
         "type": "tabs",
         "children": [
           {
-            "id": "4aa732599ca8320b",
+            "id": "273d8e9255b124f1",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -79,7 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 640.28515625
+    "width": 390.40625
   },
   "right": {
     "id": "4561a4757997d1e6",
@@ -181,8 +181,10 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "4aa732599ca8320b",
+  "active": "273d8e9255b124f1",
   "lastOpenFiles": [
+    "specs/README.md",
+    "docs/fuentes.md",
     "docs/constitution.md",
     "specs/001-acceso-usuarios-empresas.md",
     "docs/planeacion/Conceptos/Guía de conceptos.md",
@@ -202,7 +204,6 @@
     "docs/ejemplos/README.md",
     "docs/ejemplos",
     "specs/_plantilla.md",
-    "specs/README.md",
     "AGENTS.md",
     "Sin título.canvas",
     "specs/009-reportes-exportacion.md",
@@ -214,7 +215,6 @@
     "docs/prompts/implementar-spec.md",
     "docs/prompts/cambio-comportamiento.md",
     "docs/prompts/nueva-funcionalidad.md",
-    "docs/fuentes.md",
     "docs/prompts/corregir-incumplimiento.md",
     "docs/prompts",
     "specs/evidencia",

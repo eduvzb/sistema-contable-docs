@@ -1,13 +1,9 @@
 
 # Sistema Contable — Glosario de Dominio
 
-> **Documento de referencia:** `01-domain-glossary.md`  
-> **Nota en este vault:** [002 - Glosario](002%20-%20Glosario.md)  
-> **Estado:** Borrador inicial  
 > **Propósito:** Unificar el lenguaje del proyecto entre negocio, producto y desarrollo  
-> **Última actualización:** 2026-08-31
 
-**Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [MVP](003%20-%20MVP-Scope.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Guía de conceptos](Conceptos/Gu%C3%ADa%20de%20conceptos.md)
+**Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [Alcance](003%20-%20Alcance%20del%20producto.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Guía de conceptos](Conceptos/Gu%C3%ADa%20de%20conceptos.md)
 
 ---
 
@@ -32,9 +28,9 @@ Cada definición puede encontrarse en uno de estos estados:
 
 - **CONFIRMADO:** concepto identificado directamente durante el levantamiento.
 - **DECISIÓN TÉCNICA:** convención definida para el diseño del sistema.
-- **SUPUESTO MVP:** comportamiento o interpretación provisional.
+- **SUPUESTO POR VALIDAR:** comportamiento o interpretación provisional.
 - **PENDIENTE DE VALIDAR:** requiere confirmación con usuarios contables.
-- **FUERA DEL MVP:** concepto relevante pero no prioritario en la primera versión.
+- **FUERA DEL ALCANCE ACTUAL:** concepto relevante pero no prioritario en el alcance actual.
 
 ---
 
@@ -267,7 +263,7 @@ Estados potenciales:
 - cerrado;
 - bloqueado.
 
-**Estado de esos estados:** SUPUESTO MVP.
+**Estado de esos estados:** SUPUESTO POR VALIDAR.
 
 ---
 
@@ -968,7 +964,7 @@ Una póliza contabilizada deberá encontrarse balanceada.
 
 # 44. Póliza descuadrada
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 Póliza donde:
 
@@ -987,7 +983,7 @@ Este comportamiento deberá validarse con usuarios.
 
 # 45. Borrador de póliza
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 Estado temporal de una póliza que todavía puede modificarse y no representa un registro contable definitivo.
 
@@ -1007,7 +1003,7 @@ DRAFT
 
 # 46. Póliza contabilizada
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 Póliza que ha superado las validaciones necesarias y forma parte formal de los movimientos contables.
 
@@ -1107,7 +1103,7 @@ Puede estar relacionado con:
 - DIOT;
 - patrones contables.
 
-Puede ser útil contar con una entidad propia en fases posteriores.
+Puede ser útil contar con una entidad propia en ampliaciones futuras.
 
 ---
 
@@ -1141,7 +1137,7 @@ La distinción exacta dependerá del catálogo y reglas de cada empresa.
 
 Cuenta o institución utilizada para registrar movimientos financieros.
 
-En el MVP puede representarse inicialmente mediante cuentas contables.
+En el producto puede representarse inicialmente mediante cuentas contables.
 
 Una entidad bancaria independiente podría introducirse posteriormente si se implementa conciliación bancaria.
 
@@ -1272,7 +1268,7 @@ Nombre sugerido:
 DIOT
 ```
 
-La implementación completa no está confirmada para el primer MVP.
+La implementación completa no está confirmada para el producto en desarrollo.
 
 ---
 
@@ -1594,7 +1590,7 @@ El alcance definitivo sigue pendiente.
 
 # 78. Regla de migración inicial
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 Para reducir complejidad, la primera estrategia podría consistir en migrar:
 
@@ -1612,7 +1608,7 @@ Debe validarse con los usuarios antes de considerarse una decisión final.
 
 # 79. Estado de documento
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 Estado interno utilizado para representar el avance de un documento dentro del flujo contable.
 
@@ -2408,7 +2404,7 @@ Podría permitir identificar:
 - diferencias de importe;
 - depósitos o retiros pendientes.
 
-Probablemente corresponde a una fase posterior al MVP.
+Probablemente corresponde a una ampliación futura.
 
 **Pendiente de confirmar:**
 
@@ -2435,7 +2431,7 @@ Puede incluir potencialmente:
 - archivos estructurados;
 - exportaciones requeridas fiscalmente.
 
-Probablemente corresponde a una fase posterior.
+Probablemente corresponde a una ampliación futura.
 
 **Pendiente de confirmar:**
 

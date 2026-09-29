@@ -1,20 +1,16 @@
-# Sistema Contable — Alcance del MVP
+# Sistema Contable — Alcance del producto
 
-> **Documento de referencia:** `05-mvp-scope.md`  
-> **Nota en este vault:** [003 - MVP-Scope](003%20-%20MVP-Scope.md)
-> **Estado:** Borrador inicial  
-> **Enfoque:** Negocio y operación contable  
-> **Última actualización:** 2026-08-31
+> **Enfoque:** Negocio y operación contable
 
 **Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [Preguntas abiertas](006%20-%20Preguntas%20Abiertas.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md)
 
 ---
 
-# 1. Objetivo del MVP
+# 1. Objetivo del producto
 
-El objetivo del MVP es validar que el nuevo sistema puede sustituir el flujo contable principal que hoy se realiza entre varias herramientas.
+El producto reúne el flujo contable principal que hoy se realiza entre varias herramientas y evoluciona a partir del uso real de contadores.
 
-El MVP debe permitir que un contador pueda:
+El producto debe permitir que un contador pueda:
 
 ```text
 Seleccionar empresa
@@ -40,9 +36,7 @@ Validar cargos y abonos
 Consultar balanza básica
 ```
 
-El MVP no busca automatizar toda la contabilidad.
-
-Busca comprobar que el sistema representa correctamente el trabajo real del contador y puede ejecutar el flujo contable principal de una empresa.
+El alcance actual prioriza captura, consulta y trazabilidad del trabajo contable; las automatizaciones adicionales se definen cuando exista una necesidad concreta.
 
 ---
 
@@ -61,7 +55,7 @@ El contador necesita realizar pasos separados para:
 - revisar movimientos;
 - generar reportes.
 
-El MVP debe concentrar estas actividades dentro de una sola plataforma.
+El producto debe concentrar estas actividades dentro de una sola plataforma.
 
 ---
 
@@ -96,7 +90,7 @@ Debe poder:
 
 # 4. Empresas
 
-El MVP debe permitir administrar múltiples empresas.
+El producto debe permitir administrar múltiples empresas.
 
 Cada empresa deberá manejar de forma independiente:
 
@@ -132,7 +126,7 @@ Ejercicio: 2026
 Periodo: Julio
 ```
 
-Para el MVP será suficiente distinguir inicialmente entre:
+Los periodos distinguen los estados:
 
 ```text
 ABIERTO
@@ -145,7 +139,7 @@ El comportamiento exacto del cierre queda pendiente de validación.
 
 # 6. Importación y obtención de XML
 
-El MVP debe permitir cargar XML de forma manual y masiva.
+El producto debe permitir cargar XML de forma manual y masiva.
 
 El sistema debe poder:
 
@@ -157,9 +151,9 @@ El sistema debe poder:
 
 ## Simulación de descarga automática
 
-Aunque en esta fase no será necesario implementar una integración real con SAT, el MVP deberá **simular el flujo de descarga automática de XML mediante un servicio externo ficticio o controlado**.
+La descarga de XML funciona mediante un servicio simulado y controlado, conforme a SPEC-005. No hay integración real con SAT.
 
-El objetivo es que el cliente pueda visualizar y validar una de las partes más importantes de su proceso futuro:
+El recorrido de la descarga simulada es:
 
 ```text
 Seleccionar empresa
@@ -175,19 +169,11 @@ Documentos se incorporan al repositorio
 Contador continúa con el proceso contable
 ```
 
-Para efectos del MVP, el comportamiento podrá utilizar información previamente preparada o documentos de prueba.
-
-Lo que se desea validar es:
-
-- que el usuario entienda cómo iniciará la descarga;
-- que pueda visualizar el progreso o resultado del proceso;
-- que los documentos obtenidos aparezcan en la bandeja correspondiente;
-- que posteriormente pueda contabilizarlos normalmente;
-- que el flujo represente correctamente la experiencia esperada por el cliente.
+El origen controlado puede utilizar documentos de prueba. El resultado se muestra al usuario y los documentos incorporados siguen el mismo flujo contable que los importados manualmente.
 
 ### Alcance de esta simulación
 
-El MVP **sí incluye**:
+El producto **sí incluye**:
 
 - acción para iniciar una descarga;
 - representación de un servicio externo;
@@ -196,7 +182,7 @@ El MVP **sí incluye**:
 - estados básicos del proceso;
 - continuidad hacia el flujo contable.
 
-El MVP **no incluye todavía**:
+El producto **no incluye todavía**:
 
 - conexión real con SAT;
 - autenticación real ante SAT;
@@ -205,7 +191,7 @@ El MVP **no incluye todavía**:
 - tratamiento completo de errores externos;
 - validación contra servicios oficiales.
 
-Por lo tanto, durante el MVP se validará el **flujo de negocio de descarga automática**, mientras que la integración real quedará para una fase posterior.
+Una integración real con SAT requiere criterios y contratos propios antes de implementarse.
 
 ---
 
@@ -248,7 +234,7 @@ La nomenclatura definitiva de estados queda pendiente.
 
 Cada empresa debe tener su propio catálogo de cuentas.
 
-El MVP debe permitir:
+El producto debe permitir:
 
 - consultar cuentas;
 - crear cuentas;
@@ -300,15 +286,13 @@ Regla mínima:
 Total cargos = Total abonos
 ```
 
-Para el MVP se propone permitir guardar una póliza descuadrada como borrador, pero no considerarla contabilizada.
-
-Este comportamiento queda pendiente de validación con negocio.
+Una póliza descuadrada puede guardarse como borrador, pero no contabilizarse. La utilidad de este flujo para el despacho sigue abierta a validación con usuarios; el comportamiento técnico está definido en SPEC-006.
 
 ---
 
 # 11. Relación XML ↔ póliza
 
-El MVP debe conservar trazabilidad entre documentos fiscales y pólizas.
+El producto debe conservar trazabilidad entre documentos fiscales y pólizas.
 
 Debe soportar:
 
@@ -332,7 +316,7 @@ La relación entre póliza y XML debe ser opcional, ya que pueden existir póliz
 
 # 12. Ingresos
 
-El MVP debe permitir contabilizar operaciones básicas de ingreso.
+El producto debe permitir contabilizar operaciones básicas de ingreso.
 
 Flujo esperado:
 
@@ -363,7 +347,7 @@ Las reglas exactas de contabilización quedan pendientes de confirmación.
 
 # 13. Egresos
 
-El MVP debe permitir contabilizar operaciones básicas de egreso.
+El producto debe permitir contabilizar operaciones básicas de egreso.
 
 Flujo esperado:
 
@@ -396,9 +380,9 @@ Las reglas exactas quedan pendientes de confirmación.
 
 # 14. PUE
 
-El MVP debe distinguir documentos PUE.
+El producto debe distinguir documentos PUE.
 
-En esta fase el sistema debe permitir que el contador registre manualmente las cuentas y partidas correspondientes.
+En el alcance actual el sistema debe permitir que el contador registre manualmente las cuentas y partidas correspondientes.
 
 La ampliación autorizada en SPEC-006 permite prellenar partidas desde importes fiscales estructurados; el contador elige o revisa las cuentas, corrige el asiento y decide cuándo guardarlo o contabilizarlo.
 
@@ -406,7 +390,7 @@ La ampliación autorizada en SPEC-006 permite prellenar partidas desde importes 
 
 # 15. PPD y complementos de pago
 
-El MVP debe soportar el escenario básico de PPD.
+El producto debe soportar el escenario básico de PPD.
 
 Debe ser posible representar:
 
@@ -432,7 +416,7 @@ Las reglas exactas de IVA y movimientos contables quedan pendientes de confirmac
 
 # 16. Reportes incluidos
 
-El MVP debe generar reportes básicos.
+El producto debe generar reportes básicos.
 
 Como mínimo:
 
@@ -462,7 +446,7 @@ Debe existir al menos exportación a Excel de los reportes principales.
 
 # 17. Auditoría mínima
 
-El MVP debe conservar información básica sobre:
+El producto debe conservar información básica sobre:
 
 - quién creó una póliza;
 - quién modificó una póliza;
@@ -475,9 +459,9 @@ No es necesario todavía un sistema completo de auditoría histórica de todos l
 
 ---
 
-# 18. Flujo completo que debe demostrar el MVP
+# 18. Recorrido funcional del producto
 
-El MVP se considerará funcional cuando un contador pueda realizar este proceso:
+Este recorrido reúne las capacidades relacionadas; los criterios concretos se encuentran en las specs responsables:
 
 ```text
 1. Iniciar sesión
@@ -498,9 +482,9 @@ El MVP se considerará funcional cuando un contador pueda realizar este proceso:
 
 ---
 
-# 19. Escenarios mínimos a probar
+# 19. Escenarios funcionales de referencia
 
-El MVP debe probarse, como mínimo, con estos escenarios:
+Los siguientes escenarios sirven de referencia al verificar cambios en las funciones correspondientes:
 
 ## Escenario 1 — Ingreso PUE
 
@@ -532,9 +516,9 @@ Una póliza relacionada con múltiples documentos.
 
 ---
 
-# 20. Criterios de éxito del MVP
+# 20. Resultados esperados del producto
 
-El MVP será considerado exitoso si permite validar que:
+El recorrido funcional debe permitir comprobar que:
 
 1. El contador entiende el flujo sin depender de varias aplicaciones.
 2. Los XML pueden utilizarse como punto de partida para contabilizar.
@@ -549,24 +533,24 @@ El MVP será considerado exitoso si permite validar que:
 
 ---
 
-# 21. Fuera del MVP
+# 21. Fuera del alcance actual
 
-Las siguientes funcionalidades quedan fuera de esta primera versión.
+Las siguientes capacidades requieren una spec propia antes de implementarse.
 
 ## Automatización
 
 - contabilización automática;
-- sugerencia automática de cuentas;
+- sugerencias de cuentas que decidan por sí solas el tratamiento contable;
 - aprendizaje de patrones;
 - reglas automáticas avanzadas;
 - inteligencia artificial;
 - clasificación automática por conceptos.
 
-Excepción posterior autorizada: SPEC-006 prellena importes y recuerda cuentas elegidas por el contador para un emisor y componente equivalentes. No contabiliza al pulsar «Continuar» ni decide el tratamiento fiscal de la cuenta.
+SPEC-006 define propuestas editables desde CFDI y reutiliza cuentas elegidas por el contador. No contabiliza al pulsar «Continuar» ni decide el tratamiento fiscal de la cuenta.
 
 ## SAT
 
-Queda fuera del MVP la integración real con SAT.
+Queda fuera del alcance actual la integración real con SAT.
 
 No se implementará todavía:
 
@@ -576,7 +560,7 @@ No se implementará todavía:
 - consulta automática de cancelaciones;
 - envío directo de información al SAT.
 
-El **flujo de descarga automática sí será representado mediante una simulación** para que pueda validarse con el cliente.
+La descarga simulada vigente se describe en SPEC-005; una conexión real con SAT requiere un cambio específico.
 
 ## DIOT
 
@@ -593,7 +577,7 @@ El **flujo de descarga automática sí será representado mediante una simulaci�
 - IVA efectivamente cobrado;
 - validaciones fiscales avanzadas.
 
-El modelo debe poder evolucionar hacia estos conceptos, pero no es necesario automatizarlos en el MVP.
+El modelo debe poder evolucionar hacia estos conceptos, pero no es necesario automatizarlos en el alcance actual.
 
 ## CFDI especiales
 
@@ -647,103 +631,6 @@ Estos casos se documentarán y validarán posteriormente.
 
 ---
 
-# 22. Fase posterior 1 — Consolidación contable
+# 22. Ampliaciones por definir
 
-Después de validar el MVP, la siguiente fase puede concentrarse en mejorar el trabajo cotidiano.
-
-Posibles funcionalidades:
-
-- patrones contables;
-- sugerencias de cuentas;
-- reglas por proveedor;
-- reglas por cliente;
-- catálogo SAT;
-- saldos iniciales;
-- cierre de periodos;
-- mejoras de reportes;
-- mejores validaciones.
-
----
-
-# 23. Fase posterior 2 — Fiscal
-
-Una segunda evolución puede incorporar:
-
-- DIOT;
-- IVA avanzado;
-- retenciones;
-- cancelaciones;
-- sustituciones;
-- notas de crédito;
-- contabilidad electrónica;
-- validaciones fiscales.
-
----
-
-# 24. Fase posterior 3 — Automatización
-
-Una vez validado el comportamiento contable:
-
-- clasificación automática;
-- contabilización asistida;
-- sugerencias por patrones;
-- detección de inconsistencias;
-- automatización de operaciones repetitivas;
-- descarga automática de CFDI.
-
----
-
-# 25. Fase posterior 4 — Integraciones
-
-Posteriormente pueden evaluarse:
-
-- bancos;
-- conciliación bancaria;
-- SAT;
-- sistemas externos;
-- portal para clientes;
-- otros sistemas administrativos.
-
----
-
-# 26. Principio de alcance
-
-Para decidir si una funcionalidad entra en el MVP se utilizará esta pregunta:
-
-> **¿Es necesaria para demostrar que un contador puede transformar documentos fiscales en registros contables y obtener una balanza trazable?**
-
-Si la respuesta es no, probablemente debe quedar para una fase posterior.
-
----
-
-# 27. Resumen del MVP
-
-El MVP se concentra en cinco capacidades:
-
-```text
-1. Empresas y periodos
-
-2. XML fiscales
-
-3. Catálogo de cuentas
-
-4. AccountingPolicy + partidas
-
-5. Balanza y reportes básicos
-```
-
-El corazón funcional será:
-
-```text
-XML
-    ↓
-AccountingPolicy
-    ↓
-AccountingPolicyEntry
-    ↓
-Account
-    ↓
-TrialBalance
-```
-
-Todo lo relacionado con automatización, fiscalización avanzada e integraciones externas deberá agregarse después de validar correctamente este flujo.
+Las necesidades de saldos iniciales, cierre de periodos, reglas fiscales, reportes avanzados, automatización e integraciones se concretarán en specs cuando se soliciten. Este documento no fija su orden ni su diseño técnico. Para cada cambio, se contrastará el comportamiento actual con el código y se definirán criterios observables en la spec correspondiente.

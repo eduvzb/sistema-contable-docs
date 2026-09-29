@@ -1,10 +1,10 @@
 # SPEC-001 — Acceso, usuarios y empresas
 
-- **Estado:** Actualización pendiente
-- **Actualizado:** 2026-09-24 (migración documental; sin cambio de estado)
-- **Criterios de esta entrega:** CA-001-18 y CA-001-19 (ampliación del contrato de empresa)
+- **Estado:** QA
+- **Actualizado:** 2026-09-24
+- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana pendiente.
 - **Usuario:** Administrador y contador
-- **Dependencias:** Ninguna funcionalidad previa; decisiones compartidas DT-001 a DT-009.
+- **Dependencias:** Ninguna funcionalidad previa.
 
 ## Contexto y objetivo
 
@@ -55,8 +55,8 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 
 ## Requisitos no funcionales aplicables
 
-- Autenticación, autorización, aislamiento y protección de credenciales: CA-001-02/05/06/08/10/11/14 y DT-007/008/009.
-- Interfaz en español, semántica y accesible, con estados de carga, vacío y error y validación junto a campos; la presentación concreta se describe en [plan.md](plan.md).
+- Autenticación, autorización, aislamiento y protección de credenciales: CA-001-02/05/06/08/10/11/14.
+- Interfaz en español, semántica y accesible, con estados de carga, vacío y error y validación junto a campos; los CA anteriores definen el resultado observable.
 
 ## Casos límite
 
@@ -68,26 +68,16 @@ Quedan fuera registro público, invitaciones por correo, edición de perfiles, b
 
 No incluye dashboard contable.
 
-## Decisiones, supuestos y dudas
-
-### Decisiones locales
-
-- El volumen inicial usa listas completas, ordenadas por nombre y después ID, sin paginación.
-- La comprobación de RFC es estructural, no prueba existencia, vigencia ni situación fiscal. El régimen almacenado debe pertenecer al catálogo versionado, pero no se limita por tipo de persona en esta spec.
-- La razón social es el identificador visible principal de la empresa. El nombre comercial es obligatorio, secundario y no único. El tipo de persona se muestra como dato calculado y nunca como campo editable.
-- La compatibilidad de datos existentes fija nombre comercial igual a razón social y versión de plantilla `null`; no ejecuta una carga retroactiva del catálogo. SPEC-003 define la copia `GENERAL_V1` para altas nuevas y su transacción compartida.
-- La ruta raíz es un punto de entrada neutral: su destino depende del estado de acceso y se resuelve sin encadenar rutas protegidas. No se introduce una página inicial nueva.
-
 ## Criterios de finalización
 
-- Los criterios de esta entrega deben tener implementación y comprobación técnica registradas en [verificación](verificacion.md) antes de pasar a QA.
+- Los CA pendientes requieren implementación y comprobación técnica registradas en [verificación](verificacion.md) antes de pasar a QA.
 - Sólo la aprobación humana de QA registrada permite pasar a Implementada, conforme al [flujo SDD](../../docs/flujo-spec.md).
 
 ## Fuentes
 
-- [Alcance §3: actores](../../docs/planeacion/003%20-%20MVP-Scope.md#3-usuarios-incluidos); [§4: empresas](../../docs/planeacion/003%20-%20MVP-Scope.md#4-empresas); [§18: inicio del recorrido](../../docs/planeacion/003%20-%20MVP-Scope.md#18-flujo-completo-que-debe-demostrar-el-mvp).
-- [Análisis §5: administrador y contador](../../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#5-actores-del-sistema) y [OQ-011](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#13-oq-011--organization-expl%C3%ADcita) (un despacho como supuesto provisional; Organization no es obligatoria).
+- [Alcance §3: actores](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#3-usuarios-incluidos); [§4: empresas](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#4-empresas); [§18: inicio del recorrido](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#18-recorrido-funcional-del-producto).
+- [Análisis §5: administrador y contador](../../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#5-actores-del-sistema) y [OQ-011](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#13-oq-011--organization-expl%C3%ADcita) (el modelo actual no requiere una entidad Organization).
 - [BR-001](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#3-br-001--toda-operaci%C3%B3n-pertenece-a-una-empresa) (aislamiento confirmado).
-- [BR-021](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#23-br-021--la-empresa-conserva-nombre-comercial-y-tipo-de-persona-derivado) y [BR-022](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#24-br-022--cada-empresa-nueva-recibe-una-copia-independiente-de-la-plantilla-general) (identidad comercial, derivación del tipo e integración con el catálogo inicial).
-- [Análisis §6: datos de empresa](../../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#6-empresas), limitado a los datos fiscales incluidos por el alcance del MVP.
+- Identidad comercial y tipo de persona derivados: CA-001-18/19; la copia del catálogo inicial corresponde a [SPEC-003](../003-catalogo-cuentas/spec.md).
+- [Análisis §6: datos de empresa](../../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#6-empresas), limitado a los datos fiscales incluidos por el alcance del producto.
 - [Catálogo CFDI 4.0 del SAT](https://www.sat.gob.mx/minisitio/Factura/emite_quenecesitoparafacturar.htm), del que se conserva una copia versionada de `c_RegimenFiscal` en el backend.

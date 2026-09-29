@@ -1,7 +1,7 @@
 # SPEC-006 — Pólizas y trazabilidad
 
 - **Estado:** Actualización pendiente
-- **Actualizado:** 2026-09-24 (migración documental; sin cambio de estado)
+- **Actualizado:** 2026-09-28
 - **Criterios de esta entrega:** CA-006-19 revisado y CA-006-20 a CA-006-24; depende de CA-004-11.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
@@ -12,7 +12,7 @@ Crear, consultar y modificar pólizas con partidas manuales o propuestas desde C
 
 Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcionales y múltiples, trazabilidad bidireccional, ingresos/egresos PUE, representación manual del registro inicial PPD y una propuesta editable de partidas desde datos fiscales.
 
-La edición posterior a contabilización se limita por las decisiones cerradas de esta spec.
+La edición posterior a contabilización debe conservar balance, autorización y trazabilidad conforme a los criterios de esta spec.
 
 ## Historias de usuario
 
@@ -22,14 +22,16 @@ La edición posterior a contabilización se limita por las decisiones cerradas d
 
 ## Requisitos funcionales y criterios de aceptación
 
-El usuario operativo crea una póliza con o sin XML, selecciona cuentas y registra partidas. El administrador accede a cualquier empresa y el contador solo a sus asignadas, conforme a DT-008/SPEC-001. La póliza contiene fecha, tipo, número, concepto, partidas, documentos y estado; las partidas contienen cuenta, cargo, abono, concepto y referencia según alcance §9/10. Empresa/periodo vienen de SPEC-002. Se permite guardar incompleta como DRAFT (supuesto); la contabilización exige cargos = abonos.
+El usuario operativo crea una póliza con o sin XML, selecciona cuentas y registra partidas. El administrador accede a cualquier empresa y el contador solo a sus asignadas, conforme a SPEC-001. La póliza contiene fecha, tipo, número, concepto, partidas, documentos y estado; las partidas contienen cuenta, cargo, abono, concepto y referencia según alcance §9/10. Empresa/periodo vienen de SPEC-002. Se permite guardar incompleta como DRAFT; la contabilización exige cargos = abonos.
 
-Las relaciones permiten varios XML por póliza y varias pólizas por XML, incluso entre periodos. Desde cada lado se puede consultar el otro y recorrer las partidas/cuentas de la póliza. La relación contable permanece a nivel de póliza: el origen opcional de una partida generada identifica el CFDI y componente usados para proponerla, sin convertirla en una relación contable por partida. Otra granularidad de relación requiere una decisión posterior. Proveedor/cliente no requieren entidades propias en el MVP (OQ-013).
+Las relaciones permiten varios XML por póliza y varias pólizas por XML, incluso entre periodos. Desde cada lado se puede consultar el otro y recorrer las partidas/cuentas de la póliza. La relación contable permanece a nivel de póliza: el origen opcional de una partida generada identifica el CFDI y componente usados para proponerla, sin convertirla en una relación contable por partida. Otra granularidad de relación requiere una decisión posterior. Proveedor/cliente no requieren entidades propias en el alcance actual (OQ-013).
+
+Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descuento, abono por subtotal y cada traslado, y cargo por cada retención; si es recibido se invierten los lados. Un CFDI `E` invierte la orientación correspondiente a `I`. Cada impuesto presente produce una partida propia; un importe cero no genera partida. La reconciliación se calcula con seis decimales exactos y el descuadre se informa por UUID sin crear ajuste ficticio.
 
 | ID | Dado / cuando | Resultado esperado |
 |---|---|---|
 | CA-006-01 | El contador crea una póliza con partidas manuales y cuentas de su empresa. | Se conserva como póliza consultable con fecha, tipo, número, concepto, partidas, empresa y periodo según el contrato preparado; cada partida indica la cuenta afectada conforme a BR-004. |
-| CA-006-02 | Una póliza todavía tiene cargos distintos de abonos y se guarda como DRAFT. | Puede conservarse como borrador incompleto, sin considerarse contabilizada (BR-006/OQ-002, supuesto). |
+| CA-006-02 | Una póliza todavía tiene cargos distintos de abonos y se guarda como DRAFT. | Puede conservarse como borrador incompleto, sin considerarse contabilizada. |
 | CA-006-03 | Se intenta contabilizar una póliza cuyos cargos no igualan sus abonos. | Se rechaza la contabilización y no se presenta como POSTED (BR-005). |
 | CA-006-04 | Una póliza cumple las validaciones preparadas y sus cargos igualan sus abonos. | Puede contabilizarse como POSTED; sus partidas quedan disponibles para la balanza de SPEC-008. |
 | CA-006-05 | Se crea una póliza sin XML. | La ausencia de documento fiscal no impide la póliza; solo aplican las validaciones correspondientes a sus datos/partidas. |
@@ -55,7 +57,7 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 
 ## Requisitos no funcionales aplicables
 
-- Aislamiento, integridad y precisión: CA-006-03/04/08/12 y DT-011; accesibilidad y layout del editor: CA-006-14/15/18.
+- Aislamiento, integridad y precisión: CA-006-03/04/08/12; accesibilidad y layout del editor: CA-006-14/15/18.
 
 ## Casos límite
 
@@ -65,37 +67,14 @@ Las relaciones permiten varios XML por póliza y varias pólizas por XML, inclus
 
 No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa.
 
-## Decisiones, supuestos y dudas
-
-### Decisiones cerradas
-
-- La póliza obtiene un número consecutivo automático, único por empresa, periodo y tipo. La fecha debe pertenecer al periodo seleccionado.
-- Un borrador exige tipo, fecha y concepto, y puede no tener partidas. Una póliza `POSTED` exige al menos dos partidas, cuentas activas que acepten movimientos, un único cargo o abono positivo por partida, total positivo y cargos iguales a abonos usando seis decimales.
-- `POSTED` puede editarse, pero cualquier actualización debe continuar balanceada y conserva su estado. La creación y actualización conservan creador, último editor y marcas de tiempo.
-- Las relaciones de CFDI son opcionales, solo pueden usar documentos de la misma empresa y pueden cruzar periodos. La relación es con la póliza, no con cada partida.
-- La columna Día del editor es la fecha de la póliza derivada para cada renglón; no se almacena como atributo de partida.
-- La fecha de la póliza usa un control de calendario accesible y legible en español, limitado visualmente al periodo seleccionado y presentado como una capa que no altera el layout. El periodo se comunica dentro del calendario, por su contenido y etiquetas accesibles, y mediante errores cuando corresponda; no se conserva un texto instructivo permanente. La validación autoritativa de pertenencia al periodo permanece en backend.
-- Una póliza nueva presenta una partida vacía inicial. La creación automática de la siguiente partida es sólo una ayuda de captura: exige cuenta operable y un único importe positivo válido, evita duplicar renglones vacíos y no sustituye la validación al guardar.
-- El editor aprovecha el ancho disponible en escritorio para mantener visible una fila completa durante la captura normal; la adaptación a pantallas menores no elimina campos ni acciones.
-- La relación de CFDI se localiza en frontend sobre la colección ya autorizada y cargada del periodo. La búsqueda es parcial e insensible a mayúsculas, minúsculas y acentos en UUID, RFC, razón social, serie y folio; no busca por fecha o importe, no pagina ni genera solicitudes adicionales. Las casillas no excluyen CFDI ya relacionados y una selección permanece al cambiar temporalmente el filtro.
-- La nueva selección usa exclusivamente CFDI emitidos en el periodo elegido; los vínculos previos de otros periodos se conservan y muestran al editar. El orden de selección define los bloques generados. La memoria de cuentas no aplica automáticamente tratamiento fiscal ni contabiliza la póliza.
-- Para `I` emitido se propone cargo a total y descuento, abono a subtotal y traslados, y cargo a retenciones; recibido invierte los lados y `E` invierte la orientación de `I`. Cada impuesto y naturaleza presente forma partida propia; los importes cero no la crean. La reconciliación usa seis decimales exactos y rechaza sólo el CFDI descuadrado.
-
-### Pendientes y decisiones
-
-- **Resuelto para esta entrega:** numeración, fecha/periodo, mínimos DRAFT/POSTED, precisión decimal, cuentas operables, edición POSTED y relación de CFDI por póliza.
-- **Supuesto para validar:** DRAFT puede estar incompleta/descuadrada (BR-006/OQ-002/AC-011). Se mantiene la exigencia de balance para POSTED.
-- **Posterior:** estados CANCELLED/REVERSED, tipos adicionales, cierre, provisiones automáticas y auditoría histórica de campos. No inventar bloqueo ni permiso de edición POSTED para resolver su pendiente.
-- **Reinicio autorizado de datos de prueba:** en todos los entornos, mediante operación única con respaldo y recuento previos, eliminar los CFDI existentes y las pólizas de prueba que los referencian con sus partidas; conservar empresas, periodos, cuentas y pólizas no vinculadas. No ejecutar este borrado desde una migración repetible.
-
 ## Criterios de finalización
 
-- Los criterios de esta entrega deben tener implementación y comprobación técnica registradas en [verificación](verificacion.md) antes de pasar a QA.
+- Los CA pendientes requieren implementación y comprobación técnica registradas en [verificación](verificacion.md) antes de pasar a QA.
 - Sólo la aprobación humana de QA registrada permite pasar a Implementada, conforme al [flujo SDD](../../docs/flujo-spec.md).
 
 ## Fuentes
 
-- [Alcance §9](../../docs/planeacion/003%20-%20MVP-Scope.md#9-p%C3%B3lizas-contables), [Alcance §10](../../docs/planeacion/003%20-%20MVP-Scope.md#10-partidas-contables), [Alcance §11](../../docs/planeacion/003%20-%20MVP-Scope.md#11-relaci%C3%B3n-xml--p%C3%B3liza), [Alcance §12](../../docs/planeacion/003%20-%20MVP-Scope.md#12-ingresos), [Alcance §13](../../docs/planeacion/003%20-%20MVP-Scope.md#13-egresos), [Alcance §14](../../docs/planeacion/003%20-%20MVP-Scope.md#14-pue), [Alcance §17](../../docs/planeacion/003%20-%20MVP-Scope.md#17-auditor%C3%ADa-m%C3%ADnima) (pólizas, partidas, relaciones, captura manual y auditoría).
-- [BR-002](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#4-br-002--el-contador-trabaja-dentro-de-un-periodo), [BR-003](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#5-br-003--cada-empresa-tiene-su-propio-cat%C3%A1logo-de-cuentas), [BR-004](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#6-br-004--cada-partida-utiliza-una-cuenta-contable), [BR-005](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#7-br-005--una-p%C3%B3liza-contabilizada-debe-estar-balanceada), [BR-006](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#8-br-006--una-p%C3%B3liza-incompleta-puede-guardarse-como-borrador), [BR-007](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#9-br-007--una-p%C3%B3liza-puede-relacionarse-con-varios-xml), [BR-008](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#10-br-008--un-xml-puede-relacionarse-con-varias-p%C3%B3lizas), [BR-009](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#11-br-009--una-p%C3%B3liza-puede-existir-sin-xml), [BR-016](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#18-br-016--el-contador-selecciona-manualmente-las-cuentas-contables), [BR-018](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#20-br-018--debe-existir-trazabilidad-desde-el-xml), [BR-019](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#21-br-019--debe-existir-trazabilidad-desde-la-p%C3%B3liza). BR-006 es SUPUESTO MVP; las demás están confirmadas en su alcance.
-- [AC-001](../../docs/planeacion/004%20-%20Escenarios%20contables.md#3-escenario-ac-001--ingreso-pue), [AC-002](../../docs/planeacion/004%20-%20Escenarios%20contables.md#4-escenario-ac-002--egreso-pue), [AC-006](../../docs/planeacion/004%20-%20Escenarios%20contables.md#8-escenario-ac-006--varios-xml-en-una-misma-p%C3%B3liza), [AC-007](../../docs/planeacion/004%20-%20Escenarios%20contables.md#9-escenario-ac-007--un-xml-relacionado-con-varias-p%C3%B3lizas), [AC-008](../../docs/planeacion/004%20-%20Escenarios%20contables.md#10-escenario-ac-008--p%C3%B3liza-sin-cfdi), [AC-011](../../docs/planeacion/004%20-%20Escenarios%20contables.md#13-escenario-ac-011--p%C3%B3liza-descuadrada-en-borrador), [AC-012](../../docs/planeacion/004%20-%20Escenarios%20contables.md#14-escenario-ac-012--consulta-de-trazabilidad-desde-un-cfdi), [AC-013](../../docs/planeacion/004%20-%20Escenarios%20contables.md#15-escenario-ac-013--consulta-de-trazabilidad-desde-una-p%C3%B3liza). AC-001/002/008 tienen detalles pendientes; AC-011 es supuesto.
-- [OQ-002](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#4-oq-002--borradores-de-p%C3%B3lizas-descuadradas), [OQ-008](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#10-oq-008--estados-adicionales-de-accountingpolicy), [OQ-010](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#12-oq-010--tipos-adicionales-de-p%C3%B3liza), [OQ-013](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#15-oq-013--supplier-y-customer-como-entidades); [Análisis §10: numeración todavía abierta](../../docs/planeacion/001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md#10-p%C3%B3lizas-contables).
+- [Alcance §9](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#9-p%C3%B3lizas-contables), [Alcance §10](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#10-partidas-contables), [Alcance §11](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#11-relaci%C3%B3n-xml--p%C3%B3liza), [Alcance §12](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#12-ingresos), [Alcance §13](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#13-egresos), [Alcance §14](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#14-pue), [Alcance §17](../../docs/planeacion/003%20-%20Alcance%20del%20producto.md#17-auditor%C3%ADa-m%C3%ADnima) (pólizas, partidas, relaciones, captura manual y auditoría).
+- [BR-002](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#4-br-002--el-contador-trabaja-dentro-de-un-periodo), [BR-003](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#5-br-003--cada-empresa-tiene-su-propio-cat%C3%A1logo-de-cuentas), [BR-004](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#6-br-004--cada-partida-utiliza-una-cuenta-contable), [BR-005](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#7-br-005--una-p%C3%B3liza-contabilizada-debe-estar-balanceada), [BR-006](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#8-br-006--una-p%C3%B3liza-incompleta-puede-guardarse-como-borrador), [BR-007](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#9-br-007--una-p%C3%B3liza-puede-relacionarse-con-varios-xml), [BR-008](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#10-br-008--un-xml-puede-relacionarse-con-varias-p%C3%B3lizas), [BR-009](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#11-br-009--una-p%C3%B3liza-puede-existir-sin-xml), [BR-016](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#18-br-016--el-contador-selecciona-manualmente-las-cuentas-contables), [BR-018](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#20-br-018--debe-existir-trazabilidad-desde-el-xml), [BR-019](../../docs/planeacion/005%20-%20Reglas%20de%20negocio.md#21-br-019--debe-existir-trazabilidad-desde-la-p%C3%B3liza).
+- [AC-001](../../docs/planeacion/004%20-%20Escenarios%20contables.md#3-escenario-ac-001--ingreso-pue), [AC-002](../../docs/planeacion/004%20-%20Escenarios%20contables.md#4-escenario-ac-002--egreso-pue), [AC-006](../../docs/planeacion/004%20-%20Escenarios%20contables.md#8-escenario-ac-006--varios-xml-en-una-misma-p%C3%B3liza), [AC-007](../../docs/planeacion/004%20-%20Escenarios%20contables.md#9-escenario-ac-007--un-xml-relacionado-con-varias-p%C3%B3lizas), [AC-008](../../docs/planeacion/004%20-%20Escenarios%20contables.md#10-escenario-ac-008--p%C3%B3liza-sin-cfdi), [AC-011](../../docs/planeacion/004%20-%20Escenarios%20contables.md#13-escenario-ac-011--p%C3%B3liza-descuadrada-en-borrador), [AC-012](../../docs/planeacion/004%20-%20Escenarios%20contables.md#14-escenario-ac-012--consulta-de-trazabilidad-desde-un-cfdi), [AC-013](../../docs/planeacion/004%20-%20Escenarios%20contables.md#15-escenario-ac-013--consulta-de-trazabilidad-desde-una-p%C3%B3liza). Los tratamientos automáticos no se infieren de estos escenarios.
+- [OQ-002](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#4-oq-002--borradores-de-p%C3%B3lizas-descuadradas), [OQ-008](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#10-oq-008--estados-adicionales-de-accountingpolicy), [OQ-010](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#12-oq-010--tipos-adicionales-de-p%C3%B3liza), [OQ-013](../../docs/planeacion/006%20-%20Preguntas%20Abiertas.md#15-oq-013--supplier-y-customer-como-entidades).

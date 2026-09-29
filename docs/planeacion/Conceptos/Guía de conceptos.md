@@ -1,12 +1,8 @@
 
 # Sistema Contable — Glosario de Contabilidad para Desarrollo  
   
-> **Documento de referencia:** `01b-accounting-glossary-explained.md`    
-> **Nota en este vault:** [Guía de conceptos](Gu%C3%ADa%20de%20conceptos.md)
-> **Estado:** Documento de apoyo    
 > **Audiencia:** Desarrollo, producto y personas sin formación contable    
 > **Propósito:** Explicar el lenguaje contable necesario para entender el negocio del proyecto    
-> **Última actualización:** 2026-08-31
 
 **Navegación:** [Inicio](../00%20-%20Inicio.md) · [Glosario de dominio](../002%20-%20Glosario.md)
 
@@ -468,7 +464,7 @@ Proveedores    15,000    4,000    7,000    18,000
   
 La balanza sirve para revisar cómo quedó la contabilidad después de registrar pólizas.  
   
-En el proyecto, una pregunta importante del MVP es:  
+En el proyecto, una pregunta importante del producto es:
   
 > **¿Las pólizas que registramos terminan reflejándose correctamente en la balanza?**  
   
@@ -549,7 +545,7 @@ Una relación básica es:
 Activos = Pasivos + Capital  
 ```  
   
-No es necesario profundizar demasiado en este concepto para el MVP, pero ayuda a entender la lógica de equilibrio contable.  
+No es necesario profundizar demasiado en este concepto para el alcance actual, pero ayuda a entender la lógica de equilibrio contable.
   
 ---  
   
@@ -976,7 +972,7 @@ Parcialmente deducible
 No deducible  
 ```  
   
-Pero el MVP no debe intentar decidir esto automáticamente.  
+Pero el producto no debe intentar decidir esto automáticamente.
   
 ---  
   
@@ -1200,7 +1196,7 @@ Puede implicar generar información específica como:
 - balanza;  
 - archivos requeridos fiscalmente.  
   
-Quedará para fases posteriores.  
+Quedará para ampliaciones futuras.
   
 ---  
   
@@ -1219,7 +1215,7 @@ Ayuda a responder:
   
 > “¿La empresa ganó o perdió dinero durante un periodo?”  
   
-Aunque no es el foco inmediato del MVP, es un reporte contable importante.  
+Aunque no es el foco inmediato del producto, es un reporte contable importante.
   
 ---  
   
@@ -1355,7 +1351,7 @@ Está descuadrada.
   
 Podemos permitir guardar el trabajo como borrador, aunque todavía no pueda contabilizarse.  
   
-Este comportamiento es un supuesto del MVP.  
+Este comportamiento es un supuesto del producto.
   
 ---  
   
@@ -1448,7 +1444,7 @@ Esta separación explica por qué una sola factura puede terminar relacionada co
   
 # 60. Mapa mental del negocio  
   
-Si quieres entender casi todo el MVP, conserva este flujo:  
+Si quieres entender casi todo el producto, conserva este flujo:
   
 ```text  
 Algo ocurre en la empresa  

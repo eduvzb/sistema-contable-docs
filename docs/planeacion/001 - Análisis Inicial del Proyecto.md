@@ -1,11 +1,9 @@
 # Sistema Contable — Análisis Inicial del Proyecto
 
-> **Estado:** Borrador de descubrimiento / análisis inicial  
-> **Propósito:** Documento base de conocimiento del proyecto  
-> **Fuente:** Primera conversación de levantamiento de requerimientos  
-> **Última actualización:** 2026-08-31
+> **Propósito:** Contexto de necesidades contables; contrastar capacidades actuales con specs y código.
+> **Fuente:** Levantamiento de requerimientos
 
-**Navegación:** [Inicio](00%20-%20Inicio.md) · [Glosario](002%20-%20Glosario.md) · [MVP](003%20-%20MVP-Scope.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md) · [Preguntas](006%20-%20Preguntas%20Abiertas.md)
+**Navegación:** [Inicio](00%20-%20Inicio.md) · [Glosario](002%20-%20Glosario.md) · [Alcance](003%20-%20Alcance%20del%20producto.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md) · [Preguntas](006%20-%20Preguntas%20Abiertas.md)
 
 ---
 
@@ -147,7 +145,7 @@ Periodo contable
 
 ### 4.3 Flexibilidad controlada
 
-Durante las primeras etapas del producto conviene evitar reglas excesivamente rígidas.
+Las reglas deben corresponder a necesidades comprobadas y a los casos que cubre cada spec.
 
 En términos generales:
 
@@ -158,7 +156,7 @@ En términos generales:
 
 ### 4.4 Automatización progresiva
 
-La prioridad inicial es construir correctamente el dominio contable.
+La automatización se incorpora cuando sus reglas contables están definidas y son verificables.
 
 La automatización deberá añadirse después de contar con reglas suficientemente validadas.
 
@@ -196,7 +194,7 @@ Responsabilidades:
 
 ## 5.3 Roles potenciales posteriores
 
-No están confirmados para el MVP:
+No están confirmados para el alcance actual:
 
 - Supervisor contable.
 - Auditor.
@@ -287,13 +285,13 @@ Este módulo representa uno de los componentes centrales del sistema.
 - Documentos relacionados.
 - Adendas.
 
-Algunos de estos tipos deben validarse para determinar si pertenecen al MVP.
+Algunos de estos tipos deben validarse para determinar si pertenecen al producto.
 
 ---
 
 ## 8.2 Formas de incorporación
 
-### MVP
+### producto
 
 - Carga manual.
 - Carga masiva.
@@ -304,7 +302,7 @@ Algunos de estos tipos deben validarse para determinar si pertenecen al MVP.
 - Descarga programada.
 - Sincronización periódica.
 
-La descarga automática **no está confirmada como requisito del MVP**.
+La descarga automática **no está confirmada como requisito del producto**.
 
 ---
 
@@ -817,7 +815,7 @@ Inconsistencias potenciales a detectar:
 - Documento sin tasa.
 - Póliza descuadrada.
 
-> Debe validarse cuáles de estas verificaciones pertenecen al MVP y cuáles a fases posteriores.
+> Debe validarse cuáles de estas verificaciones pertenecen al producto y cuáles a ampliaciones futuras.
 
 ---
 
@@ -887,7 +885,7 @@ Ejemplos:
 - Empresa afectada.
 - Valores anteriores y posteriores, cuando corresponda.
 
-El alcance exacto de auditoría para el MVP deberá definirse.
+El alcance exacto de auditoría para el alcance actual deberá definirse.
 
 ---
 
@@ -1052,9 +1050,9 @@ Consideraciones técnicas propuestas:
 
 ---
 
-# 27. MVP propuesto
+# 27. Capacidades consideradas
 
-El MVP debe concentrarse en demostrar que el sistema puede ejecutar correctamente el flujo contable principal.
+El producto cubre el flujo contable principal y puede ampliarse según las necesidades observadas.
 
 ## 27.1 Administración
 
@@ -1104,7 +1102,7 @@ El MVP debe concentrarse en demostrar que el sistema puede ejecutar correctament
 
 ---
 
-# 28. Fuera del MVP inicial / fases posteriores
+# 28. Capacidades para ampliaciones futuras
 
 Funcionalidades candidatas para posteriores iteraciones:
 
@@ -1251,23 +1249,6 @@ La configuración de IVA y DIOT puede cambiar por empresa y régimen fiscal.
 
 ---
 
-# 31. Decisiones preliminares
-
-Estas decisiones surgen del análisis inicial y deberán confirmarse durante la definición formal del producto.
-
-| ID | Decisión preliminar |
-|---|---|
-| D-001 | El producto será una aplicación web multiempresa. |
-| D-002 | El MVP priorizará la importación manual de XML antes que integración directa con SAT. |
-| D-003 | La relación XML ↔ póliza deberá conservar trazabilidad explícita. |
-| D-004 | PUE, PPD y complementos de pago pertenecen al núcleo contable. |
-| D-005 | Las reglas automáticas deberán comenzar como sugerencias o advertencias. |
-| D-006 | La automatización avanzada no debe desarrollarse antes de validar el modelo contable. |
-| D-007 | El sistema debe soportar catálogos contables diferentes por empresa. |
-| D-008 | La arquitectura debe considerar procesamiento masivo y asíncrono desde el inicio. |
-
----
-
 # 32. Riesgos
 
 ## R-001 — Complejidad contable
@@ -1343,7 +1324,7 @@ Las reglas y archivos fiscales requieren validación especializada.
 
 ## SAT / CFDI
 
-- [ ] ¿La descarga directa del SAT pertenece al MVP?
+- [ ] ¿La descarga directa del SAT pertenece al producto?
 - [ ] ¿Cómo se obtendrán los XML?
 - [ ] ¿Se utilizará SAT directamente o un proveedor tercero?
 - [ ] ¿Cómo se manejarán CFDI cancelados?
@@ -1380,7 +1361,7 @@ Las reglas y archivos fiscales requieren validación especializada.
 
 ## IVA / DIOT
 
-- [ ] ¿DIOT pertenece al MVP?
+- [ ] ¿DIOT pertenece al producto?
 - [ ] ¿El sistema únicamente generará el TXT?
 - [ ] ¿Se contempla envío directo posteriormente?
 - [ ] ¿Qué validaciones deben realizarse antes de generar DIOT?
@@ -1439,9 +1420,9 @@ Las reglas y archivos fiscales requieren validación especializada.
 
 ---
 
-# 35. Flujo prioritario para prototipo
+# 35. Recorrido funcional de referencia
 
-El primer flujo funcional que debería poder probarse de extremo a extremo es:
+Un recorrido funcional completo es:
 
 ```text
 Login
@@ -1471,81 +1452,13 @@ Consultar póliza
 Generar balanza básica
 ```
 
-Este flujo permite validar el corazón del producto antes de implementar automatizaciones fiscales o inteligentes.
+Este recorrido reúne capacidades de varias specs; cada cambio se verifica con sus criterios y con el código vigente.
 
 ---
 
-# 36. Orden sugerido de definición
+# 36. Resultado funcional esperado
 
-Antes de desarrollar funcionalidad extensa conviene cerrar progresivamente:
-
-## Paso 1 — Dominio
-
-Definir formalmente:
-
-- Empresa.
-- Periodo.
-- Cuenta.
-- Documento fiscal.
-- Relación entre CFDI.
-- Complemento de pago.
-- Póliza.
-- Partida.
-- Impuesto.
-
-## Paso 2 — Casos contables
-
-Documentar ejemplos reales de:
-
-- Ingreso PUE.
-- Egreso PUE.
-- Ingreso PPD.
-- Egreso PPD.
-- Pago parcial.
-- Varios complementos.
-- Nota de crédito.
-- Cancelación.
-- Retención.
-- Operación en moneda extranjera.
-
-## Paso 3 — Reglas
-
-Por cada caso definir:
-
-- Datos de entrada.
-- Cuentas involucradas.
-- Partidas esperadas.
-- Impuestos.
-- Periodo.
-- Relación con CFDI.
-- Validaciones.
-- Casos excepcionales.
-
-## Paso 4 — UX
-
-Diseñar:
-
-- Selector empresa / periodo.
-- Bandeja de XML.
-- Vista de XML.
-- Editor de póliza.
-- Selector de cuentas.
-- Relación documento ↔ póliza.
-- Pantalla de revisión.
-
-## Paso 5 — MVP técnico
-
-Implementar el flujo principal end-to-end.
-
-## Paso 6 — Automatización
-
-Agregar patrones, sugerencias y reglas después de validar el comportamiento manual.
-
----
-
-# 37. Criterio de éxito del MVP
-
-El MVP debería demostrar que un contador puede completar el siguiente ciclo sin depender del sistema contable actual para ese flujo específico:
+El producto debe permitir que un contador complete el siguiente ciclo:
 
 ```text
 Importar CFDI
@@ -1559,67 +1472,6 @@ Importar CFDI
 → exportar información
 ```
 
-El objetivo del MVP no debería ser automatizar toda la contabilidad.
-
-El objetivo debería ser comprobar que el nuevo modelo:
-
-1. Representa correctamente los casos contables reales.
-2. Mantiene trazabilidad.
-3. Es suficientemente rápido para trabajo cotidiano.
-4. Permite crecer hacia reglas y automatización.
+El modelo debe representar casos contables reales, mantener trazabilidad y permitir el trabajo cotidiano. Las nuevas reglas y automatizaciones se definen en sus propias specs.
 
 ---
-
-# 38. Próximos documentos recomendados
-
-Este análisis debería utilizarse como entrada para documentos separados.
-
-```text
-knowledge/
-├── [00 - Inicio.md](00%20-%20Inicio.md)
-├── [01 - Glosario de dominio](002%20-%20Glosario.md)
-├── [02 - Preguntas abiertas](006%20-%20Preguntas%20Abiertas.md)
-├── [03 - Reglas de negocio](005%20-%20Reglas%20de%20negocio.md)
-├── [04 - Escenarios contables](004%20-%20Escenarios%20contables.md)
-├── [05 - Alcance del MVP](003%20-%20MVP-Scope.md)
-└── 06 - Modelo de dominio (pendiente de crear)
-```
-
-Posteriormente:
-
-```text
-specs/
-├── authentication/
-├── companies/
-├── fiscal-documents/
-├── accounts/
-├── policies/
-├── payments/
-└── reporting/
-```
-
----
-
-# 39. Estado del conocimiento
- 
-Este documento representa un **primer levantamiento**, no una especificación final.
-
-Las siguientes categorías deben mantenerse separadas durante el proyecto:
-
-### Confirmado
-
-Información expresamente indicada durante el levantamiento.
-
-### Propuesta
-
-Diseño o comportamiento sugerido para resolver una necesidad.
-
-### Pendiente de validar
-
-Aspectos que requieren confirmación de contadores o responsables del negocio.
-
-### Futuro
-
-Funcionalidades que no deberían condicionar el MVP salvo que se confirme lo contrario.
-
-Esta separación será importante para evitar que hipótesis iniciales terminen implementándose accidentalmente como reglas contables.

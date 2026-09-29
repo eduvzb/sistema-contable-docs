@@ -1,12 +1,8 @@
 # Sistema Contable — Preguntas Abiertas
 
-> **Documento de referencia:** `02-open-questions.md`  
-> **Nota en este vault:** [006 - Preguntas Abiertas](006%20-%20Preguntas%20Abiertas.md)
-> **Estado:** Borrador inicial  
-> **Enfoque:** Dudas pendientes después del análisis de negocio, MVP, escenarios, reglas y modelo de dominio  
-> **Última actualización:** 2026-08-31
+> **Enfoque:** Dudas pendientes después del análisis de negocio, producto, escenarios, reglas y modelo de dominio
 
-**Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [MVP](003%20-%20MVP-Scope.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md)
+**Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [Alcance](003%20-%20Alcance%20del%20producto.md) · [Escenarios](004%20-%20Escenarios%20contables.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md)
 
 ---
 
@@ -18,7 +14,7 @@ Este documento concentra únicamente las preguntas que siguen abiertas después 
 - glosario de dominio;
 - glosario contable;
 - escenarios contables;
-- alcance del MVP;
+- alcance del producto;
 - reglas de negocio;
 - modelo de dominio.
 
@@ -28,24 +24,24 @@ La idea es evitar detener el proyecto por preguntas que pueden resolverse más a
 
 Cada pregunta se clasifica como:
 
-- **BLOQUEA MVP**
-- **VALIDAR DURANTE MVP**
-- **POSTERIOR AL MVP**
+- **BLOQUEANTE**
+- **VALIDAR CON USUARIOS**
+- **NO PRIORIZADO**
 - **REVISIÓN NORMATIVA**
 
 ---
 
-# 2. Preguntas que bloquean el MVP
+# 2. Preguntas bloqueantes del siguiente cambio
 
-Actualmente no existe ninguna pregunta que impida comenzar la definición funcional y técnica del MVP.
+Actualmente no existe ninguna pregunta que impida comenzar la definición funcional y técnica del producto.
 
-Las decisiones mínimas necesarias para avanzar se consideran suficientemente resueltas de forma provisional.
+Cada spec identifica las dudas que bloquean su siguiente cambio; esta lista reúne preguntas de dominio para ampliaciones futuras.
 
 ---
 
 # 3. OQ-001 — Jerarquía de cuentas contables
 
-**Prioridad:** VALIDAR DURANTE MVP
+**Prioridad:** VALIDAR CON USUARIOS
 
 ## Pregunta
 
@@ -59,12 +55,6 @@ Cuenta padre
     └── Cuenta hija
 ```
 
-## Decisión provisional
-
-El sistema debe permitir una estructura jerárquica de cuentas.
-
-No se fija todavía un número máximo de niveles.
-
 ## Qué validar
 
 - cuántos niveles utilizan normalmente;
@@ -75,23 +65,11 @@ No se fija todavía un número máximo de niveles.
 
 # 4. OQ-002 — Borradores de pólizas descuadradas
 
-**Prioridad:** VALIDAR DURANTE MVP
+**Prioridad:** VALIDAR CON USUARIOS
 
 ## Pregunta
 
 ¿El contador necesita guardar una póliza incompleta aunque todavía no esté balanceada?
-
-## Decisión provisional
-
-Sí.
-
-```text
-DRAFT
-→ puede estar descuadrada
-
-POSTED
-→ debe estar balanceada
-```
 
 ## Qué validar
 
@@ -101,31 +79,13 @@ Si este flujo representa correctamente su forma de trabajo.
 
 # 5. OQ-003 — Momento en que un CFDI se considera contabilizado
 
-**Prioridad:** VALIDAR DURANTE MVP
+**Prioridad:** VALIDAR CON USUARIOS
 
 ## Pregunta
 
 ¿Qué debe mostrar el sistema cuando un CFDI ya participa en alguna póliza pero todavía tiene movimientos pendientes?
 
 Esto es especialmente importante en PPD.
-
-## Decisión provisional
-
-Un CFDI se considera:
-
-```text
-contabilizado
-```
-
-cuando existe al menos una `AccountingPolicy` relacionada en estado `POSTED`.
-
-Sin embargo:
-
-```text
-contabilizado ≠ liquidado
-```
-
-Una factura puede estar contabilizada y conservar saldo pendiente.
 
 ## Qué validar
 
@@ -137,23 +97,11 @@ Una factura puede estar contabilizada y conservar saldo pendiente.
 
 # 6. OQ-004 — Saldo pendiente en PPD
 
-**Prioridad:** VALIDAR DURANTE MVP
+**Prioridad:** VALIDAR CON USUARIOS
 
 ## Pregunta
 
 ¿Cómo debe presentarse al usuario el saldo pendiente de una factura PPD?
-
-## Decisión provisional
-
-Conceptualmente:
-
-```text
-Importe de la operación
--
-Pagos relacionados
-=
-Saldo pendiente
-```
 
 ## Qué validar
 
@@ -166,7 +114,7 @@ Saldo pendiente
 
 # 7. OQ-005 — Complementos que pagan múltiples facturas
 
-**Prioridad:** VALIDAR DURANTE MVP / REVISIÓN NORMATIVA
+**Prioridad:** VALIDAR CON USUARIOS / REVISIÓN NORMATIVA
 
 ## Pregunta
 
@@ -182,10 +130,6 @@ FiscalDocument [PAYMENT]
     └── importe pagado
 ```
 
-## Decisión provisional
-
-El complemento se mantiene como un `FiscalDocument` y conserva relaciones con cada factura correspondiente.
-
 ## Qué falta
 
 - validar la estructura funcional;
@@ -196,17 +140,11 @@ El complemento se mantiene como un `FiscalDocument` y conserva relaciones con ca
 
 # 8. OQ-006 — Provisión en operaciones PPD
 
-**Prioridad:** POSTERIOR AL MVP / REVISIÓN NORMATIVA
+**Prioridad:** NO PRIORIZADO / REVISIÓN NORMATIVA
 
 ## Pregunta
 
 ¿Cuándo debe existir una póliza de provisión y cuál debe ser su tratamiento?
-
-## Decisión para MVP
-
-No automatizar provisiones.
-
-El contador podrá crear manualmente las pólizas necesarias.
 
 ## Pendiente
 
@@ -221,7 +159,7 @@ Determinar posteriormente:
 
 # 9. OQ-007 — IVA pendiente y momento de pago/cobro
 
-**Prioridad:** POSTERIOR AL MVP / REVISIÓN NORMATIVA
+**Prioridad:** NO PRIORIZADO / REVISIÓN NORMATIVA
 
 ## Pregunta
 
@@ -233,17 +171,9 @@ Determinar posteriormente:
 
 especialmente en operaciones PPD y pagos parciales?
 
-## Decisión para MVP
-
-No automatizar este tratamiento.
-
-El sistema debe conservar suficiente trazabilidad para incorporarlo posteriormente.
-
----
-
 # 10. OQ-008 — Estados adicionales de AccountingPolicy
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
@@ -261,37 +191,13 @@ CANCELLED
 REVERSED
 ```
 
-## Decisión para MVP
-
-Usar únicamente:
-
-```text
-DRAFT
-POSTED
-```
-
----
-
 # 11. OQ-009 — Estados de FiscalDocument
 
-**Prioridad:** VALIDAR DURANTE MVP
+**Prioridad:** VALIDAR CON USUARIOS
 
 ## Pregunta
 
 ¿Qué estados necesita visualizar el usuario para los documentos fiscales?
-
-## Decisión provisional
-
-No crear una máquina de estados compleja.
-
-El MVP puede manejar información como:
-
-```text
-importado
-con error
-```
-
-y derivar su situación contable mediante relaciones con pólizas.
 
 ## Qué validar
 
@@ -307,52 +213,23 @@ Si el usuario necesita distinguir visualmente:
 
 # 12. OQ-010 — Tipos adicionales de póliza
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
 ¿Qué tipos de póliza adicionales requiere el despacho?
 
-## Decisión para MVP
-
-Soportar:
-
-```text
-INGRESO
-EGRESO
-DIARIO
-```
-
-Conceptos como:
-
-```text
-AJUSTE
-CIERRE
-```
-
-pueden agregarse posteriormente.
-
----
-
 # 13. OQ-011 — Organization explícita
 
-**Prioridad:** POSTERIOR AL MVP / DECISIÓN TÉCNICA
+**Prioridad:** NO PRIORIZADO / DECISIÓN TÉCNICA
 
 ## Pregunta
 
-¿Es necesario representar explícitamente una `Organization` desde la primera versión?
-
-## Decisión provisional
-
-El MVP puede asumir un único despacho.
-
-La decisión puede tomarse durante arquitectura sin afectar el flujo contable principal.
-
----
+¿Es necesario representar explícitamente una `Organization` en el modelo actual?
 
 # 14. OQ-012 — OpeningBalance
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
@@ -362,32 +239,13 @@ La decisión puede tomarse durante arquitectura sin afectar el flujo contable pr
 - periodo;
 - cuenta contable?
 
-## Decisión provisional
-
-El concepto existe en el dominio, pero no es necesario cerrar su diseño para la primera demostración del flujo contable.
-
-Será importante para migración.
-
----
-
 # 15. OQ-013 — Supplier y Customer como entidades
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
 ¿Proveedor y cliente necesitan ser entidades propias desde el inicio?
-
-## Decisión para MVP
-
-No.
-
-Inicialmente se utilizará información obtenida de los CFDI:
-
-- RFC;
-- razón social;
-- emisor;
-- receptor.
 
 ## Podrían convertirse en entidades cuando sean necesarias para:
 
@@ -401,23 +259,15 @@ Inicialmente se utilizará información obtenida de los CFDI:
 
 # 16. OQ-014 — Cancelaciones de CFDI
 
-**Prioridad:** POSTERIOR AL MVP / REVISIÓN NORMATIVA
+**Prioridad:** NO PRIORIZADO / REVISIÓN NORMATIVA
 
 ## Pregunta
 
 ¿Qué debe ocurrir cuando un CFDI ya contabilizado aparece posteriormente como cancelado?
 
-## Decisión para MVP
-
-No automatizar el tratamiento.
-
-El diseño debe evitar eliminar historial.
-
----
-
 # 17. OQ-015 — Sustituciones y notas de crédito
 
-**Prioridad:** POSTERIOR AL MVP / REVISIÓN NORMATIVA
+**Prioridad:** NO PRIORIZADO / REVISIÓN NORMATIVA
 
 ## Pregunta
 
@@ -426,17 +276,9 @@ El diseño debe evitar eliminar historial.
 - un CFDI sustituto;
 - una nota de crédito?
 
-## Decisión para MVP
-
-Conservar la capacidad conceptual de relacionar documentos.
-
-No implementar todavía el comportamiento contable completo.
-
----
-
 # 18. OQ-016 — Reglas de cierre y reapertura
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
@@ -450,15 +292,9 @@ Aspectos pendientes:
 - quién puede reabrir;
 - cómo se audita.
 
-## Decisión para MVP
-
-El concepto puede representarse de manera básica, pero el flujo formal de cierre no forma parte del MVP.
-
----
-
 # 19. OQ-017 — Migración
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
@@ -473,15 +309,9 @@ Opciones posibles:
 - relaciones históricas;
 - ejercicios anteriores.
 
-## Decisión provisional
-
-No resolver migración completa durante el MVP.
-
----
-
 # 20. OQ-018 — DIOT y contabilidad electrónica
 
-**Prioridad:** POSTERIOR AL MVP / REVISIÓN NORMATIVA
+**Prioridad:** NO PRIORIZADO / REVISIÓN NORMATIVA
 
 ## Pregunta
 
@@ -495,15 +325,9 @@ Incluye potencialmente:
 - contabilidad electrónica;
 - otros archivos.
 
-## Decisión para MVP
-
-Fuera de alcance.
-
----
-
 # 21. OQ-019 — Moneda extranjera
 
-**Prioridad:** POSTERIOR AL MVP / REVISIÓN NORMATIVA
+**Prioridad:** NO PRIORIZADO / REVISIÓN NORMATIVA
 
 ## Pregunta
 
@@ -513,29 +337,13 @@ Fuera de alcance.
 - tipo de cambio;
 - diferencias cambiarias?
 
-## Decisión para MVP
-
-Conservar los datos del CFDI cuando existan.
-
-No implementar lógica contable avanzada.
-
----
-
 # 22. OQ-020 — Conciliación bancaria
 
-**Prioridad:** POSTERIOR AL MVP
+**Prioridad:** NO PRIORIZADO
 
 ## Pregunta
 
 ¿El producto debe incorporar conciliación bancaria?
-
-## Decisión para MVP
-
-No.
-
-Se evaluará una vez validado el núcleo contable.
-
----
 
 # 23. Preguntas para revisión normativa
 
@@ -558,71 +366,8 @@ Prioridad inicial:
 
 ---
 
-# 24. Preguntas que sí vale la pena validar con usuarios durante el MVP
+# 24. Cómo usar las preguntas abiertas
 
-En lugar de realizar una entrevista amplia antes de desarrollar, podemos observar y validar durante la demostración:
+Al preparar una ampliación, consulta sólo las preguntas relacionadas con sus criterios. Valida con contadores la jerarquía de cuentas, la captura de pólizas incompletas, la lectura de estados de CFDI, los pagos parciales y la trazabilidad cuando esos flujos cambien.
 
-1. ¿La jerarquía de cuentas contables representa su catálogo?
-2. ¿Necesitan guardar pólizas incompletas?
-3. ¿Cómo quieren identificar visualmente un CFDI contabilizado?
-4. ¿Cómo quieren visualizar pagos parciales y saldo pendiente?
-5. ¿El flujo de PPD se entiende correctamente?
-6. ¿Los tipos `INGRESO`, `EGRESO` y `DIARIO` cubren la primera prueba?
-7. ¿La trazabilidad CFDI → póliza y póliza → CFDI muestra suficiente información?
-8. ¿La descarga simulada representa el proceso que esperan?
-
----
-
-# 25. Qué NO debe detener el desarrollo
-
-Las siguientes preguntas no deben bloquear el inicio de specs o diseño técnico:
-
-- configuración avanzada;
-- automatización;
-- reglas por proveedor;
-- reglas por cliente;
-- DIOT;
-- conciliación bancaria;
-- contabilidad electrónica;
-- moneda extranjera avanzada;
-- cierre completo;
-- migración histórica;
-- patrones contables.
-
----
-
-# 26. Regla para nuevas preguntas
-
-Cuando aparezca una nueva duda deberá evaluarse en este orden:
-
-```text
-1. ¿Bloquea realmente el MVP?
-        ↓
-2. ¿Puede resolverse mediante lógica del dominio?
-        ↓
-3. ¿Puede resolverse mediante normativa?
-        ↓
-4. ¿Podemos usar un supuesto temporal?
-        ↓
-5. ¿Puede validarse durante el MVP?
-        ↓
-6. Solo entonces convertirla en pregunta bloqueante.
-```
-
-La intención es evitar detener el proyecto por incertidumbre que puede resolverse progresivamente.
-
----
-
-# 27. Estado actual
-
-Con las decisiones provisionales ya tomadas:
-
-> **No existen preguntas abiertas que impidan avanzar hacia specs y diseño técnico del MVP.**
-
-Las preguntas de este documento deben utilizarse como:
-
-- guía para pruebas;
-- guía para revisión normativa;
-- guía para la siguiente entrevista;
-- lista de decisiones posteriores.
-
+Una pregunta bloquea únicamente la entrega cuyo resultado no puede definirse sin responderla. Las ampliaciones no priorizadas no detienen el trabajo actual. Una vez resuelta y reflejada en código y pruebas, retírala de este documento; Git conserva el antecedente.

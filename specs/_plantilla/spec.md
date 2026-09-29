@@ -25,7 +25,7 @@ Conservar los IDs `CA-NNN-XX` al cambiar un criterio. Redactar cada criterio nue
 
 ## Requisitos no funcionales aplicables
 
-Seguridad, aislamiento, precisión, accesibilidad o rendimiento sólo cuando apliquen; enlazar la decisión o el CA responsable. No inventar umbrales.
+Seguridad, aislamiento, precisión, accesibilidad o rendimiento sólo cuando apliquen; enlazar el CA o contrato responsable. No inventar umbrales.
 
 ## Casos límite
 
@@ -35,12 +35,10 @@ Vacíos, duplicados, datos inválidos, concurrencia y otros límites aplicables,
 
 Exclusiones explícitas de esta entrega.
 
-## Decisiones, supuestos y dudas
+## Preguntas abiertas
 
-- **Decidido:** decisión funcional local y fuente.
-- **Supuesto para validar:** comportamiento provisional con fuente.
-- **Duda bloqueante:** sólo si impide definir o verificar un criterio. Una spec con dudas bloqueantes permanece en Borrador.
-- **Posterior:** asunto excluido que no bloquea esta entrega.
+- **Bloqueante:** decisión sin la cual no puede definirse o comprobarse un criterio. Mantener la spec en Borrador.
+- **Para una ampliación futura:** cuestión que no cambia los criterios de esta entrega. No registrar aquí decisiones ya reflejadas por el código o los CA.
 
 ## Criterios de finalización
 
@@ -49,4 +47,4 @@ Exclusiones explícitas de esta entrega.
 
 ## Fuentes
 
-Enlaces concretos al alcance, reglas BR, escenarios AC, preguntas OQ y decisiones pertinentes. Conservar su grado de certeza conforme al [mapa de fuentes](../../docs/fuentes.md).
+Enlaces concretos a fuentes de dominio pertinentes. Contrastar siempre las afirmaciones sobre comportamiento implementado con código y pruebas.

@@ -1,6 +1,6 @@
 # Ejemplos de XML CFDI
 
-Estos archivos son fixtures documentales para probar la importación de CFDI 4.0 en el MVP. Están alineados con [SPEC-004](../../specs/004-documentos-fiscales/spec.md) y [SPEC-007](../../specs/007-ppd-complementos/spec.md).
+Estos archivos son fixtures documentales para probar la importación de CFDI 4.0 en el alcance actual. Están alineados con [SPEC-004](../../specs/004-documentos-fiscales/spec.md) y [SPEC-007](../../specs/007-ppd-complementos/spec.md).
 
 | Archivo | Escenario | Empresa del ejemplo |
 |---|---|---|
@@ -28,4 +28,4 @@ Para probar la importación manual, carga uno o varios archivos desde la bandeja
 POST /api/companies/{companyId}/fiscal-document-imports
 ```
 
-Los archivos no contienen una firma digital ni un timbre fiscal verificable por el SAT. Son ejemplos estructuralmente compatibles con el parser del MVP y no deben utilizarse como comprobantes fiscales reales.
+Los archivos no contienen una firma digital ni un timbre fiscal verificable por el SAT. Son ejemplos estructuralmente compatibles con el parser del producto y no deben utilizarse como comprobantes fiscales reales.

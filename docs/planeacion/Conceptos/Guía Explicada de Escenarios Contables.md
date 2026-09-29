@@ -1,11 +1,7 @@
 # Sistema Contable — Guía Explicada de Escenarios Contables
 
-> **Documento de referencia:** `04-accounting-scenarios-explained.md`  
-> **Estado:** Documento de apoyo  
 > **Audiencia:** Producto, desarrollo y personas sin formación contable  
-> **Documento de referencia en este vault:** [004 - Escenarios contables](../004%20-%20Escenarios%20contables.md)  
 > **Propósito:** Explicar en lenguaje sencillo qué significa cada escenario contable del documento oficial  
-> **Última actualización:** 2026-08-31
 
 **Navegación:** [Inicio](../00%20-%20Inicio.md) · [Escenarios oficiales](../004%20-%20Escenarios%20contables.md)
 
@@ -198,7 +194,7 @@ No necesitamos conocer todavía el asiento perfecto.
 
 Necesitamos que el sistema permita al contador construirlo.
 
-Ese es un principio muy importante del MVP:
+Ese es un principio muy importante del producto:
 
 > Primero permitir contabilizar correctamente de forma manual; después automatizar.
 
@@ -549,7 +545,7 @@ POSTED
 
 debe estar balanceado.
 
-Es un supuesto del MVP y todavía debe validarse.
+Es un supuesto del producto y todavía debe validarse.
 
 ---
 
@@ -617,7 +613,7 @@ Clientes      50,000   15,000    5,000   ...
 
 No necesitamos dominar ahora las reglas de naturaleza de cuentas.
 
-Para el MVP nos importa demostrar que:
+Para entender el producto importa observar cómo:
 
 ```text
 Pólizas
@@ -629,7 +625,7 @@ afectan cuentas
 se reflejan en balanza
 ```
 
-Si eso funciona, estamos validando una parte muy importante del corazón contable.
+El cálculo concreto de la balanza está en la spec responsable y en el código.
 
 ---
 
@@ -670,7 +666,7 @@ Buscando documentos...
 Importar
 ```
 
-Por detrás los archivos pueden venir de datos preparados para el MVP.
+El origen real de los datos de la descarga simulada se verifica en el código vigente.
 
 ## ¿Estamos engañando al cliente?
 
@@ -704,7 +700,7 @@ Hay situaciones como:
 
 Todas son importantes.
 
-Pero intentar resolverlas antes de comprobar el flujo principal haría el MVP demasiado grande.
+Pero intentar resolverlas antes de comprobar el flujo principal haría el producto demasiado grande.
 
 La estrategia es:
 
@@ -792,7 +788,7 @@ Puede contener varios o incluso ninguno.
 XML → póliza → partidas → cuentas → balanza
 ```
 
-es la columna vertebral del MVP.
+es la columna vertebral del producto.
 
 ---
 

@@ -1,23 +1,15 @@
 
-# Sistema Contable — Reglas de Negocio del MVP
+# Sistema Contable — Reglas de negocio
 
-> **Documento de referencia:** `03-business-rules.md`  
-> **Nota en este vault:** [005 - Reglas de negocio](005%20-%20Reglas%20de%20negocio.md)
-> **Estado:** Borrador simplificado  
-> **Enfoque:** Negocio y comportamiento del MVP  
-> **Última actualización:** 2026-08-31
+> **Enfoque:** Negocio y comportamiento del producto
 
-**Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [MVP](003%20-%20MVP-Scope.md) · [Escenarios](004%20-%20Escenarios%20contables.md)
+**Navegación:** [Inicio](00%20-%20Inicio.md) · [Análisis](001%20-%20An%C3%A1lisis%20Inicial%20del%20Proyecto.md) · [Alcance](003%20-%20Alcance%20del%20producto.md) · [Escenarios](004%20-%20Escenarios%20contables.md)
 
 ---
 
 # 1. Propósito
 
-Este documento define las reglas básicas que necesita el MVP para representar el flujo contable principal.
-
-En esta etapa **no se busca diseñar un sistema altamente configurable**.
-
-El objetivo es trabajar con un conjunto simple de reglas que permita:
+Este documento reúne reglas de dominio para interpretar el flujo contable:
 
 ```text
 XML
@@ -27,23 +19,17 @@ XML
 → Balanza
 ```
 
-Cuando una regla todavía no esté completamente confirmada, se marcará como:
+El estado de una regla indica su validación de negocio o normativa, no si el código la implementa. Para conocer el comportamiento actual, consulta la spec responsable y el código. Los estados usados aquí son:
 
 - **CONFIRMADA**
-- **SUPUESTO MVP**
+- **SUPUESTO POR VALIDAR**
 - **PENDIENTE DE VALIDAR**
-
-Más adelante, después de validar el MVP, se decidirá qué reglas deben convertirse en configuraciones.
 
 ---
 
-# 2. Principio general del MVP
+# 2. Principio general del producto
 
-Durante el MVP se utilizará un comportamiento predefinido.
-
-No se desarrollará todavía un configurador contable completo.
-
-La prioridad es comprobar que el sistema puede representar correctamente el proceso contable.
+Una nueva configuración o regla contable debe responder a una necesidad concreta y quedar definida en una spec antes de implementarse.
 
 ---
 
@@ -119,7 +105,7 @@ AccountingPolicy
 
 # 7. BR-005 — Una póliza contabilizada debe estar balanceada
 
-**Estado:** CONFIRMADA COMO REGLA DEL MVP
+**Estado:** CONFIRMADA COMO REGLA
 
 Para contabilizar una `AccountingPolicy` debe cumplirse:
 
@@ -133,7 +119,7 @@ Una póliza que no cumpla esta condición no puede considerarse contabilizada.
 
 # 8. BR-006 — Una póliza incompleta puede guardarse como borrador
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 Se permitirá guardar una póliza aunque todavía no esté balanceada, siempre que permanezca como borrador.
 
@@ -145,7 +131,7 @@ POSTED
 → cargos = abonos
 ```
 
-Este comportamiento se validará durante las pruebas.
+El comportamiento técnico está definido en SPEC-006; la utilidad del flujo para los contadores requiere validación con usuarios.
 
 ---
 
@@ -196,7 +182,7 @@ Por tanto, relacionar un XML con una póliza es opcional.
 
 # 12. BR-010 — El mismo CFDI no debe importarse dos veces
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 El UUID se utilizará para detectar documentos ya existentes.
 
@@ -206,13 +192,13 @@ Si el mismo CFDI vuelve a cargarse:
 - se informa al usuario;
 - no se crea una segunda operación equivalente.
 
-Los casos de sustitución o corrección quedan para una fase posterior.
+Los casos de sustitución o corrección quedan para una ampliación futura.
 
 ---
 
 # 13. BR-011 — El XML original no se conserva
 
-**Estado:** CONFIRMADA COMO REGLA DEL MVP
+**Estado:** CONFIRMADA COMO REGLA
 
 Cuando un XML se incorpora al sistema, se extraen, validan y conservan sus datos fiscales normalizados, relaciones y trazabilidad contable. El archivo original no se copia a almacenamiento durable ni se conserva como BLOB.
 
@@ -231,7 +217,7 @@ PUE
 PPD
 ```
 
-El MVP no automatizará todavía todas las diferencias contables entre ambos.
+El producto no automatizará todavía todas las diferencias contables entre ambos.
 
 El contador podrá registrar manualmente las partidas necesarias.
 
@@ -278,15 +264,15 @@ Cada movimiento debe conservar el periodo al que pertenece.
 
 Cuando exista un complemento de pago, el sistema debe conservar la relación con la factura o facturas correspondientes.
 
-Para el MVP se utilizará este comportamiento como parte del escenario PPD.
+Para el producto se utilizará este comportamiento como parte del escenario PPD.
 
 ---
 
 # 18. BR-016 — El contador selecciona manualmente las cuentas contables
 
-**Estado:** CONFIRMADA PARA MVP
+**Estado:** CONFIRMADA PARA EL ALCANCE ACTUAL
 
-El MVP no intentará decidir automáticamente qué cuenta contable utilizar.
+El producto no intentará decidir automáticamente qué cuenta contable utilizar.
 
 El contador seleccionará manualmente las cuentas y podrá modificar las partidas.
 
@@ -332,9 +318,9 @@ Desde una póliza debe poder consultarse qué documentos fiscales están relacio
 
 ---
 
-# 22. BR-020 — La descarga automática se simula en el MVP
+# 22. BR-020 — La descarga automática se simula en el alcance actual
 
-**Estado:** CONFIRMADA PARA MVP
+**Estado:** CONFIRMADA PARA EL ALCANCE ACTUAL
 
 El cliente debe poder visualizar el flujo:
 
@@ -354,115 +340,8 @@ No se implementará todavía la integración real con SAT.
 
 ---
 
-# 23. Reglas que NO resolverá todavía el MVP
+# 23. Límites y revisión de reglas
 
-El MVP no definirá completamente las reglas de:
+Los tratamientos de IVA, deducibilidad, retenciones, cancelaciones, moneda extranjera, cierre, DIOT y conciliación bancaria requieren definición funcional y, cuando corresponda, revisión normativa antes de implementarse. El comportamiento observable de cada entrega se concreta en su spec; el código y las pruebas muestran lo que ya funciona.
 
-- IVA pendiente;
-- IVA efectivamente pagado;
-- IVA efectivamente cobrado;
-- deducibilidad;
-- retenciones;
-- cancelaciones de CFDI;
-- sustituciones;
-- notas de crédito;
-- cierre contable;
-- reapertura;
-- moneda extranjera;
-- diferencias cambiarias;
-- DIOT;
-- contabilidad electrónica;
-- conciliación bancaria.
-
-Estos conceptos pueden existir en el modelo de conocimiento, pero no deben complicar el primer flujo funcional.
-
----
-
-# 24. Qué no será configurable todavía
-
-Aunque el producto futuro podría permitir distintas formas de operación, el MVP no tendrá configuraciones avanzadas para:
-
-- comportamiento PPD;
-- reglas de IVA;
-- agrupación automática;
-- provisiones automáticas;
-- patrones contables;
-- sugerencias automáticas;
-- reglas por proveedor;
-- reglas por cliente;
-- reglas por régimen fiscal.
-
-Para las pruebas se utilizará un comportamiento simple y predefinido.
-
----
-
-# 25. Qué podrá cambiar después del MVP
-
-Después de validar el flujo principal se analizará cuáles comportamientos deben convertirse en:
-
-```text
-Regla fija
-Configuración
-Sugerencia
-Patrón
-Automatización
-```
-
-Esta decisión no forma parte del MVP.
-
----
-
-# 26. Revisión normativa
-
-Cuando una regla del MVP tenga implicaciones fiscales o contables, podrá contrastarse posteriormente con:
-
-- legislación aplicable;
-- reglas SAT;
-- NIF;
-- otras fuentes normativas.
-
-Si se encuentra una posible contradicción, se documentará y analizará antes de modificar el comportamiento.
-
-Encontrar una diferencia no significa cambiar automáticamente el sistema.
-
----
-
-# 27. Set de reglas para pruebas
-
-Para la primera prueba utilizaremos un único conjunto de reglas:
-
-```text
-MVP_RULESET_V1
-```
-
-Su objetivo será dar un comportamiento estable y repetible al MVP.
-
-No significa que todas sus decisiones sean reglas universales del producto final.
-
-Este ruleset deberá permitir probar:
-
-```text
-Empresa
-↓
-Periodo
-↓
-Importación / descarga simulada
-↓
-XML
-↓
-AccountingPolicy
-↓
-Partidas
-↓
-Cuentas contables
-↓
-Balanza
-↓
-Trazabilidad
-```
-
----
-
-# 28. Pregunta principal del documento
-
-> **¿Qué reglas mínimas necesitamos fijar para probar correctamente el flujo contable principal sin construir todavía toda la flexibilidad del producto final?**
+Una diferencia entre una regla de este documento y el producto debe investigarse en el caso específico. La regla no autoriza por sí sola a cambiar una operación implementada.

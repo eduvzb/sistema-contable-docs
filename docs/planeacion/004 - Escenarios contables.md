@@ -1,14 +1,10 @@
 
 # Sistema Contable — Escenarios Contables
 
-> **Documento de referencia:** `04-accounting-scenarios.md`  
-> **Nota en este vault:** [004 - Escenarios contables](004%20-%20Escenarios%20contables.md)
-> **Estado:** Borrador funcional  
-> **Audiencia:** Contadores, responsables de negocio, producto y desarrollo  
-> **Propósito:** Describir los escenarios contables que el sistema debe poder representar  
-> **Última actualización:** 2026-08-31
+> **Audiencia:** Contadores, responsables de negocio, producto y desarrollo
+> **Propósito:** Describir escenarios contables de referencia
 
-**Navegación:** [Inicio](00%20-%20Inicio.md) · [MVP](003%20-%20MVP-Scope.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md) · [Guía explicada](Conceptos/Gu%C3%ADa%20Explicada%20de%20Escenarios%20Contables.md)
+**Navegación:** [Inicio](00%20-%20Inicio.md) · [Alcance](003%20-%20Alcance%20del%20producto.md) · [Reglas](005%20-%20Reglas%20de%20negocio.md) · [Guía explicada](Conceptos/Gu%C3%ADa%20Explicada%20de%20Escenarios%20Contables.md)
 
 ---
 
@@ -65,10 +61,10 @@ AccountingPolicyEntry
 
 ## Estado de las reglas
 
-Los escenarios pueden contener:
+Estos estados describen validación de negocio, no implementación. El código y las pruebas muestran el comportamiento actual. Los escenarios pueden contener:
 
 - **CONFIRMADO:** identificado directamente en el levantamiento.
-- **SUPUESTO MVP:** comportamiento provisional.
+- **SUPUESTO POR VALIDAR:** comportamiento provisional.
 - **PENDIENTE DE VALIDAR:** requiere confirmación del despacho.
 
 ---
@@ -511,13 +507,13 @@ El sistema debe ser capaz de representar el cambio de estado contable del IVA si
 
 # 13. Escenario AC-011 — Póliza descuadrada en borrador
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 ## Contexto
 
 El contador comienza a preparar una póliza pero todavía no termina de capturar las partidas.
 
-## Comportamiento propuesto
+## Comportamiento definido en SPEC-006
 
 Se permite:
 
@@ -633,7 +629,7 @@ El objetivo funcional es que las pólizas contabilizadas afecten los saldos cons
 
 # 17. Escenario AC-015 — Documento duplicado
 
-**Estado:** SUPUESTO MVP
+**Estado:** SUPUESTO POR VALIDAR
 
 ## Contexto
 
@@ -657,13 +653,13 @@ El sistema debe:
 
 # 18. Escenario AC-016 — Descarga simulada de XML
 
-**Estado:** DEFINIDO PARA MVP
+**Estado:** DEFINIDO PARA EL ALCANCE ACTUAL
 
 ## Contexto
 
 El cliente desea visualizar cómo funcionará en el futuro la obtención automática de documentos fiscales.
 
-En el MVP no existirá todavía integración real con SAT.
+En el producto no existirá todavía integración real con SAT.
 
 ## Flujo
 
@@ -702,7 +698,7 @@ El usuario puede validar:
 
 ---
 
-# 19. Escenarios posteriores al MVP
+# 19. Escenarios para ampliaciones futuras
 
 Los siguientes casos se consideran relevantes, pero no forman parte del flujo mínimo inicial.
 
@@ -748,9 +744,9 @@ Debe generar la información fiscal requerida cuando se incorpore esta función.
 
 ---
 
-# 20. Escenarios prioritarios para validar con el primer MVP
+# 20. Escenarios de referencia para el producto en desarrollo
 
-Los escenarios que deberían probarse primero son:
+Los escenarios que conviene comprobar en los cambios correspondientes son:
 
 ```text
 AC-001 Ingreso PUE
@@ -767,7 +763,7 @@ AC-014 Balanza
 AC-016 Descarga simulada
 ```
 
-Estos escenarios permiten validar el núcleo del modelo antes de incorporar automatización o fiscalización avanzada.
+Cada escenario se comprueba cuando una spec modifica su comportamiento; su inclusión aquí no crea una tarea técnica pendiente.
 
 ---
 
