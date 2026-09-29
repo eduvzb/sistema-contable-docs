@@ -1,7 +1,7 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-- **Estado:** Actualización pendiente
-- **Actualizado:** 2026-09-28
+- **Estado:** QA
+- **Actualizado:** 2026-09-29
 - **Criterios de esta entrega:** CA-006-19 revisado y CA-006-20 a CA-006-24; depende de CA-004-11.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)

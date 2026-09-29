@@ -2,12 +2,27 @@
 
 El [estado de trabajo y los criterios](spec.md) se contrastan con código y pruebas. Git conserva las entregas anteriores.
 
-## Entrega actual
+## Estado de validación
 
-| CA | Prueba o comprobación ejecutada | Resultado | Revisión/PR |
-|---|---|---|---|
-| CA-NNN-01 | Pendiente | No ejecutada | Pendiente |
+### Validado técnicamente
 
-## QA humana
+- [x] **CA-NNN-01 — Resultado observable:** comportamiento comprobado.
+- [x] **Regresión:** pruebas relevantes aprobadas.
+- [x] **Integración:** PR fusionado o cierre técnico correspondiente.
 
-Recorridos visuales pendientes. Registrar aprobación u observaciones con fecha; la aprobación es requisito para Implementada.
+### Pendiente de validación humana
+
+- [ ] Recorrido visual concreto pendiente.
+- [ ] Registrar fecha, resultado y observaciones de QA; una aprobación permite cambiar el estado a Implementada.
+
+## Evidencia técnica
+
+### Backend
+
+- `comando ejecutado` — resultado real.
+- PR: enlace y estado real.
+
+### Frontend
+
+- `comando ejecutado` — resultado real.
+- PR: enlace y estado real.

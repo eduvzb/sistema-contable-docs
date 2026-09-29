@@ -16,4 +16,4 @@ Orden de trabajo: contrato de desglose SPEC-004 → [propuesta backend](tasks-ba
 
 ## Datos de prueba
 
-La tarea BE-006-04 conserva el reinicio único de datos de prueba ya autorizado: requiere respaldo y recuentos antes/después, sin migración repetible y preservando empresas, periodos, cuentas y pólizas no vinculadas. La spec no identifica el entorno/base de datos ni los registros concretos del reinicio; confirmar ese destino antes de ejecutar cualquier operación destructiva. Su ejecución y resultado se registran en [verificación](verificacion.md).
+La validación de CA-006-21/22/23/24 usa datos aislados del entorno de pruebas (`RefreshDatabase` y fixtures). Se comprueba que previsualizar no cree pólizas, que los guardados válidos conserven el origen y actualicen la memoria de cuentas, y que errores de autorización/integridad no dejen escrituras parciales. No se requiere reiniciar datos de una base compartida ni ejecutar una operación destructiva. Los resultados se registran en [verificación](verificacion.md).

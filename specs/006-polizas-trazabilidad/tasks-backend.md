@@ -17,8 +17,7 @@ Los criterios y el estado vigentes están en [spec.md](spec.md). El [plan técni
   - Depende de: BE-006-01 y BE-006-02.
   - Hecho cuando: Las pruebas backend focalizadas y relevantes de regresión pasan y se documentan con revisión y PR.
 
-- [ ] **BE-006-04 — Preparar y ejecutar únicamente la operación de reinicio de datos de prueba autorizada en la spec, fuera de migraciones repetibles.**
-  - CA: CA-006-21/23 (preparación de datos); alcance del reinicio en plan.md.
-- Depende de: respaldo y recuento previos.
-- Hecho cuando: Quedan registrados respaldo, recuentos antes/después y conservación de empresas, periodos, cuentas y pólizas no vinculadas.
-  - Pendiente: la spec aún no identifica el entorno/base de datos ni el conjunto exacto de registros que se debe reiniciar; no ejecutar hasta resolver ese destino.
+- [x] **BE-006-04 — Validar propuestas y memoria de cuentas con datos de prueba aislados, sin reiniciar bases compartidas.**
+  - CA: CA-006-21/22/23/24.
+  - Depende de: BE-006-01 y BE-006-02.
+  - Hecho cuando: las pruebas aisladas verifican que previsualizar no persiste pólizas, que guardar conserva origen y sugerencias, que los errores no dejan escrituras parciales y que la regresión backend pasa.
