@@ -1,19 +1,37 @@
 # Plan técnico — SPEC-006
 
-Este plan cubre sólo CA-006-19 revisado y CA-006-20 a CA-006-24 de [spec.md](spec.md). Antes de implementar, contrastar los contratos propuestos con el código actual de backend y frontend. El desglose fiscal de SPEC-004 ya está disponible.
+Este plan cubre únicamente CA-006-19 y CA-006-20 revisados de [spec.md](spec.md). La entrega reemplaza la lista de búsqueda del selector de CFDI por una tabla filtrable dentro de Nueva/Editar póliza, sin modificar la generación de partidas, el guardado ni la contabilización.
 
-## Contrato de propuestas
+## Contratos y datos
 
-`POST /api/companies/{companyId}/accounting-periods/{periodId}/accounting-policy-entry-previews` recibe `fiscal_document_ids` en orden y devuelve bloques de partidas por CFDI, su componente de origen, cuentas sugeridas y errores asociados al UUID. La operación no guarda pólizas. Sólo usa CFDI autorizados de la empresa y admite generación para `I`/`E` en MXN cuyos datos fiscales cuadran a seis decimales. Un CFDI inválido no impide generar los demás bloques válidos.
+El frontend reutiliza `GET /api/companies/{companyId}/fiscal-documents?period_id={periodId}&include=policy-links`. La respuesta vigente ya contiene fecha de emisión, tipo, dirección, RFC y nombre de emisor y receptor, UUID, Serie, Folio, total, moneda y vínculos con pólizas. No se agregan endpoints, campos, tipos públicos, migraciones ni reglas de autorización.
 
-Los contratos de guardado y consulta de póliza incorporan `source_fiscal_document_id` y `source_component_key` opcionales por partida. El backend valida que cada origen pertenece a la empresa y a los documentos relacionados con la póliza. Al guardar DRAFT o POSTED actualiza la memoria de cuentas en la misma transacción; la clave es empresa, emisor, dirección, tipo, PUE/PPD y componente. Los importes siempre proceden del CFDI seleccionado, nunca de la memoria. Una póliza POSTED sigue exigiendo balance y cuentas operables.
+La consulta se limita al periodo contable activo. Al editar, los `fiscal_documents` ya relacionados incluidos en la póliza se combinan en presentación con la consulta del periodo para conservar y mostrar por separado vínculos históricos de otros periodos; esos documentos históricos no se vuelven seleccionables en esta ventana.
 
-## Interfaz e integración
+## Interfaz y filtrado
 
-La ventana «CFDI relacionados» utiliza CFDI del periodo cargados y autorizados, conserva selección ordenada y vínculos previos de otros periodos. «Continuar» solicita propuestas y abre bloques editables; no guarda la póliza. Los errores por UUID y los casos de captura manual permanecen visibles. Al asignar una cuenta, sólo se propaga a componentes equivalentes del mismo emisor que todavía estén vacíos; no altera importes ni cuentas elegidas manualmente.
+La ventana «CFDI relacionados» muestra una tabla con Selección, Fecha, Tipo, RFC, Nombre, Monto, Folio fiscal, Folio interno y Vínculos. RFC y Nombre se derivan de la contraparte según la dirección del CFDI; Folio fiscal corresponde al UUID; Folio interno usa Serie-Folio; Monto presenta el total y el código de moneda, sin conversión.
 
-Orden de trabajo: contrato de desglose SPEC-004 → [propuesta backend](tasks-backend.md) → [ventana y bloques frontend](tasks-frontend.md) → memoria y guardado → pruebas de integración y regresión. Backend valida autorización, exactitud decimal, integridad y atomicidad; frontend prueba interacción con Vitest y React Testing Library. La disposición visual real se revisa en QA humana.
+Los filtros se ejecutan localmente sobre los CFDI ya cargados del periodo y se combinan con lógica AND. Fecha y monto admiten extremos inclusivos desde/hasta; un extremo vacío no restringe. RFC, nombre, UUID y Serie-Folio usan coincidencia parcial normalizada, sin distinguir mayúsculas, minúsculas ni acentos. Tipo admite Todos, Ingreso (`I`), Egreso (`E`) y Pago (`P`). Un rango inválido o invertido muestra un error asociado y no se aplica hasta corregirse. «Limpiar filtros» restablece la tabla sin alterar la selección.
 
-## Datos de prueba
+La selección permanece ordenada y se conserva aunque una fila quede oculta por los filtros. El recuento distingue coincidencias visibles de selección total. No hay paginación ni selección masiva. La tabla usa encabezado reconocible, casillas etiquetadas por CFDI, operación por teclado, región desplazable y estados explícitos de carga, error, periodo sin documentos y filtros sin coincidencias.
 
-La validación de CA-006-21/22/23/24 usa datos aislados del entorno de pruebas (`RefreshDatabase` y fixtures). Se comprueba que previsualizar no cree pólizas, que los guardados válidos conserven el origen y actualicen la memoria de cuentas, y que errores de autorización/integridad no dejen escrituras parciales. No se requiere reiniciar datos de una base compartida ni ejecutar una operación destructiva. Los resultados se registran en [verificación](verificacion.md).
+«Continuar» conserva su responsabilidad actual: solicita la propuesta para los CFDI seleccionados del periodo y cierra la ventana para presentar bloques editables; no guarda ni contabiliza la póliza. Los CFDI `P` permanecen seleccionables y siguen el flujo de captura manual ya definido por CA-006-22.
+
+## Responsabilidades y orden de integración
+
+- Backend: sin trabajo nuevo; conserva autorización, aislamiento, filtrado por periodo y exposición de `policy-links` mediante el contrato vigente.
+- Frontend: consulta el periodo activo, compone los vínculos históricos, administra filtros y selección, renderiza la tabla y conserva las acciones actuales.
+- Dependencias: FE-006-04 consume el contrato vigente de SPEC-004 y no requiere una tarea backend previa.
+
+## Errores e integridad
+
+Los errores de carga no se presentan como una tabla vacía. Los rangos inválidos conservan el resto de los filtros y la selección para que el usuario pueda corregirlos. Filtrar, limpiar, cerrar o reabrir la ventana durante la misma edición no elimina CFDI seleccionados ni modifica vínculos históricos. Cambiar de empresa, periodo o póliza reinicia el estado de filtros conforme al nuevo contexto.
+
+## Estrategia de pruebas
+
+Las pruebas de componente con Vitest y React Testing Library cubren columnas y valores derivados, cada filtro y sus combinaciones, límites inclusivos, errores de rango, limpieza, selección oculta, orden, vínculos históricos, tipo `P`, recuentos, estados de carga/error/vacío y que «Continuar» no guarda la póliza. También se ejecutan las comprobaciones frontend de tipos, lint y formato. La legibilidad, el desplazamiento interno y la jerarquía visual se reservan para QA humana.
+
+## Riesgos y bloqueantes técnicos
+
+No hay bloqueantes conocidos. El alcance supone un volumen mensual manejable en memoria; paginación o filtrado remoto requerirán una entrega posterior y un contrato backend explícito.

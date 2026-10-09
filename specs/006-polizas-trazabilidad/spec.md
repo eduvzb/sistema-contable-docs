@@ -2,7 +2,7 @@
 
 - **Estado:** QA
 - **Actualizado:** 2026-09-29
-- **Criterios de esta entrega:** CA-006-19 revisado y CA-006-20 a CA-006-24; depende de CA-004-11.
+- **Criterios de esta entrega:** CA-006-19 y CA-006-20 revisados.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
 
@@ -48,8 +48,8 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 | CA-006-16 | El usuario abre la creación de una póliza nueva. | El editor inicia con exactamente una partida vacía lista para capturar. Al editar una póliza se muestran sus partidas conservadas y no se agrega una partida vacía implícita. |
 | CA-006-17 | En una partida capturada, el usuario termina un cargo o abono y presiona `Enter`. | Si la partida tiene una cuenta operable y exactamente uno de cargo o abono contiene un importe positivo válido, queda disponible una sola partida vacía posterior: se agrega al final cuando no existe y el foco pasa a su control de cuenta. `Enter` no guarda ni contabiliza la póliza. Si la partida no es válida, no se agrega otra y la captura actual se conserva para corregirla. |
 | CA-006-18 | El usuario captura una póliza en un viewport de escritorio de al menos 1280 píxeles CSS de ancho. | Puede ver y operar los campos, totales y acciones del editor sin scroll horizontal en el diálogo ni en la tabla de partidas. En anchos menores, el contenido sigue siendo operable y puede recurrir a desplazamiento horizontal sin quedar cortado. |
-| CA-006-19 | CUANDO el usuario busca CFDI al crear o editar una póliza. | EL SISTEMA filtra localmente los CFDI ya cargados para el periodo elegido por coincidencia parcial en UUID, RFC, razón social, serie o folio, sin distinguir mayúsculas, minúsculas ni acentos. La lista muestra fecha, tipo, UUID, contraparte y vínculos existentes; permite seleccionar varios CFDI mediante casillas, conserva selecciones ocultas temporalmente por la búsqueda y muestra recuento o estado sin resultados. Los CFDI relacionados con otras pólizas siguen disponibles; los vínculos preexistentes de otros periodos se conservan al editar. |
-| CA-006-20 | CUANDO se abre «CFDI relacionados» en una póliza del periodo. | EL SISTEMA presenta en una ventana los CFDI emitidos en ese periodo, con búsqueda y selección múltiple; conserva el orden de selección y muestra relaciones anteriores aunque correspondan a otro periodo. «Continuar» no guarda la póliza. La búsqueda y selección previa de CA-006-19 se mantienen dentro de la ventana para los CFDI del periodo. |
+| CA-006-19 | CUANDO el usuario abre «CFDI relacionados» al crear o editar una póliza. | EL SISTEMA presenta en una tabla los CFDI cuya fecha de emisión pertenece al periodo contable activo. Cada fila permite selección mediante casilla y muestra Fecha, Tipo, RFC, Nombre, Monto, Folio fiscal, Folio interno y Vínculos. RFC y Nombre corresponden a la contraparte; Folio fiscal es el UUID; Folio interno combina Serie y Folio; Monto muestra el total nominal y su moneda, sin conversión. El tipo permite Todos, Ingreso, Egreso y Pago. No se incluye selección masiva ni paginación. |
+| CA-006-20 | CUANDO el usuario filtra o selecciona CFDI dentro de la ventana. | EL SISTEMA combina filtros locales por fecha desde/hasta, tipo, RFC, nombre, monto mínimo/máximo, folio fiscal y folio interno, y actualiza la tabla mientras se captura. Los extremos de fecha y monto son inclusivos; un extremo vacío no restringe; un rango invertido o inválido se informa junto al control y no se aplica hasta corregirse. RFC, nombre y folios aceptan coincidencia parcial sin distinguir mayúsculas, minúsculas ni acentos. La interfaz muestra coincidencias y selección total, permite limpiar filtros, conserva el orden y los CFDI seleccionados aunque queden ocultos por los filtros, y mantiene visibles sin hacer seleccionables los vínculos históricos de otros periodos al editar. Los CFDI relacionados con otras pólizas siguen disponibles. «Continuar» prepara las partidas de los CFDI seleccionados, pero no guarda ni contabiliza la póliza. |
 | CA-006-21 | CUANDO se continúa con uno o varios CFDI `I` o `E` en MXN cuyos datos fiscales cuadran. | EL SISTEMA prellena bloques consecutivos de partidas por CFDI en el orden elegido: total, subtotal, descuento e impuestos presentes por tipo y naturaleza, con importes y lado cargo/abono según dirección y tipo. Las cuentas no conocidas quedan vacías y cada importe puede corregirse antes de guardar. |
 | CA-006-22 | SI un CFDI seleccionado no cuadra con su total, es tipo `P` o usa otra moneda. | EL SISTEMA muestra su UUID y motivo. Un descuadre detiene la generación de ese CFDI sin ajuste ficticio; `P` y moneda distinta de MXN permiten relación y captura manual, sin generación. Los demás CFDI válidos pueden continuar. |
 | CA-006-23 | CUANDO el contador asigna cuentas a partidas generadas y guarda una póliza válida DRAFT o POSTED. | EL SISTEMA conserva el origen opcional de cada partida y una sugerencia por empresa, emisor, dirección, tipo, PUE/PPD y componente; al volver a seleccionar un CFDI equivalente propone esas cuentas con sus propios importes. En conflictos de una misma póliza prevalece la última partida. |
@@ -57,15 +57,15 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 
 ## Requisitos no funcionales aplicables
 
-- Aislamiento, integridad y precisión: CA-006-03/04/08/12; accesibilidad y layout del editor: CA-006-14/15/18.
+- Aislamiento, integridad y precisión: CA-006-03/04/08/12; accesibilidad y layout del editor y del selector de CFDI: CA-006-14/15/18/19/20. Los filtros tienen etiquetas asociadas, los errores de rango son anunciables y la tabla conserva operación por teclado y desplazamiento interno en viewports estrechos.
 
 ## Casos límite
 
-- Póliza descuadrada, cuenta o CFDI ajeno, fecha inválida, CFDI sin propuesta y error parcial por CFDI: CA-006-02/03/08/14/22.
+- Póliza descuadrada, cuenta o CFDI ajeno, fecha inválida, rangos de filtro inválidos, periodo sin CFDI, filtros sin coincidencias, CFDI sin propuesta y error parcial por CFDI: CA-006-02/03/08/14/19/20/22.
 
 ## Fuera de alcance
 
-No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa.
+No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión, auditoría histórica completa, búsqueda entre periodos, paginación, selección masiva ni cambios al contrato backend de documentos fiscales.
 
 ## Criterios de finalización
 
