@@ -1,25 +1,23 @@
 # Plan técnico — SPEC-NNN
 
-La definición y el estado vigentes están en [spec.md](spec.md). Este plan referencia sus CA y no crea reglas de negocio.
+Sólo cambios técnicos necesarios para los CA de [spec.md](spec.md). No repetir requisitos ni describir lo que no cambia.
+
+Explica los cambios con frases directas. Usa nombres exactos de rutas, campos o estados cuando sean necesarios, sin añadir jerga para lo que puede decirse de forma sencilla.
 
 ## Contratos y datos
 
-Operaciones, entradas, salidas, representación de importes, persistencia y compatibilidad necesarios para los CA de esta entrega. Registrar la spec responsable de cada contrato compartido.
+Operación, entradas/salidas y cambios de datos. Incluir precisión, autorización, integridad, errores o compatibilidad cuando cambien; referenciar los CA. Si no hay cambios, indicarlo.
 
 ## Responsabilidades y orden de integración
 
-- Backend: validación autoritativa, autorización, persistencia y API aplicables.
-- Frontend: presentación, interacción y estado de interfaz aplicables.
-- Dependencias: contrato que debe estar disponible antes de una tarea consumidora; enlazar los IDs de las tareas afectadas.
-
-## Errores e integridad
-
-Errores observables, aislamiento por empresa, atomicidad y regresiones aplicables. Referenciar los CA.
+- Backend: cambio necesario, o ninguno.
+- Frontend: cambio necesario, o ninguno.
+- Orden: dependencia concreta, o trabajo independiente.
 
 ## Estrategia de pruebas
 
-Pruebas de comportamiento backend y regresiones pertinentes. Para interacción nueva o modificada en Next/React, usar Vitest y React Testing Library; reservar layout real para QA visual humana. No registrar resultados no ejecutados aquí.
+Qué comportamiento y regresión comprobar. Para interacción Next/React, Vitest y React Testing Library; la revisión visual es QA humana. Resultados en `verificacion.md`, no aquí.
 
-## Riesgos y bloqueantes técnicos
+## Bloqueantes técnicos
 
-Anotar únicamente contratos, migraciones o cuestiones técnicas aún pendientes para esta entrega. Las tareas se dividen entre [backend](tasks-backend.md) y [frontend](tasks-frontend.md); los resultados viven en [verificacion.md](verificacion.md).
+Ninguno, o decisión técnica pendiente. Omitir riesgos genéricos y decisiones cerradas.

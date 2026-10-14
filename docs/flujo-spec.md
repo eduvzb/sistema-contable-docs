@@ -4,11 +4,24 @@ Una spec describe un cambio deseado. Para saber qué hace el producto hoy, consu
 
 Cada funcionalidad tiene `spec.md` (resultado esperado y estado de trabajo), `plan.md` (contratos de la entrega pendiente), `tasks-backend.md`, `tasks-frontend.md` y `verificacion.md` (comprobación de la entrega actual y QA). Las tareas terminadas y las cronologías se consultan en Git; no se mantienen como listas paralelas.
 
+## Specs pequeñas y claras
+
+- Desde ahora, describe cada entrega con un objetivo breve, alcance acotado y sólo los criterios necesarios para desarrollarla y comprobarla. Prefiere frases cortas y términos concretos.
+- Usa lenguaje natural: indica quién hace qué y qué ocurre después. No es obligatorio escribir «DADO / CUANDO / EL SISTEMA» ni repetir esas fórmulas. Prefiere «Si faltan datos, se muestra qué falta y no se guarda» a «Ante una condición de invalidez, el sistema preservará la integridad». Evita jerga y siglas sin explicar; usa nombres técnicos exactos sólo donde aporten precisión. No añadas explicaciones que repitan lo ya dicho.
+- Escribe cada comportamiento una sola vez: errores, permisos y casos límite van en los CA afectados. Historias, contexto extenso y secciones separadas de reglas o límites no son obligatorios.
+- No expliques todo el producto ni copies reglas de otras specs: enlaza la responsable. Contratos en el plan, acciones en tareas y resultados reales en verificación.
+- Si una entrega mezcla objetivos independientes, reduce su alcance o prepara entregas separadas. No crees otra spec para cada tarea de una funcionalidad existente.
+- Añade detalle sólo si evita una ambigüedad necesaria para implementar o probar. Brevedad no significa omitir integridad, errores ni decisiones bloqueantes.
+- Aplica este formato a nuevas specs y al cambio solicitado en futuras entregas; no reescribas todas las existentes ni retires criterios vigentes por longitud.
+
 ## Preparar un cambio
+
+Usa lectura incremental: no recargues documentos ya vigentes en contexto y abre sólo los archivos o fragmentos necesarios para la fase. Agrupa comprobaciones documentales al final de las fases autorizadas, sin omitirlas ni reutilizar resultados tras cambios que los invaliden. En el chat, informa sólo decisiones, cambios y bloqueos; evita explicar pasos rutinarios o repetir acuerdos. Este ahorro no sustituye la revisión de código, pruebas ni instrucciones aplicables.
 
 1. Localiza la funcionalidad en el [índice](../specs/README.md). Reutiliza su spec para cambios de una función existente. Para una capacidad nueva, toma el siguiente ID libre y usa las [plantillas](../specs/_plantilla/spec.md).
 2. Lee el código y las pruebas de los repositorios afectados. Consulta las fuentes de dominio pertinentes sólo para aclarar el requisito o un conflicto; el [mapa de fuentes](fuentes.md) indica qué aporta cada una.
-3. En `spec.md`, escribe objetivo, alcance, actores, criterios observables, errores, casos límite y exclusiones. Conserva los IDs de CA existentes; agrega otros sin renumerar. Distingue una duda que bloquea el cambio de una ampliación futura.
+   - Si hay ambigüedades, contradicciones o vacíos, acláralos con preguntas en lenguaje natural, hasta tres por ronda. Espera las respuestas y adapta la siguiente ronda; no uses un cuestionario completo por rutina ni repitas lo ya definido. Resume el resultado para confirmar antes de escribir. Si se solicita guardar un borrador con decisiones pendientes, registra sólo los bloqueantes, no la conversación.
+3. En `spec.md`, escribe objetivo, alcance, actor y criterios observables que incluyan errores y límites relevantes. Añade exclusiones y sólo dudas vigentes. Conserva los IDs de CA existentes; agrega otros sin renumerar. Distingue una duda que bloquea el cambio de una ampliación futura.
 4. En `plan.md`, define únicamente contratos o migraciones nuevos, autorización, integridad y orden de integración. Crea tareas pendientes por repositorio con CA, dependencia y «Hecho cuando» comprobable. Evita copiar decisiones cerradas o describir de nuevo todo el producto.
 
 | Estado de trabajo | Condición |
