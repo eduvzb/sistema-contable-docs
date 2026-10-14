@@ -1,7 +1,7 @@
 # SPEC-004 — Documentos fiscales
 
-- **Estado:** Actualización pendiente
-- **Actualizado:** 2026-10-13
+- **Estado:** QA
+- **Actualizado:** 2026-10-14
 - **Criterios de esta entrega:** CA-004-12 y CA-004-13; conservación y consulta de conceptos para la vista previa de SPEC-006.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md)

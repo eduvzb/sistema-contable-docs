@@ -21,10 +21,9 @@ CA-004-12/13: conservación de conceptos CFDI y consulta autorizada del detalle.
   - `pnpm build`: aprobado.
 - [x] Pint y revisión de whitespace del backend pasan.
   - `vendor/bin/pint --dirty --format agent` y `git diff --check`: aprobados.
-
-### Validación técnica pendiente
-
-- [ ] Commit, publicación de rama y PR de backend y frontend conforme al flujo.
+- [x] Ramas publicadas, PR abiertos hacia `main` y revisión solicitada a colaborador con acceso.
+  - Backend: commit `d841b59`, [PR #9](https://github.com/eduvzb/sistema-contable-back/pull/9).
+  - Frontend: commit `c032007`, [PR #18](https://github.com/eduvzb/sistema-contable-front/pull/18).
 
 ### QA humana pendiente
 

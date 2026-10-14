@@ -21,10 +21,9 @@ CA-006-25 a CA-006-29: vista previa de conceptos CFDI. Implementación frontend 
   - `pnpm exec prettier --check <archivos modificados>`: aprobado.
   - `pnpm build`: aprobado.
   - El detector de interfaz de Impeccable no reportó hallazgos (`[]`).
-
-### Validación técnica pendiente
-
-- [ ] Commit, publicación de rama y PR de backend y frontend conforme al flujo.
+- [x] Ramas publicadas, PR abiertos hacia `main` y revisión solicitada a colaborador con acceso.
+  - Backend: commit `d841b59`, [PR #9](https://github.com/eduvzb/sistema-contable-back/pull/9).
+  - Frontend: commit `c032007`, [PR #18](https://github.com/eduvzb/sistema-contable-front/pull/18).
 
 ### QA humana pendiente
 

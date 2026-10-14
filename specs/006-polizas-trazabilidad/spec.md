@@ -1,7 +1,7 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-- **Estado:** Actualización pendiente
-- **Actualizado:** 2026-10-13
+- **Estado:** QA
+- **Actualizado:** 2026-10-14
 - **Criterios de esta entrega:** CA-006-25 a CA-006-29; vista previa de conceptos del CFDI.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
