@@ -1,26 +1,40 @@
 # Verificación — SPEC-006
 
-El [estado de trabajo y los criterios](spec.md) se contrastarán con el código y las pruebas de frontend cuando se implemente la entrega. Git conserva la evidencia de entregas anteriores.
+## Entrega actual
+
+CA-006-25 a CA-006-29: vista previa de conceptos CFDI. Implementación frontend y pruebas completadas el 2026-10-14. El endpoint real requerido está cubierto por las pruebas de backend de [SPEC-004](../004-documentos-fiscales/verificacion.md); quedan pendientes publicación y QA humana.
 
 ## Estado de validación
 
-### Validación técnica completada
+### Validación técnica comprobada
 
-- [x] **CA-006-19 — Tabla de CFDI del periodo:** columnas Fecha, Tipo, RFC y Nombre de la contraparte, Monto y moneda, Folio fiscal, Folio interno y Vínculos; incluye selección por casilla, sin paginación ni selección masiva.
-- [x] **CA-006-20 — Filtros y conservación de selección:** filtros locales combinables; extremos inclusivos; validación de rangos; limpieza, coincidencias, selección total y selección que permanece al ocultar filas.
-- [x] **Vínculos históricos:** se cargan desde la póliza al editar, se muestran sin permitir selección y se conservan mientras se filtran CFDI del periodo.
-- [x] **Estados y accesibilidad:** se distinguen carga, error, periodo vacío y cero coincidencias; etiquetas y errores asociados; casillas operables por teclado; tabla con desplazamiento interno.
-- [x] **Continuidad del flujo:** «Continuar» conserva la propuesta actual, no guarda ni contabiliza; CFDI `P` se puede relacionar y seguir capturando manualmente.
-- [x] **Pruebas y comprobaciones frontend:** `pnpm test -- src/features/policies/components/accounting-policy-editor.test.tsx` — 6 archivos, 28 pruebas aprobadas; `pnpm exec tsc --noEmit`; ESLint sobre los archivos modificados; Prettier `--check` sobre ambos archivos.
+- [x] CA-006-25: la acción aparece en el selector antes de seleccionar, en bloques generados, documentos de captura manual y vínculos históricos.
+- [x] CA-006-26/27: el panel identifica el CFDI, respeta orden y repetidos, presenta texto largo sin interpretarlo como HTML y distingue posiciones sin descripción y datos no disponibles.
+- [x] CA-006-28: carga, error, reintento y respuestas tardías de otro documento o empresa no alteran la captura ni activan generación o guardado.
+- [x] CA-006-29: nombre accesible, foco inicial, cierre, retorno al disparador y Escape sin cerrar la póliza se comprueban con pruebas de componentes.
+- [x] El endpoint real de detalle entrega conceptos a un usuario autorizado y distingue lista vacía, `null` de documentos anteriores y acceso a otra empresa.
+  - `./vendor/bin/sail artisan test --compact tests/Feature/Spec004Test.php`: 11 pruebas y 99 aserciones aprobadas.
+- [x] Regresiones frontend, tipos, lint de archivos modificados, formato y build pasan.
+  - `pnpm test`: 8 archivos y 42 pruebas aprobadas.
+  - `pnpm typecheck`: aprobado.
+  - `pnpm exec eslint <archivos modificados>`: aprobado.
+  - `pnpm exec prettier --check <archivos modificados>`: aprobado.
+  - `pnpm build`: aprobado.
+  - El detector de interfaz de Impeccable no reportó hallazgos (`[]`).
+
+### Validación técnica pendiente
+
+- [ ] Commit, publicación de rama y PR de backend y frontend conforme al flujo.
 
 ### QA humana pendiente
 
-- [ ] Confirmar que la jerarquía de filtros y tabla facilita localizar un CFDI durante Nueva/Editar póliza.
-- [ ] Confirmar que Fecha, Tipo, RFC, Nombre, Monto y folios se distinguen y comparan con facilidad.
-- [ ] Confirmar que selección, vínculos y recuentos son claros aun cuando los filtros oculten filas seleccionadas.
-- [ ] Confirmar que la tabla se mantiene operable en los viewports previstos mediante desplazamiento interno, sin cortar acciones.
-- [ ] Registrar fecha, resultado y observaciones de QA; una aprobación permite cambiar el estado a Implementada.
+- [ ] Confirmar que el ojo se identifica fácilmente junto al CFDI y aporta contexto al asignar cuentas.
+- [ ] Revisar separación de conceptos, descripciones extensas y operación en escritorio y anchos estrechos.
+- [ ] Confirmar que el panel no oculta acciones necesarias ni interrumpe la captura.
+- [ ] Registrar fecha, resultado y observaciones. No hay aprobación humana registrada.
 
-## Evidencia técnica
+## Contraste de implementación y observación ajena
 
-Implementación frontend de CA-006-19/20 completada. El contrato backend vigente se reutilizó sin cambios. La revisión visual humana de filtros, tabla y desplazamiento interno sigue pendiente; hasta su aprobación, la spec permanece en QA.
+El editor consulta el detalle fiscal de forma diferida y presenta un panel dentro del diálogo actual. Los disparadores no cambian selección, propuestas, sugerencias, guardado ni contabilización. Las pruebas frontend usan el cliente API simulado; las pruebas backend ejercitan el endpoint real, pero no se ejecutó una prueba integral entre frontend y backend.
+
+Existe una discrepancia previa fuera de esta entrega: CA-006-19/20 y la verificación anterior describen una tabla con filtros, mientras el código actual consultado presenta una lista con búsqueda. Esta preparación no reconstruye el selector ni modifica esos criterios; requiere revisión separada y no acredita su cumplimiento.

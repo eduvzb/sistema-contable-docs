@@ -1,37 +1,35 @@
 # Plan técnico — SPEC-006
 
-Este plan cubre únicamente CA-006-19 y CA-006-20 revisados de [spec.md](spec.md). La entrega reemplaza la lista de búsqueda del selector de CFDI por una tabla filtrable dentro de Nueva/Editar póliza, sin modificar la generación de partidas, el guardado ni la contabilización.
+Esta entrega cubre CA-006-25 a CA-006-29 de [spec.md](spec.md). Consume la conservación y consulta de conceptos de [SPEC-004](../004-documentos-fiscales/plan.md), sin cambiar selección, propuestas, guardado ni contabilización.
 
 ## Contratos y datos
 
-El frontend reutiliza `GET /api/companies/{companyId}/fiscal-documents?period_id={periodId}&include=policy-links`. La respuesta vigente ya contiene fecha de emisión, tipo, dirección, RFC y nombre de emisor y receptor, UUID, Serie, Folio, total, moneda y vínculos con pólizas. No se agregan endpoints, campos, tipos públicos, migraciones ni reglas de autorización.
+Al abrir la vista, consultar `GET /api/companies/{companyId}/fiscal-documents/{documentId}` mediante el servicio de detalle existente. El campo `concepts` y su compatibilidad se definen exclusivamente en SPEC-004. La identificación usa UUID, Serie/Folio y contraparte según dirección; si no hay nombre, usa el RFC disponible.
 
-La consulta se limita al periodo contable activo. Al editar, los `fiscal_documents` ya relacionados incluidos en la póliza se combinan en presentación con la consulta del periodo para conservar y mostrar por separado vínculos históricos de otros periodos; esos documentos históricos no se vuelven seleccionables en esta ventana.
+Mantener separados el estado de consulta y el estado editable de la póliza. Identificar cada petición por empresa y documento. Cancelar o ignorar respuestas obsoletas al cambiar de CFDI, empresa, periodo, póliza o cerrar el diálogo; borrar contenido anterior antes de mostrar el nuevo. No reutilizar datos de otra empresa ni modificar el payload de propuestas o guardado.
 
-## Interfaz y filtrado
+## Interfaz
 
-La ventana «CFDI relacionados» muestra una tabla con Selección, Fecha, Tipo, RFC, Nombre, Monto, Folio fiscal, Folio interno y Vínculos. RFC y Nombre se derivan de la contraparte según la dirección del CFDI; Folio fiscal corresponde al UUID; Folio interno usa Serie-Folio; Monto presenta el total y el código de moneda, sin conversión.
+Agregar una acción de ojo independiente de la casilla o etiqueta de selección en el selector, incluida la sección de vínculos históricos. En el editor, colocarla junto al encabezado documental del bloque existente y exponer los documentos relacionados sin bloque generado en un área identificada. Usar `type="button"` para evitar enviar el formulario; no anidar el botón en una etiqueta que active la casilla. No sustituir el selector ni reconstruir su filtrado en esta entrega.
 
-Los filtros se ejecutan localmente sobre los CFDI ya cargados del periodo y se combinan con lógica AND. Fecha y monto admiten extremos inclusivos desde/hasta; un extremo vacío no restringe. RFC, nombre, UUID y Serie-Folio usan coincidencia parcial normalizada, sin distinguir mayúsculas, minúsculas ni acentos. Tipo admite Todos, Ingreso (`I`), Egreso (`E`) y Pago (`P`). Un rango inválido o invertido muestra un error asociado y no se aplica hasta corregirse. «Limpiar filtros» restablece la tabla sin alterar la selección.
+Componer un panel de lectura dentro del diálogo desde el que se abre, no otro modal apilado. El encabezado documental precede una lista numerada de conceptos, con separación entre elementos, ajuste de texto y desplazamiento interno cuando haga falta. Renderizar texto con React sin HTML interpretado. Mantener la acción cercana al CFDI y a la asignación de cuentas, sin confundir la descripción comercial con el concepto editable de una partida.
 
-La selección permanece ordenada y se conserva aunque una fila quede oculta por los filtros. El recuento distingue coincidencias visibles de selección total. No hay paginación ni selección masiva. La tabla usa encabezado reconocible, casillas etiquetadas por CFDI, operación por teclado, región desplazable y estados explícitos de carga, error, periodo sin documentos y filtros sin coincidencias.
-
-«Continuar» conserva su responsabilidad actual: solicita la propuesta para los CFDI seleccionados del periodo y cierra la ventana para presentar bloques editables; no guarda ni contabiliza la póliza. Los CFDI `P` permanecen seleccionables y siguen el flujo de captura manual ya definido por CA-006-22.
+El panel tiene una acción de cierre propia. Al abrirlo, el foco pasa a su título o control inicial; al cerrar, vuelve al disparador. Si se usa Escape, cierra primero el panel, sin cerrar el editor ni descartar la captura. Usar la gestión de foco del diálogo vigente sin agregar una segunda trampa de foco.
 
 ## Responsabilidades y orden de integración
 
-- Backend: sin trabajo nuevo; conserva autorización, aislamiento, filtrado por periodo y exposición de `policy-links` mediante el contrato vigente.
-- Frontend: consulta el periodo activo, compone los vínculos históricos, administra filtros y selección, renderiza la tabla y conserva las acciones actuales.
-- Dependencias: FE-006-04 consume el contrato vigente de SPEC-004 y no requiere una tarea backend previa.
+- Backend: el trabajo nuevo pertenece a SPEC-004; no hay cambios propios en pólizas ni propuestas.
+- Frontend: contrato/servicio en `src/features/fiscal-documents` y `src/shared/contracts`; hook de consulta y panel en `src/features/policies`, consumiendo exports públicos. Los componentes no importan módulos API; el único `fetch` permanece en `src/shared/api/client.ts`.
+- Integración: primero el contrato y la consulta de SPEC-004; después hook/panel y disparadores en selector/editor. Reutilizar primitivas existentes sin convertir el panel específico en un componente global.
 
 ## Errores e integridad
 
-Los errores de carga no se presentan como una tabla vacía. Los rangos inválidos conservan el resto de los filtros y la selección para que el usuario pueda corregirlos. Filtrar, limpiar, cerrar o reabrir la ventana durante la misma edición no elimina CFDI seleccionados ni modifica vínculos históricos. Cambiar de empresa, periodo o póliza reinicia el estado de filtros conforme al nuevo contexto.
+El panel distingue carga, error con reintento y datos no disponibles. Una lista vacía, `null` o campo ausente presenta el aviso acordado; una lista con elementos sin descripción mantiene cada posición. Un fallo de autorización tampoco muestra contenido anterior. Abrir/cerrar el panel no invoca selección, generación, sugerencias, guardado ni contabilización.
 
 ## Estrategia de pruebas
 
-Las pruebas de componente con Vitest y React Testing Library cubren columnas y valores derivados, cada filtro y sus combinaciones, límites inclusivos, errores de rango, limpieza, selección oculta, orden, vínculos históricos, tipo `P`, recuentos, estados de carga/error/vacío y que «Continuar» no guarda la póliza. También se ejecutan las comprobaciones frontend de tipos, lint y formato. La legibilidad, el desplazamiento interno y la jerarquía visual se reservan para QA humana.
+Pruebas con Vitest y React Testing Library para panel y hook: documento correcto, orden, repetidos, texto completo/seguro, datos parciales, `null`, lista vacía, campo ausente, carga, error, reintento y respuestas fuera de orden. En `accounting-policy-editor.test.tsx`, cubrir selector sin selección, bloque generado, captura manual, vínculos históricos, edición, varios CFDI, conservación de captura y ausencia de llamadas de generación/guardado al consultar. Cubrir teclado, nombre accesible, cierre, retorno de foco y Escape sin cerrar el editor. Ejecutar regresiones de selección, propuesta y sugerencias, tipos, lint y formato. Legibilidad y disposición real quedan para QA humana, sin exigir prueba integral por navegador.
 
 ## Riesgos y bloqueantes técnicos
 
-No hay bloqueantes conocidos. El alcance supone un volumen mensual manejable en memoria; paginación o filtrado remoto requerirán una entrega posterior y un contrato backend explícito.
+No hay decisiones bloqueantes. La consulta diferida evita añadir todas las descripciones a los listados. No introduce paginación, búsqueda, truncamiento de texto ni cambios al volumen de documentos del selector.

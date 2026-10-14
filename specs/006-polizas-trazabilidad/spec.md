@@ -1,8 +1,8 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-- **Estado:** QA
-- **Actualizado:** 2026-09-29
-- **Criterios de esta entrega:** CA-006-19 y CA-006-20 revisados.
+- **Estado:** Actualización pendiente
+- **Actualizado:** 2026-10-13
+- **Criterios de esta entrega:** CA-006-25 a CA-006-29; vista previa de conceptos del CFDI.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
 
@@ -13,6 +13,8 @@ Crear, consultar y modificar pólizas con partidas manuales o propuestas desde C
 Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcionales y múltiples, trazabilidad bidireccional, ingresos/egresos PUE, representación manual del registro inicial PPD y una propuesta editable de partidas desde datos fiscales.
 
 La edición posterior a contabilización debe conservar balance, autorización y trazabilidad conforme a los criterios de esta spec.
+
+Esta actualización permite al contador consultar los productos o servicios de cada CFDI antes de seleccionarlo y mientras asigna cuentas en Nueva/Editar póliza. La consulta es de lectura y usa las descripciones conservadas por [SPEC-004](../004-documentos-fiscales/spec.md).
 
 ## Historias de usuario
 
@@ -54,6 +56,11 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 | CA-006-22 | SI un CFDI seleccionado no cuadra con su total, es tipo `P` o usa otra moneda. | EL SISTEMA muestra su UUID y motivo. Un descuadre detiene la generación de ese CFDI sin ajuste ficticio; `P` y moneda distinta de MXN permiten relación y captura manual, sin generación. Los demás CFDI válidos pueden continuar. |
 | CA-006-23 | CUANDO el contador asigna cuentas a partidas generadas y guarda una póliza válida DRAFT o POSTED. | EL SISTEMA conserva el origen opcional de cada partida y una sugerencia por empresa, emisor, dirección, tipo, PUE/PPD y componente; al volver a seleccionar un CFDI equivalente propone esas cuentas con sus propios importes. En conflictos de una misma póliza prevalece la última partida. |
 | CA-006-24 | CUANDO varios CFDI del mismo emisor están en la misma captura y el contador asigna una cuenta al primer bloque. | EL SISTEMA aplica esa cuenta a las partidas equivalentes posteriores aún vacías sin alterar importes ni elecciones manuales. Una póliza contabilizada sigue exigiendo cuentas válidas y balance autoritativo. |
+| CA-006-25 | El contador revisa CFDI en «CFDI relacionados» o trabaja con ellos en Nueva/Editar póliza. | Cada documento dispone de un botón de ojo «Ver conceptos» junto a su identificación. Está disponible antes de seleccionar el CFDI, en el encabezado de su bloque de partidas y junto a los documentos relacionados sin bloque generado, incluidos los que requieren captura manual y los vínculos históricos al editar. No se repite el botón en cada partida del mismo bloque. |
+| CA-006-26 | Se activa «Ver conceptos» para un CFDI con descripciones conservadas. | Se abre un panel de lectura dentro del diálogo actual, titulado «Conceptos del CFDI», con UUID, serie y folio cuando existan y contraparte. Muestra todos los conceptos como una lista ordenada y claramente separada, incluidas descripciones repetidas, respetando el orden del XML. El texto completo puede leerse y seleccionarse, se ajusta al ancho y no se interpreta como contenido activo. No mezcla datos de otros CFDI. |
+| CA-006-27 | Se consulta un CFDI con información parcial o sin descripciones disponibles. | Cada concepto sin descripción se identifica como «Sin descripción» en su posición. Si no hay conceptos conservados, se muestra «No hay descripciones disponibles para este CFDI», sin afirmar que el XML original carecía de conceptos. La consulta no bloquea la captura contable. |
+| CA-006-28 | Se abre o cierra la vista, se cambia de CFDI consultado o falla su carga. | Consultar no selecciona ni deselecciona documentos, no genera partidas, no ejecuta «Continuar», no guarda ni contabiliza y no cambia cuentas, importes, conceptos contables, referencias ni correcciones. La carga se identifica como tal; un fallo muestra un error recuperable con reintento y cierre, distinto de la ausencia de datos. Una respuesta tardía de otro CFDI o contexto no reemplaza el contenido del documento consultado. |
+| CA-006-29 | Se usa la vista previa con teclado o en un ancho estrecho. | El botón tiene nombre accesible «Ver conceptos del CFDI …», identificado por folio o UUID, y no depende de pasar el cursor ni de un tooltip. El panel y su cierre son operables con teclado; al cerrarlo, el foco vuelve al botón que lo abrió. Las descripciones y acciones permanecen legibles y alcanzables sin cortar el contenido. |
 
 ## Requisitos no funcionales aplicables
 
@@ -66,6 +73,8 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 ## Fuera de alcance
 
 No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión, auditoría histórica completa, búsqueda entre periodos, paginación, selección masiva ni cambios al contrato backend de documentos fiscales.
+
+La exclusión de cambios al contrato backend corresponde al selector de CA-006-19/20; esta actualización sí consume el nuevo dato de conceptos definido en SPEC-004. Quedan fuera seleccionar cuentas a partir de las descripciones, generar una partida por concepto, cambiar propuestas o sugerencias vigentes, excluir CFDI contabilizados y ampliar la interfaz de Documentos fiscales.
 
 ## Criterios de finalización
 

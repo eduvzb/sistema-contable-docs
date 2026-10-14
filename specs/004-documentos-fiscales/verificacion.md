@@ -1,13 +1,36 @@
 # Verificación — SPEC-004
 
-El [estado de trabajo y los criterios](spec.md) se contrastan con el código y las pruebas de backend y frontend. Git conserva las entregas anteriores.
-
 ## Entrega actual
 
-CA-004-11 y la importación/consulta fiscal están integrados. No hay tareas técnicas abiertas.
+CA-004-12/13: conservación de conceptos CFDI y consulta autorizada del detalle. Código y pruebas añadidos el 2026-10-14; la validación integrada se completó con Laravel Sail.
 
-La regresión ejecutada el 2026-09-24 en los repositorios actuales pasó: `./vendor/bin/sail artisan test --compact` (88 pruebas, 870 aserciones), `pnpm test` (6 archivos, 26 pruebas), `pnpm lint`, `pnpm typecheck` y `pnpm build`. Las pruebas backend por funcionalidad están en `tests/Feature/Spec004Test.php` del repositorio de backend cuando aplica. Estos resultados acreditan el estado de código comprobado; no sustituyen la revisión visual.
+## Estado de validación
 
-## QA humana pendiente
+### Validación técnica comprobada
 
-Lote mixto, mensajes por archivo, bandeja reconciliada y desglose de descuento e impuestos en el detalle. Registrar aquí fecha, resultado y observaciones. Sólo una aprobación humana registrada permite cambiar el estado a Implementada.
+- [x] El parser conserva orden, repetidos, descripción completa, entidades XML, prefijo alternativo y posiciones sin descripción; CFDI sin conceptos produce una lista vacía.
+  - `./vendor/bin/sail artisan test --compact tests/Unit/CfdiXmlParserTest.php`: 2 pruebas aprobadas.
+- [x] CA-004-12/13: las pruebas de importación, duplicados, lotes, lista vacía, documentos anteriores, detalle autorizado, aislamiento y ausencia de conceptos en listado/importación pasan.
+  - `./vendor/bin/sail artisan test --compact tests/Feature/Spec004Test.php`: 11 pruebas y 99 aserciones aprobadas.
+  - `./vendor/bin/sail artisan test --compact`: 100 pruebas y 951 aserciones aprobadas.
+- [x] El contrato y servicio de detalle frontend aceptan lista, `null`, campo ausente y errores; la suite de comportamiento, tipos, lint de archivos modificados y formato pasan.
+  - `pnpm test`: 8 archivos y 42 pruebas aprobadas.
+  - `pnpm typecheck`: aprobado.
+  - `pnpm exec eslint <archivos modificados>`: aprobado.
+  - `pnpm exec prettier --check <archivos modificados>`: aprobado.
+  - `pnpm build`: aprobado.
+- [x] Pint y revisión de whitespace del backend pasan.
+  - `vendor/bin/pint --dirty --format agent` y `git diff --check`: aprobados.
+
+### Validación técnica pendiente
+
+- [ ] Commit, publicación de rama y PR de backend y frontend conforme al flujo.
+
+### QA humana pendiente
+
+- [ ] Revisar el resultado integrado con la vista previa de [SPEC-006](../006-polizas-trazabilidad/verificacion.md), incluidos conceptos de nuevas importaciones y el aviso de documentos anteriores.
+- [ ] Registrar fecha, resultado y observaciones. No hay aprobación humana registrada.
+
+## Contraste de implementación
+
+El cambio agrega una columna JSON nullable, extracción por espacio de nombres CFDI, persistencia en la importación existente y conceptos sólo en el recurso de detalle. Las pruebas de integración se ejecutaron con PostgreSQL dentro de Laravel Sail.

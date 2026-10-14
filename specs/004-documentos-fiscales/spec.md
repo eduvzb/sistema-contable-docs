@@ -1,8 +1,8 @@
 # SPEC-004 — Documentos fiscales
 
-- **Estado:** QA
-- **Actualizado:** 2026-09-24
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana pendiente.
+- **Estado:** Actualización pendiente
+- **Actualizado:** 2026-10-13
+- **Criterios de esta entrega:** CA-004-12 y CA-004-13; conservación y consulta de conceptos para la vista previa de SPEC-006.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md)
 
@@ -11,6 +11,8 @@
 Incorporar XML manualmente, de uno en uno o en lote; extraer y conservar únicamente datos fiscales normalizados, detectar duplicados y consultar los documentos de la empresa y periodo. Mostrar emitidos/recibidos e información fiscal extraída, distinguiendo PUE/PPD.
 
 Incluye la bandeja de documentos y su situación contable derivada de pólizas.
+
+Esta actualización conserva las descripciones de los conceptos de nuevas importaciones para que el contador consulte qué producto o servicio representa cada CFDI al elegir cuentas en [SPEC-006](../006-polizas-trazabilidad/spec.md). No amplía la interfaz del detalle fiscal.
 
 ## Historias de usuario
 
@@ -38,6 +40,8 @@ La carga admite XML CFDI 4.0 de tipo `I`, `E` y `P` cuando el RFC de la empresa 
 | CA-004-09 | Termina un intento de importación, incluido un lote con archivos importados y rechazados. | El resultado por archivo permanece visible para revisión, pero la selección nativa de archivos queda vacía y permite iniciar otro intento —incluso seleccionando nuevamente el mismo archivo— sin conservar adjuntos anteriores. Al cerrar y reabrir el diálogo inicia una sesión limpia. |
 | CA-004-10 | Ya existe un CFDI y se vuelve a importar junto con otro nuevo de la misma empresa. | El existente se informa como duplicado una sola vez, el nuevo se incorpora una sola vez y la bandeja se reconcilia con la consulta autoritativa. Si el nuevo corresponde al periodo y filtros visibles queda localizable sin recargar manualmente; si queda fuera, el resultado explica qué periodo o filtro impide verlo. Crear una póliza y reintentar la importación reflejan la misma existencia del documento. |
 | CA-004-11 | CUANDO se importa por primera vez un CFDI 4.0 con descuento, impuestos federales trasladados o retenidos, o impuestos locales en complemento. | EL SISTEMA conserva subtotal, descuento, total y cada impuesto con clave o nombre, naturaleza e importe decimal de seis posiciones, sin conservar el XML original. La consulta entrega ese desglose a SPEC-006 sin volver a cargar el archivo. |
+| CA-004-12 | Se importa por primera vez un CFDI admitido con elementos `cfdi:Concepto` dentro de `cfdi:Conceptos`. | Se conserva el atributo `Descripcion` de cada concepto y su pertenencia al CFDI, en el orden del XML y sin eliminar descripciones repetidas. Un concepto sin descripción conserva su posición sin inventar texto. Las descripciones completas quedan consultables por el usuario con acceso a la empresa y al documento, sin conservar el XML original ni cambiar los datos fiscales o las reglas de importación vigentes. |
+| CA-004-13 | Se consulta un documento anterior sin conceptos conservados, un documento nuevo sin conceptos o se reimporta un UUID existente. | La consulta permite distinguir datos no conservados de una lista de conceptos vacía. No reconstruye descripciones ni actualiza el documento por reimportación; el UUID existente sigue informándose como duplicado. La ausencia de descripciones no impide por sí sola continuar la captura contable. |
 
 ## Requisitos no funcionales aplicables
 
@@ -50,6 +54,8 @@ La carga admite XML CFDI 4.0 de tipo `I`, `E` y `P` cuando el RFC de la empresa 
 ## Fuera de alcance
 
 No incluye SAT real, tratamiento de cancelaciones/sustituciones, nómina ni automatización fiscal avanzada.
+
+Esta entrega tampoco incluye recuperar conceptos de documentos anteriores, conservar otros atributos de los conceptos, ampliar impuestos, mostrar el XML original ni añadir una sección de conceptos en Documentos fiscales.
 
 ## Criterios de finalización
 
