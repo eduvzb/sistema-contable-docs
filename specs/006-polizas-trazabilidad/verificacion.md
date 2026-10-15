@@ -15,7 +15,7 @@
 ### Backend
 
 - Rama `codex/feature/SPEC-006/reutilizacion-cfdi-entrega`; commit `8d4997c`.
-- PR [#11](https://github.com/eduvzb/sistema-contable-back/pull/11), abierta hacia `main`; reviewer `alavazarez` solicitado. CI no verificado.
+- PR [#11](https://github.com/eduvzb/sistema-contable-back/pull/11), fusionada a `main` el 2026-10-15; merge commit `2253855`. CI sin checks reportados.
 - `./vendor/bin/sail artisan test --compact`: **114 pruebas aprobadas, 1,057 aserciones**. Incluye endpoints reales en procesos/conexiones PostgreSQL independientes para competencia por un CFDI y actualización concurrente de la opción global.
 - `./vendor/bin/sail pint --dirty --format agent`: aprobado.
 - `git diff --check`: aprobado.
@@ -25,7 +25,7 @@ El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el comm
 ### Frontend
 
 - Rama `codex/feature/SPEC-006/reutilizacion-cfdi`; commit `6d250cf`.
-- PR [#19](https://github.com/eduvzb/sistema-contable-front/pull/19), abierta hacia `main`; reviewer `alavazarez` solicitado. CI no verificado.
+- PR [#19](https://github.com/eduvzb/sistema-contable-front/pull/19), abierta hacia `main`; reviewer `alavazarez` solicitado. CI sin checks reportados.
 - `pnpm test`: **58 pruebas aprobadas** en 10 archivos.
 - `pnpm typecheck`: aprobado.
 - `pnpm lint`: cero errores; 94 warnings en scripts existentes de `.agents/skills/impeccable`.
@@ -35,7 +35,7 @@ El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el comm
 ### Documentación
 
 - Rama `codex/docs/SPEC-006/cierre-tecnico`; commits `56763a1` y `62cdc69`.
-- PR [#1](https://github.com/eduvzb/sistema-contable-docs/pull/1), abierta hacia `main`; reviewer `alavazarez` solicitado.
+- PR [#1](https://github.com/eduvzb/sistema-contable-docs/pull/1), abierta hacia `main`; reviewer `alavazarez` solicitado. CI sin checks reportados.
 - `python3 scripts/spec_index.py --write` y `python3 scripts/spec_index.py --check`: 9 specs y enlaces locales validados.
 - `git diff --check`: aprobado.
 
