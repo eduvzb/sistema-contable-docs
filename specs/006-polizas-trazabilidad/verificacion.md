@@ -2,38 +2,40 @@
 
 ## Entrega actual
 
-CA-006-25 a CA-006-29: vista previa de conceptos CFDI. Implementación frontend y pruebas completadas el 2026-10-14. El endpoint real requerido está cubierto por las pruebas de backend de [SPEC-004](../004-documentos-fiscales/verificacion.md); quedan pendientes publicación y QA humana.
+CA-006-07/20 revisados y CA-006-30 a CA-006-35: reutilización configurable de CFDI. Preparación documental del 2026-10-14; no se ha implementado ni ejecutado pruebas de esta entrega. Estado: Actualización pendiente.
 
-## Estado de validación
+## Validación técnica pendiente
 
-### Validación técnica comprobada
+- [ ] CA-006-30: opción global persistente, inicialmente desactivada, modificable solo por administrador, con validación y errores de guardado.
+- [ ] CA-006-20/31/35: CFDI usados visibles en búsqueda, selección bloqueada con motivo accesible, consulta de conceptos y vínculos operable; carga, error y reintento sin habilitar vínculos por suposición.
+- [ ] CA-006-32: servidor rechaza vínculos nuevos con UUID y sin guardado parcial, incluso con petición manipulada o pantalla desactualizada.
+- [ ] CA-006-07/33: edición conserva relaciones anteriores compartidas y de otros periodos; retirar y guardar un vínculo cambia su tratamiento en una incorporación posterior.
+- [ ] CA-006-34: ambos valores de la opción funcionan, la desactivación no elimina relaciones y se consulta el valor vigente al guardar.
+- [ ] CA-006-32/34: dos transacciones entre periodos no reutilizan el mismo CFDI con la opción desactivada; el cambio global se serializa con el guardado, probado en un motor con bloqueos reales.
+- [ ] CA-006-32/35: errores y respuestas obsoletas conservan la captura y no sustituyen el contexto actual.
+- [ ] Regresiones backend/frontend, pruebas de componentes, tipos, lint y formato de los cambios.
+- [ ] Cierre técnico y publicación de repositorios afectados conforme al flujo, solo cuando se autorice la implementación y entrega.
 
-- [x] CA-006-25: la acción aparece en el selector antes de seleccionar, en bloques generados, documentos de captura manual y vínculos históricos.
-- [x] CA-006-26/27: el panel identifica el CFDI, respeta orden y repetidos, presenta texto largo sin interpretarlo como HTML y distingue posiciones sin descripción y datos no disponibles.
-- [x] CA-006-28: carga, error, reintento y respuestas tardías de otro documento o empresa no alteran la captura ni activan generación o guardado.
-- [x] CA-006-29: nombre accesible, foco inicial, cierre, retorno al disparador y Escape sin cerrar la póliza se comprueban con pruebas de componentes.
-- [x] El endpoint real de detalle entrega conceptos a un usuario autorizado y distingue lista vacía, `null` de documentos anteriores y acceso a otra empresa.
-  - `./vendor/bin/sail artisan test --compact tests/Feature/Spec004Test.php`: 11 pruebas y 99 aserciones aprobadas.
-- [x] Regresiones frontend, tipos, lint de archivos modificados, formato y build pasan.
-  - `pnpm test`: 8 archivos y 42 pruebas aprobadas.
-  - `pnpm typecheck`: aprobado.
-  - `pnpm exec eslint <archivos modificados>`: aprobado.
-  - `pnpm exec prettier --check <archivos modificados>`: aprobado.
-  - `pnpm build`: aprobado.
-  - El detector de interfaz de Impeccable no reportó hallazgos (`[]`).
-- [x] Ramas publicadas, PR abiertos hacia `main` y revisión solicitada a colaborador con acceso.
-  - Backend: commit `d841b59`, [PR #9](https://github.com/eduvzb/sistema-contable-back/pull/9).
-  - Frontend: commit `c032007`, [PR #18](https://github.com/eduvzb/sistema-contable-front/pull/18).
+## QA humana pendiente
 
-### QA humana pendiente
+- [ ] Claridad del alcance global y del valor guardado en Configuración.
+- [ ] Visibilidad de «Ya usado en otra póliza» y distinción entre un documento usado y uno contabilizado.
+- [ ] Operación del selector, vínculos anteriores y conceptos con teclado y en anchos estrechos.
+- [ ] Registrar persona, fecha, resultado y observaciones; no hay aprobación de esta entrega.
 
-- [ ] Confirmar que el ojo se identifica fácilmente junto al CFDI y aporta contexto al asignar cuentas.
-- [ ] Revisar separación de conceptos, descripciones extensas y operación en escritorio y anchos estrechos.
-- [ ] Confirmar que el panel no oculta acciones necesarias ni interrumpe la captura.
-- [ ] Registrar fecha, resultado y observaciones. No hay aprobación humana registrada.
+## Contraste de partida y límite ajeno
 
-## Contraste de implementación y observación ajena
+Se revisaron `AccountingPolicyController`, `FiscalDocumentController`, `FiscalDocumentResource`, las rutas de API, el área administrativa y el editor con sus pruebas de selección. La reutilización sigue permitida y no hay endpoint global de configuración. `accounted` solo refleja vínculos POSTED; `policy_links` también incluye borradores. Estas lecturas no acreditan los nuevos criterios.
 
-El editor consulta el detalle fiscal de forma diferida y presenta un panel dentro del diálogo actual. Los disparadores no cambian selección, propuestas, sugerencias, guardado ni contabilización. Las pruebas frontend usan el cliente API simulado; las pruebas backend ejercitan el endpoint real, pero no se ejecutó una prueba integral entre frontend y backend.
+Se conserva la observación ajena previa: CA-006-19/20 describen una tabla con filtros, mientras el código consultado presenta una lista con búsqueda. Esta entrega no reconstruye el selector ni acredita el cumplimiento de esos filtros.
 
-Existe una discrepancia previa fuera de esta entrega: CA-006-19/20 y la verificación anterior describen una tabla con filtros, mientras el código actual consultado presenta una lista con búsqueda. Esta preparación no reconstruye el selector ni modifica esos criterios; requiere revisión separada y no acredita su cumplimiento.
+La evidencia de la entrega anterior de conceptos permanece en Git; su QA humana no estaba aprobada y no queda aprobada por esta preparación. No se trasladan checks de aquella entrega como evidencia de la actual.
+
+## Validación documental
+
+- `python3 scripts/spec_index.py --write`: índice actualizado; 9 specs y sus enlaces locales validados.
+- `python3 scripts/spec_index.py --check`: correcto.
+- `git diff --check`: sin errores de espacios.
+- Revisión de los cinco documentos y del diff: criterios enlazados con contratos y tareas, sin decisiones bloqueantes; se conservan los IDs y criterios previos salvo CA-006-07/20, ajustados al alcance confirmado.
+
+Esta validación es documental; no sustituye pruebas del producto ni QA humana.

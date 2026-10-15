@@ -1,35 +1,47 @@
 # Plan técnico — SPEC-006
 
-Esta entrega cubre CA-006-25 a CA-006-29 de [spec.md](spec.md). Consume la conservación y consulta de conceptos de [SPEC-004](../004-documentos-fiscales/plan.md), sin cambiar selección, propuestas, guardado ni contabilización.
+Entrega: CA-006-07/20 revisados y CA-006-30 a CA-006-35 de [spec.md](spec.md). No cambia importes, propuestas ni el significado de POSTED.
 
-## Contratos y datos
+## Contratos
 
-Al abrir la vista, consultar `GET /api/companies/{companyId}/fiscal-documents/{documentId}` mediante el servicio de detalle existente. El campo `concepts` y su compatibilidad se definen exclusivamente en SPEC-004. La identificación usa UUID, Serie/Folio y contraparte según dirección; si no hay nombre, usa el RFC disponible.
+- `GET /api/accounting-settings`: autenticación y contraseña actualizada, para administradores y contadores. Respuesta `200`: `{ "data": { "allow_cfdi_reuse": false } }`. Solo expone esta opción global, sin datos de empresas.
+- `PUT /api/accounting-settings`: solo administrador. Recibe `{ "allow_cfdi_reuse": true }` o `false` como booleano JSON obligatorio y responde `200` con el valor persistido en el mismo formato de GET. Campo ausente, nulo o no booleano: `422`, error en `allow_cfdi_reuse`. Contador: `403`; sin sesión: `401`. No hay modificación por empresa ni caché que mantenga un valor anterior tras guardar.
+- Se conserva `GET /api/companies/{companyId}/fiscal-documents?include=policy-links`. `policy_links` ya contiene todas las pólizas de esa empresa con ID, estado y periodo, sin limitar los vínculos al periodo visible. El selector combina esos vínculos con la configuración y los IDs inicialmente relacionados a la póliza editada. No usar `accounted`: actualmente significa existencia de una póliza POSTED y no detecta uso exclusivo en borradores. No cambiar ese campo ni los listados de SPEC-004.
+- POST/PUT de pólizas conservan su payload. Reutilización prohibida: `422` con `errors.fiscal_document_ids` como lista de mensajes que identifican los UUID en conflicto, por ejemplo «El CFDI {uuid} ya está usado en otra póliza». No exponer documentos o pólizas de empresas ajenas. La respuesta sigue el formato de validación actual.
 
-Mantener separados el estado de consulta y el estado editable de la póliza. Identificar cada petición por empresa y documento. Cancelar o ignorar respuestas obsoletas al cambiar de CFDI, empresa, periodo, póliza o cerrar el diálogo; borrar contenido anterior antes de mostrar el nuevo. No reutilizar datos de otra empresa ni modificar el payload de propuestas o guardado.
+## Persistencia y compatibilidad
 
-## Interfaz
+Crear una tabla `accounting_settings` con una única fila global de ID fijo `1`, booleano `allow_cfdi_reuse` no nulo con valor inicial `false` y timestamps. La migración inserta esa fila también en instalaciones existentes. No modificar las relaciones históricas ni agregar unicidad por documento en la tabla de vínculos: se permiten relaciones múltiples cuando la opción está activa y deben conservarse las anteriores.
 
-Agregar una acción de ojo independiente de la casilla o etiqueta de selección en el selector, incluida la sección de vínculos históricos. En el editor, colocarla junto al encabezado documental del bloque existente y exponer los documentos relacionados sin bloque generado en un área identificada. Usar `type="button"` para evitar enviar el formulario; no anidar el botón en una etiqueta que active la casilla. No sustituir el selector ni reconstruir su filtrado en esta entrega.
+Una ausencia inesperada de configuración no equivale a permitir reutilización: fallar sin guardar y devolver error recuperable. La fila se crea en la migración, no mediante un seeder opcional. No requiere cambios monetarios ni migrar estados fiscales.
 
-Componer un panel de lectura dentro del diálogo desde el que se abre, no otro modal apilado. El encabezado documental precede una lista numerada de conceptos, con separación entre elementos, ajuste de texto y desplazamiento interno cuando haga falta. Renderizar texto con React sin HTML interpretado. Mantener la acción cercana al CFDI y a la asignación de cuentas, sin confundir la descripción comercial con el concepto editable de una partida.
+## Guardado, autorización e integridad
 
-El panel tiene una acción de cierre propia. Al abrirlo, el foco pasa a su título o control inicial; al cerrar, vuelve al disparador. Si se usa Escape, cierra primero el panel, sin cerrar el editor ni descartar la captura. Usar la gestión de foco del diálogo vigente sin agregar una segunda trampa de foco.
+Integrar la comprobación compartida en creación y actualización de `AccountingPolicyController`, dentro de la transacción existente y antes de reemplazar partidas, vínculos o sugerencias. Mantener autorización por empresa, validación de cuentas, balance, fechas y reserva de trabajo.
 
-## Responsabilidades y orden de integración
+Después de bloquear el periodo y, en edición, la póliza como hoy, bloquear la fila global de configuración con `lockForUpdate`. Todas las escrituras de pólizas, independientemente del periodo, usan ese mismo bloqueo; PUT de configuración lo usa también. Mantener ese orden sin adquirir periodos después de la configuración. Leer el valor y los vínculos con una lectura vigente bajo bloqueo, no desde la captura del cliente ni desde un snapshot anterior a adquirirlo. Así se serializan el cambio de opción y la comprobación/creación de vínculos, incluso entre periodos; la reserva de un periodo por sí sola no cubre este caso.
 
-- Backend: el trabajo nuevo pertenece a SPEC-004; no hay cambios propios en pólizas ni propuestas.
-- Frontend: contrato/servicio en `src/features/fiscal-documents` y `src/shared/contracts`; hook de consulta y panel en `src/features/policies`, consumiendo exports públicos. Los componentes no importan módulos API; el único `fetch` permanece en `src/shared/api/client.ts`.
-- Integración: primero el contrato y la consulta de SPEC-004; después hook/panel y disparadores en selector/editor. Reutilizar primitivas existentes sin convertir el panel específico en un componente global.
+En edición, obtener del servidor los IDs ya relacionados con la póliza bloqueada. Calcular vínculos nuevos como IDs solicitados menos IDs persistidos; si la opción está desactivada, buscar para esos IDs cualquier vínculo a otra póliza de la misma empresa, sin filtrar estado o periodo. Rechazar todos los conflictos antes de escribir. Conservar los IDs anteriores no es una reutilización nueva, aunque estén compartidos. Retirar un vínculo y volver a agregarlo antes de guardar no lo convierte en nuevo; retirarlo mediante un guardado sí lo hace para una incorporación posterior. El rollback cubre póliza, partidas, vínculos y sugerencias. No imponer una restricción única incompatible con la opción activa.
 
-## Errores e integridad
+La generación de vista previa continúa sin guardar ni reservar CFDI. La comprobación definitiva ocurre al guardar, aunque la vista previa o selección se hayan hecho antes del cambio de disponibilidad.
 
-El panel distingue carga, error con reintento y datos no disponibles. Una lista vacía, `null` o campo ausente presenta el aviso acordado; una lista con elementos sin descripción mantiene cada posición. Un fallo de autorización tampoco muestra contenido anterior. Abrir/cerrar el panel no invoca selección, generación, sugerencias, guardado ni contabilización.
+## Interfaz y responsabilidades
 
-## Estrategia de pruebas
+- Administración: agregar una sección «Configuración» en el área existente `src/features/admin`, con la opción y una explicación de su alcance global. Carga, guardado, error recuperable y confirmación de éxito diferenciados. No presentar un cambio fallido como persistido ni ofrecerlo al contador.
+- Datos: contrato compartido de configuración, servicio y export público en la feature responsable; el editor consume el export mediante su hook de solicitudes. Mantener API → hook → componente; `fetch` permanece solo en el cliente compartido.
+- Selector: al abrirlo, actualizar configuración y documentos con sus vínculos. Durante carga o error no aceptar vínculos nuevos ni continuar con ellos; conservar la captura y permitir reintentar. Ignorar respuestas de un contexto anterior.
+- Con la opción desactivada, deshabilitar la casilla de documentos usados que no estuvieran vinculados originalmente a la póliza editada. Mostrar «Ya usado en otra póliza» junto al documento, asociado al control accesible, no solo mediante color o tooltip. Mantenerlos en búsqueda y conteo de coincidencias; no contarlos como seleccionados nuevos. «Ver conceptos» y la consulta de vínculos no se deshabilitan.
+- Si una selección nueva previa queda bloqueada al refrescar, retirarla de la selección nueva e informar el motivo, sin borrar partidas ni correcciones existentes. Al recibir `422` de guardado, mostrar el error con UUID, conservar la captura y permitir revisar vínculos; no reenviar ni eliminar datos automáticamente. La protección definitiva es del servidor.
+- Al editar, conservar los vínculos iniciales y el tratamiento histórico de otros periodos. No reconstruir tabla o filtros: la diferencia previamente documentada entre CA-006-19/20 y la lista actual sigue fuera de esta entrega.
 
-Pruebas con Vitest y React Testing Library para panel y hook: documento correcto, orden, repetidos, texto completo/seguro, datos parciales, `null`, lista vacía, campo ausente, carga, error, reintento y respuestas fuera de orden. En `accounting-policy-editor.test.tsx`, cubrir selector sin selección, bloque generado, captura manual, vínculos históricos, edición, varios CFDI, conservación de captura y ausencia de llamadas de generación/guardado al consultar. Cubrir teclado, nombre accesible, cierre, retorno de foco y Escape sin cerrar el editor. Ejecutar regresiones de selección, propuesta y sugerencias, tipos, lint y formato. Legibilidad y disposición real quedan para QA humana, sin exigir prueba integral por navegador.
+## Orden y pruebas
 
-## Riesgos y bloqueantes técnicos
+Primero migración, permisos y contrato de configuración; después validación transaccional y pruebas backend; luego administración y selector frontend con el contrato disponible. No hay decisiones bloqueantes.
 
-No hay decisiones bloqueantes. La consulta diferida evita añadir todas las descripciones a los listados. No introduce paginación, búsqueda, truncamiento de texto ni cambios al volumen de documentos del selector.
+Backend: ampliar pruebas de SPEC-006 para valor inicial en instalaciones nuevas/existentes, persistencia, validación de booleanos, autorización, ambas posiciones de la opción, uso en DRAFT/POSTED y otros periodos, vínculos previos compartidos, retirada y posterior incorporación, payload manipulado, configuración cambiada con pantalla abierta y rollback incluyendo sugerencias. Probar dos conexiones/transacciones contra un motor con bloqueos reales para el mismo CFDI entre periodos y la serialización con el cambio de opción; SQLite en memoria no acredita concurrencia. Ejecutar regresiones de SPEC-001/002/004/006/007 según impacto; adaptar casos de reutilización existentes para activar explícitamente la opción.
+
+Frontend: Vitest y React Testing Library para guardar configuración, errores, carga y reintento; selección bloqueada con ratón/teclado, búsqueda y consulta de conceptos accesibles, opción activa, borradores, vínculos de otros periodos, edición con relaciones anteriores compartidas, refresco de selecciones, respuestas obsoletas y rechazo del servidor conservando captura. Mantener regresiones de propuesta, sugerencias y vista de conceptos; comprobar tipos, lint y formato. QA humana revisa claridad de la opción, motivo del bloqueo y operación en anchos estrechos, sin exigir prueba integral por navegador.
+
+## Evidencia de partida
+
+`FiscalDocumentController::index` ya entrega `policy_links` sin recorte de periodos y calcula `accounted` solo con POSTED. `AccountingPolicyController::replaceDetails` valida empresa, pero no restringe reutilización. El editor actual filtra por periodo/búsqueda sin bloquear documentos usados; sus pruebas incluyen vínculos DRAFT y POSTED. No existe una ruta de configuración global en `routes/api.php`.
