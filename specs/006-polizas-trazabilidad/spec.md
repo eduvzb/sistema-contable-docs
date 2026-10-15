@@ -2,7 +2,7 @@
 
 - **Estado:** Actualización pendiente
 - **Actualizado:** 2026-10-14
-- **Criterios de esta entrega:** CA-006-07/20 revisados y CA-006-30 a CA-006-35; reutilización configurable de CFDI.
+- **Criterios de esta entrega:** reutilización configurable de CFDI (CA-006-07/20 revisados y CA-006-30 a CA-006-35) y nuevo requerimiento diferenciado de conceptos de partidas (CA-006-36 a CA-006-39).
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
 
@@ -15,6 +15,8 @@ Incluye tipos INGRESO/EGRESO/DIARIO, estados DRAFT/POSTED, relaciones XML opcion
 La edición posterior a contabilización debe conservar balance, autorización y trazabilidad conforme a los criterios de esta spec.
 
 Esta actualización permite al administrador controlar globalmente si un CFDI puede vincularse a más de una póliza. Cuando no se permite, los documentos usados siguen visibles para consulta, pero no se pueden seleccionar ni agregar a otra póliza.
+
+El nuevo requerimiento de conceptos es independiente de esa configuración: al generar partidas desde uno o varios XML, al crear o editar una póliza, añadir serie-folio y nombre del emisor al componente contable de cada partida. Se reutiliza SPEC-006 por pertenecer a la misma funcionalidad, sin sustituir el trabajo pendiente de reutilización.
 
 ## Historias de usuario
 
@@ -67,6 +69,10 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 | CA-006-33 | Se edita una póliza que ya contiene documentos relacionados. | Se conservan visibles, consultables y relacionados sus CFDI existentes, incluso si también están en otras pólizas o pertenecen a otros periodos. La restricción solo afecta a vínculos nuevos; no impide guardar o contabilizar una póliza por conservar vínculos previos y no altera las demás validaciones. Si se retira un vínculo y se guarda, cualquier incorporación posterior vuelve a ser un vínculo nuevo. |
 | CA-006-34 | El administrador activa o desactiva la reutilización. | Activada, permite seleccionar y vincular CFDI ya usados, respetando permisos y reglas vigentes. Desactivada, restringe vínculos nuevos sin eliminar ni modificar relaciones existentes. Cada guardado aplica el valor vigente en el servidor, aunque la pantalla se haya abierto con otro valor. Si un CFDI deja de tener vínculos, vuelve a estar disponible para nuevas pólizas. |
 | CA-006-35 | Se carga o actualiza la disponibilidad de CFDI. | Mientras no se conoce la configuración o falla su carga, no se habilitan vínculos nuevos por suposición; se informa la carga o un error con reintento sin perder la captura. Al volver a abrir el selector se actualiza la configuración y los vínculos; una respuesta tardía de otra empresa, periodo o póliza no sustituye el contexto actual. La búsqueda y la consulta de Documentos fiscales no ocultan XML por estar usados. |
+| CA-006-36 | Se generan partidas desde uno o varios XML al crear o editar una póliza. | Cada partida conserva su componente contable y añade serie-folio y nombre del emisor de su propio XML: `Total · A-123 Proveedor SA`, `Subtotal · A-123 Proveedor SA`, o la etiqueta de impuesto correspondiente con el mismo sufijo. No se mezclan datos de distintos XML. Se usa siempre el emisor, incluso cuando la empresa activa sea quien emitió el documento. |
+| CA-006-37 | Faltan datos de identificación en el XML de origen. | Sin serie se usa el folio; sin folio, la serie; sin ambos, el UUID. Si falta el nombre del emisor se usa su RFC. No se muestran valores nulos, guiones ni separadores sobrantes por los datos ausentes. |
+| CA-006-38 | El usuario revisa, corrige y guarda las partidas generadas, o abre una póliza existente. | El concepto propuesto sigue siendo editable y el texto guardado se conserva al volver a consultar. Abrir la edición o seleccionar XML sin ejecutar «Continuar» no recalcula conceptos guardados ni modifica partidas manuales. El cambio no altera cuentas, importes, referencias, orden, sugerencias ni reglas de generación o de relación de documentos. |
+| CA-006-39 | El concepto propuesto o corregido supera el límite vigente de 255 caracteres. | No se recorta silenciosamente. La captura permite corregirlo y el guardado mantiene su validación de longitud, informa el error de la partida y conserva los datos para corregirlos, sin persistencia parcial. |
 
 ## Requisitos no funcionales aplicables
 
@@ -80,7 +86,7 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 
 No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión, auditoría histórica completa, búsqueda entre periodos, paginación, selección masiva ni cambios al contrato backend de documentos fiscales.
 
-La exclusión de cambios al contrato backend corresponde a la entrega original del selector de CA-006-19/20; esta actualización agrega configuración global y validación de vínculos. La vista previa de conceptos conserva el dato definido en SPEC-004. Quedan fuera configuración por empresa, ocultar XML usados, eliminar vínculos existentes, reservar documentos antes de guardar, cambiar propuestas o sugerencias contables y ampliar la interfaz de Documentos fiscales. No se reconstruye el selector ni se corrige su discrepancia previa de filtros en esta entrega.
+La exclusión de cambios al contrato backend corresponde a la entrega original del selector de CA-006-19/20; esta actualización agrega configuración global y validación de vínculos. La vista previa de conceptos conserva el dato definido en SPEC-004. Quedan fuera configuración por empresa, ocultar XML usados, eliminar vínculos existentes, reservar documentos antes de guardar, cambiar importes o sugerencias contables y ampliar la interfaz de Documentos fiscales. El único cambio a las propuestas del nuevo requerimiento es el concepto descrito en CA-006-36 a CA-006-39; no se migran conceptos históricos ni se modifica el concepto general de la póliza. No se reconstruye el selector ni se corrige su discrepancia previa de filtros en esta entrega.
 
 ## Criterios de finalización
 

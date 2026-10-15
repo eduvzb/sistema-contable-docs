@@ -2,6 +2,8 @@
 
 Los criterios y el estado vigentes están en [spec.md](spec.md). El [plan técnico](plan.md) define contratos y dependencias; los resultados ejecutados se registran en [verificacion.md](verificacion.md).
 
+Las tareas FE-006-07 a FE-006-09 corresponden a reutilización de CFDI; el nuevo requerimiento de conceptos se prepara por separado en FE-006-10/11.
+
 ## FE-006-07 — Opción en Administración
 
 - [ ] Incorporar contrato, servicio, hook y sección de Configuración global en el área administrativa existente.
@@ -22,3 +24,17 @@ Los criterios y el estado vigentes están en [spec.md](spec.md). El [plan técni
 - **CA:** CA-006-07/20/32/33/34/35.
 - **Depende de:** FE-006-08.
 - **Hecho cuando:** Vitest y React Testing Library comprueban que un `422` por reutilización muestra el UUID y conserva cuentas, partidas, conceptos, importes y relaciones para corregir; no reenvía ni borra información automáticamente. Pasan regresiones de selección, propuesta, sugerencias y consulta de conceptos, tipos, lint y formato. La disposición real se deja explícitamente pendiente de QA humana.
+
+## FE-006-10 — Integración de conceptos propuestos
+
+- [ ] Actualizar las pruebas y los datos simulados del editor para consumir el concepto completo de la vista previa sin recomponerlo.
+- **CA:** CA-006-36/37/38.
+- **Depende de:** [BE-006-10](tasks-backend.md#be-006-10--concepto-propuesto-con-identificación-del-xml); no depende de las tareas de reutilización.
+- **Hecho cuando:** Vitest y React Testing Library verifican creación y edición con varios XML, texto recibido sin mezcla ni duplicación, edición manual y payload enviado. Abrir una póliza y seleccionar XML sin «Continuar» no cambia conceptos existentes; las partidas manuales permanecen intactas. Pasan las regresiones de generación, sugerencias y consulta de conceptos.
+
+## FE-006-11 — Corrección de conceptos largos
+
+- [ ] Asociar a la partida el error de longitud del servidor y comprobar la corrección sin pérdida de datos, ajustando la presentación solo si falta.
+- **CA:** CA-006-38/39.
+- **Depende de:** FE-006-10 y [BE-006-11](tasks-backend.md#be-006-11--persistencia-y-límite-del-concepto).
+- **Hecho cuando:** pruebas de componentes verifican propuesta larga sin truncar, rechazo `422` visible junto a su partida, conservación del resto de la captura y reenvío del concepto corregido al crear y editar. Pasan tipos, lint y formato; la legibilidad y el layout real quedan pendientes de QA humana.

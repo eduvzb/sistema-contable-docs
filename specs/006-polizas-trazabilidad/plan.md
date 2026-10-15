@@ -1,6 +1,6 @@
 # Plan técnico — SPEC-006
 
-Entrega: CA-006-07/20 revisados y CA-006-30 a CA-006-35 de [spec.md](spec.md). No cambia importes, propuestas ni el significado de POSTED.
+Entrega pendiente de reutilización: CA-006-07/20 revisados y CA-006-30 a CA-006-35 de [spec.md](spec.md). Nuevo requerimiento separado dentro de la misma funcionalidad: conceptos de partidas, CA-006-36 a CA-006-39. No cambia importes ni el significado de POSTED; solo el segundo requerimiento modifica el texto de las propuestas.
 
 ## Contratos
 
@@ -45,3 +45,29 @@ Frontend: Vitest y React Testing Library para guardar configuración, errores, c
 ## Evidencia de partida
 
 `FiscalDocumentController::index` ya entrega `policy_links` sin recorte de periodos y calcula `accounted` solo con POSTED. `AccountingPolicyController::replaceDetails` valida empresa, pero no restringe reutilización. El editor actual filtra por periodo/búsqueda sin bloquear documentos usados; sus pruebas incluyen vínculos DRAFT y POSTED. No existe una ruta de configuración global en `routes/api.php`.
+
+## Nuevo requerimiento: concepto de partidas desde XML
+
+### Contrato y responsabilidad
+
+Modificar únicamente el valor de `data.blocks[].entries[].concept` en `POST /api/companies/{companyId}/accounting-periods/{periodId}/accounting-policy-entry-previews`. La entrada sigue siendo `{ "fiscal_document_ids": [1, 2] }`; no agregar campos, endpoints ni migraciones. `AccountingPolicyEntryPreviewService` compone el texto con la etiqueta actual del componente y los datos conservados del documento de ese bloque, según CA-006-36/37. Recortar espacios exteriores de cada dato y tratar valores nulos, vacíos o solo con espacios como ausentes; no convertir a número serie o folio, para conservar ceros iniciales. El separador entre componente e identificación es ` · `; entre serie y folio, `-`; entre identificación y emisor, un espacio.
+
+Se conservan `source_component_key` y el origen del bloque: las sugerencias de cuentas no deben depender del concepto visible. No obtener el emisor desde el nombre de contraparte que usa el selector. Mantener los controles vigentes de acceso a empresa y periodo, la precisión monetaria y las exclusiones de generación de CA-006-22. La vista previa no escribe datos.
+
+### Integración y compatibilidad
+
+El editor ya copia `entry.concept` desde la respuesta en `continueWithPreview`, tanto en creación como en edición; debe consumir el texto sin volver a añadir el sufijo. No recalcularlo al abrir una póliza, cambiar una cuenta o seleccionar una casilla. Mantener la edición manual y el envío de `entries[].concept` en POST/PUT de pólizas, sin reconstruir el concepto en el guardado. La acción explícita «Continuar» conserva su comportamiento actual de reemplazar los bloques seleccionados; este requerimiento no redefine la regeneración ni migra partidas previas.
+
+Conservar la validación `max:255` de `StoreAccountingPolicyRequest`: la propuesta se devuelve completa, incluso si excede ese límite, para permitir su corrección. POST/PUT rechazan el exceso con `422` en `entries.{índice}.concept` antes de persistir. El editor muestra ese error asociado a la partida sin descartar la captura; no limitar la entrada de forma que trunque un valor ya propuesto. No ampliar columnas ni recortar el nombre automáticamente.
+
+### Orden y cobertura
+
+Primero implementar y probar el texto en el servicio backend; después adaptar los datos simulados y las comprobaciones de integración del editor, agregando la presentación del error de longitud si falta. Este requerimiento no depende de implementar las tareas de configuración global: utiliza los XML que las reglas vigentes permitan seleccionar.
+
+- Backend, `tests/Feature/Spec006Test.php`: uno y varios XML con datos distintos; total, subtotal, descuento e impuestos; emitidos y recibidos; todos los sustitutos de CA-006-37, campos blancos y folios con ceros iniciales. Verificar que no cambian orden, lados, importes ni sugerencias y que se mantiene el rechazo por acceso/periodo. Probar guardado y consulta de conceptos propuestos y corregidos, límite de 255 caracteres y rechazo a partir de 256 sin escritura parcial, tanto en creación como en actualización.
+- Frontend, `accounting-policy-editor.test.tsx`, Vitest y React Testing Library: «Continuar» en creación y edición, dos XML sin mezcla de conceptos ni sufijos duplicados, conservación de partidas manuales y de conceptos guardados al abrir, corrección y payload enviado, error de longitud y recuperación sin pérdida de captura. Mantener regresiones de propuestas, propagación de cuentas y consulta de conceptos del XML. Tipos, lint y formato según scripts vigentes.
+- QA humana pendiente: lectura y edición de conceptos largos, identificación del XML en cada partida, error de longitud y operación con teclado sin deteriorar el layout vigente. No se exige prueba integral por navegador.
+
+### Evidencia de partida del nuevo requerimiento
+
+`AccountingPolicyEntryPreviewService` asigna actualmente `concept = $component['label']`; el editor copia ese texto sin transformación. La prueba backend existente cubre componentes y exactitud, y las pruebas del editor simulan conceptos `Total`/`Subtotal`; estas lecturas no acreditan el formato nuevo. `StoreAccountingPolicyRequest` limita los conceptos de partidas a 255 caracteres. No hay bloqueantes de preparación.
