@@ -25,7 +25,7 @@ El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el comm
 ### Frontend
 
 - Rama `codex/feature/SPEC-006/reutilizacion-cfdi`; commit `6d250cf`.
-- PR [#19](https://github.com/eduvzb/sistema-contable-front/pull/19), abierta hacia `main`; reviewer `alavazarez` solicitado. CI sin checks reportados.
+- PR [#19](https://github.com/eduvzb/sistema-contable-front/pull/19), fusionada a `main` el 2026-10-15; merge commit `23c845a`. CI sin checks reportados.
 - `pnpm test`: **58 pruebas aprobadas** en 10 archivos.
 - `pnpm typecheck`: aprobado.
 - `pnpm lint`: cero errores; 94 warnings en scripts existentes de `.agents/skills/impeccable`.
