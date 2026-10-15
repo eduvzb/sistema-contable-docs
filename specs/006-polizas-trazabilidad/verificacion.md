@@ -14,11 +14,13 @@
 
 ### Backend
 
-- Rama `codex/feature/SPEC-006/reutilizacion-cfdi`; commit `8d4997c`.
-- PR [#10](https://github.com/eduvzb/sistema-contable-back/pull/10), abierta hacia `main`; reviewer `alavazarez` solicitado. CI no verificado.
+- Rama `codex/feature/SPEC-006/reutilizacion-cfdi-entrega`; commit `8d4997c`.
+- PR [#11](https://github.com/eduvzb/sistema-contable-back/pull/11), abierta hacia `main`; reviewer `alavazarez` solicitado. CI no verificado.
 - `./vendor/bin/sail artisan test --compact`: **114 pruebas aprobadas, 1,057 aserciones**. Incluye endpoints reales en procesos/conexiones PostgreSQL independientes para competencia por un CFDI y actualización concurrente de la opción global.
 - `./vendor/bin/sail pint --dirty --format agent`: aprobado.
 - `git diff --check`: aprobado.
+
+El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el commit ajeno `c89aa7f`; su rama y contenido se conservaron.
 
 ### Frontend
 
