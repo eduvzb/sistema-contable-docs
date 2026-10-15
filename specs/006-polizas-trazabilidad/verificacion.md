@@ -32,6 +32,13 @@ El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el comm
 - Prettier en los archivos frontend modificados: aprobado.
 - `git diff --check`: aprobado.
 
+### Documentación
+
+- Rama `codex/docs/SPEC-006/cierre-tecnico`; commits `56763a1` y `62cdc69`.
+- PR [#1](https://github.com/eduvzb/sistema-contable-docs/pull/1), abierta hacia `main`; reviewer `alavazarez` solicitado.
+- `python3 scripts/spec_index.py --write` y `python3 scripts/spec_index.py --check`: 9 specs y enlaces locales validados.
+- `git diff --check`: aprobado.
+
 ## QA humana pendiente
 
 - [ ] Confirmar que la opción global en Administración sea clara y que un guardado fallido no se presente como exitoso.
