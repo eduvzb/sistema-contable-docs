@@ -9,10 +9,11 @@
 - [x] CA-006-38/39: conceptos editables y persistidos sin recálculo al abrir; el texto largo no se trunca y su error puede corregirse al crear o editar sin perder la captura.
 - [x] Pruebas backend/frontend, tipos, formato y revisión de diferencias ejecutados según los comandos y resultados indicados abajo.
 - [x] QA humana de los conceptos de partidas (tarea 018; CA-006-36/39): revisados el uso visible y la lectura/edición de conceptos en la interfaz.
-  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
+  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
 - [x] QA humana de la vista previa de conceptos CFDI (tarea 023; CA-006-25/29), integrada con la conservación y consulta descritas en SPEC-004.
-  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
-- [ ] QA humana pendiente: revisar que la opción global sea clara, que el bloqueo de CFDI usados se distinga de «contabilizado» y que los vínculos históricos sigan consultables. La revisión de teclado y anchos estrechos de estos flujos sigue pendiente.
+  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
+- [x] QA humana: opción global, bloqueo y consulta de CFDI usados, vínculos históricos, teclado y operación en anchos estrechos aprobados.
+  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
 
 ## Evidencia técnica
 
@@ -43,16 +44,16 @@ El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el comm
 - `python3 scripts/spec_index.py --write` y `python3 scripts/spec_index.py --check`: 9 specs y enlaces locales validados.
 - `git diff --check`: aprobado.
 
-## QA humana pendiente
+## QA humana aprobada
 
-- [ ] Confirmar que la opción global en Administración sea clara y que un guardado fallido no se presente como exitoso.
-- [ ] Confirmar que «Ya usado en otra póliza» se distingue de «contabilizado» y que los vínculos anteriores siguen consultables.
+- [x] Confirmar que la opción global en Administración sea clara y que un guardado fallido no se presente como exitoso.
+- [x] Confirmar que «Ya usado en otra póliza» se distingue de «contabilizado» y que los vínculos anteriores siguen consultables.
 - [x] Tarea 018: revisar con teclado y en anchos estrechos la lectura y edición de conceptos largos y el error de longitud.
-  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
+  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
 - [x] Tarea 023: revisar la vista previa de descripciones y su integración con los conceptos conservados en SPEC-004.
   - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
-- [ ] Revisar con teclado y en anchos estrechos el selector y los vínculos históricos.
-- La aprobación de las tareas 018 y 023 no cierra el QA completo de SPEC-006; los puntos pendientes anteriores deben aprobarse antes de cambiar la spec a Implementada.
+- [x] Revisar con teclado y en anchos estrechos el selector y los vínculos históricos.
+- Aprobación general de QA de SPEC-006 confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
 
 ## Observación fuera del alcance
 

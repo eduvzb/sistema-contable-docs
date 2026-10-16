@@ -1,7 +1,7 @@
 # SPEC-002 — Contexto contable
 
-- **Estado:** QA
-- **Actualizado:** 2026-09-24
+- **Estado:** Implementada
+- **Actualizado:** 2026-10-15
 - **Criterios de esta entrega:** Sin tareas técnicas abiertas; resta QA humana.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md)

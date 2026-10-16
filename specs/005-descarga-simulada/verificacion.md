@@ -8,6 +8,6 @@ La descarga simulada reutiliza el importador sin almacenar el XML original. No h
 
 La regresión ejecutada el 2026-09-24 en los repositorios actuales pasó: `./vendor/bin/sail artisan test --compact` (88 pruebas, 870 aserciones), `pnpm test` (6 archivos, 26 pruebas), `pnpm lint`, `pnpm typecheck` y `pnpm build`. Las pruebas backend por funcionalidad están en `tests/Feature/Spec005Test.php` del repositorio de backend cuando aplica. Estos resultados acreditan el estado de código comprobado; no sustituyen la revisión visual.
 
-## QA humana pendiente
+## QA humana aprobada
 
-Inicio, vacío, fallo/reintento, resultado parcial y continuidad hacia bandeja y póliza. Registrar aquí fecha, resultado y observaciones. Sólo una aprobación humana registrada permite cambiar el estado a Implementada.
+Inicio, vacío, fallo/reintento, resultado parcial y continuidad hacia bandeja y póliza. Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.

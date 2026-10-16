@@ -1,6 +1,6 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-- **Estado:** QA
+- **Estado:** Implementada
 - **Actualizado:** 2026-10-15
 - **Criterios de esta entrega:** reutilización configurable de CFDI (CA-006-07/20 revisados y CA-006-30 a CA-006-35) y nuevo requerimiento diferenciado de conceptos de partidas (CA-006-36 a CA-006-39).
 - **Usuario:** Administrador o contador con empresa accesible

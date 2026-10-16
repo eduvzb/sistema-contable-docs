@@ -1,7 +1,7 @@
 # SPEC-008 — Balanza básica
 
-- **Estado:** QA
-- **Actualizado:** 2026-09-24
+- **Estado:** Implementada
+- **Actualizado:** 2026-10-15
 - **Criterios de esta entrega:** Sin tareas técnicas abiertas; resta QA humana.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-006](../006-polizas-trazabilidad/spec.md)
