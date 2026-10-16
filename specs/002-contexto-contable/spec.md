@@ -1,8 +1,8 @@
 # SPEC-002 — Contexto contable
 
-- **Estado:** Implementada
+- **Estado:** QA
 - **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; resta QA humana.
+- **Criterios de esta entrega:** Reserva explícita de periodos de trabajo; liberación por el usuario responsable o por un administrador.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md)
 
@@ -38,6 +38,9 @@ Habilitar un ejercicio de cuatro dígitos crea de forma atómica sus doce meses 
 | CA-002-07 | Desde una vista con datos se cambia a otro periodo. | La región de contenido mantiene una estructura estable y muestra una transición de carga identificable; no presenta por un instante datos, estados vacíos ni acciones del periodo anterior como si correspondieran al nuevo, y evita saltos de disposición perceptibles. |
 | CA-002-08 | El usuario cambia de periodo, recarga o navega hacia atrás/adelante dentro de la misma empresa. | Se recuperan la pestaña activa y el estado de consulta compatible, incluida la página actual cuando continúa existiendo. Si una página deja de ser válida, se ajusta a una página existente y se muestra el resultado sin perder silenciosamente el contexto. |
 | CA-002-09 | El usuario abre el selector de empresa y busca entre sus empresas accesibles. | Puede filtrar por razón social o RFC, sin distinguir mayúsculas/minúsculas ni acentos en el nombre, recorrer los resultados con teclado o puntero y seleccionar una empresa. La lista informa cuando no hay coincidencias; limpiar la búsqueda vuelve a mostrar todas las empresas accesibles. Buscar o abrir el control no cambia el contexto hasta que el usuario selecciona una empresa. |
+| CA-002-10 | Un usuario habilita explícitamente un ejercicio para una empresa. | Se crean sus doce meses según las reglas actuales y cada periodo inicia sin reserva de trabajo. La interfaz lo identifica como «Disponible»; esto no cambia el estado contable del periodo. |
+| CA-002-11 | Un usuario autorizado elige «Abrir periodo» sobre un periodo disponible. | El periodo queda reservado inmediatamente para ese usuario, antes de crear o editar pólizas. Otros usuarios pueden consultar la información, pero no tomar la reserva; la interfaz identifica quién está trabajando y el servidor rechaza una toma concurrente con el responsable de la reserva. |
+| CA-002-12 | El usuario responsable elige «Cerrar periodo», o un administrador libera una reserva ajena. | Se libera la reserva de trabajo y el periodo vuelve a estar disponible para otra persona. La liberación no modifica el estado contable `OPEN` o `CLOSED` ni los datos del periodo. |
 
 ## Requisitos no funcionales aplicables
 
@@ -49,7 +52,7 @@ Habilitar un ejercicio de cuatro dígitos crea de forma atómica sus doce meses 
 
 ## Fuera de alcance
 
-No incluye el flujo formal de cierre/reapertura ni reglas inventadas para periodos cerrados.
+La reserva de trabajo de esta entrega no es el cierre contable. No cambia el estado contable `OPEN`/`CLOSED`, no define restricciones contables de cierre ni añade un flujo formal de reapertura. En el sheet, «cerrado» describe un periodo disponible, sin una persona trabajando; la interfaz usa «Disponible» para no confundirlo con un cierre contable.
 
 ## Criterios de finalización
 

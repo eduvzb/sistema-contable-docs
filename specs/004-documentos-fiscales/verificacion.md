@@ -2,6 +2,12 @@
 
 ## Entrega actual
 
+- [x] La regresión actual del árbol integrado pasa con Laravel Sail: `./vendor/bin/sail artisan test --compact`, 114 pruebas y 1,057 aserciones (2026-10-15; árbol equivalente a backend `2253855`).
+- [x] La suite frontend pasa: `pnpm test`, 58 pruebas en 10 archivos; `pnpm typecheck` y `pnpm build` aprobados (árbol equivalente a `23c845a`).
+- [x] `pnpm lint` termina sin errores; reporta 94 advertencias en herramientas locales excluidas de Git.
+- [ ] `pnpm format:check` global: falla previamente en 87 archivos locales de `.agents`/`.impeccable`; no se considera aprobado ni se modifica ese trabajo ajeno. No hay cambios de código para esta spec.
+
+
 CA-004-12/13: conservación de conceptos CFDI y consulta autorizada del detalle. Código y pruebas añadidos el 2026-10-14; la validación integrada se completó con Laravel Sail.
 
 ## Estado de validación
@@ -21,9 +27,9 @@ CA-004-12/13: conservación de conceptos CFDI y consulta autorizada del detalle.
   - `pnpm build`: aprobado.
 - [x] Pint y revisión de whitespace del backend pasan.
   - `vendor/bin/pint --dirty --format agent` y `git diff --check`: aprobados.
-- [x] Ramas publicadas, PR abiertos hacia `main` y revisión solicitada a colaborador con acceso.
-  - Backend: commit `d841b59`, [PR #9](https://github.com/eduvzb/sistema-contable-back/pull/9).
-  - Frontend: commit `c032007`, [PR #18](https://github.com/eduvzb/sistema-contable-front/pull/18).
+- [x] Ramas publicadas, PR integrados previamente en `main` y revisión solicitada a colaborador con acceso.
+  - Backend: commit `d841b59`, integrado, [PR #9](https://github.com/eduvzb/sistema-contable-back/pull/9).
+  - Frontend: commit `c032007`, integrado, [PR #18](https://github.com/eduvzb/sistema-contable-front/pull/18).
 
 ### QA humana
 

@@ -2,7 +2,7 @@
 
 - **Estado:** Implementada
 - **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana pendiente.
+- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana aprobada y registrada.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
 

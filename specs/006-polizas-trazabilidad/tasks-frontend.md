@@ -1,3 +1,3 @@
 # Tareas de frontend — SPEC-006
 
-No hay tareas pendientes para esta entrega. La evidencia técnica, los comandos y la PR están en [verificacion.md](verificacion.md); la QA visual humana sigue pendiente.
+No hay tareas técnicas abiertas para esta entrega. CA-006-19/20/40/41/42/43/44 están comprobados y publicados; ver [verificación](verificacion.md). QA humana pendiente.

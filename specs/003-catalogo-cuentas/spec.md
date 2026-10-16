@@ -1,8 +1,8 @@
 # SPEC-003 — Catálogo de cuentas
 
-- **Estado:** Implementada
+- **Estado:** QA
 - **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; resta QA humana.
+- **Criterios de esta entrega:** Descargar el layout CSV, importar una plantilla global del catálogo SAT y copiarla a empresas nuevas, sin alterar catálogos existentes.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md)
 
@@ -23,7 +23,7 @@ El usuario operativo administra las cuentas de una empresa accesible y las deja 
 
 Una cuenta contiene código único por empresa de hasta 64 caracteres, nombre, naturaleza `DEBIT|CREDIT`, padre opcional de la misma empresa, `accepts_entries` y estado activo. Una cuenta inactiva o agrupadora permanece consultable, pero no puede usarse en nuevas partidas. Tras la primera partida, código, naturaleza y padre no se editan; nombre y estado sí.
 
-La importación acepta CSV UTF-8 con encabezado `code,name,nature,parent_code,accepts_entries,active`. Usa `DEBIT|CREDIT` y booleanos `true|false`; el padre puede aparecer antes o después de la fila hija. Un error de fila, duplicado, padre inexistente o ciclo rechaza todo el lote e informa las filas afectadas.
+La importación por empresa acepta CSV UTF-8 con encabezado `code,name,nature,parent_code,accepts_entries,active` o la variante extendida que agrega `sat_grouping_code` al final. Usa `DEBIT|CREDIT` y booleanos `true|false`; el padre puede aparecer antes o después de la fila hija. Un error de fila, duplicado, padre inexistente o ciclo rechaza todo el lote e informa las filas afectadas.
 
 | ID | Dado / cuando | Resultado esperado |
 |---|---|---|
@@ -39,6 +39,9 @@ La importación acepta CSV UTF-8 con encabezado `code,name,nature,parent_code,ac
 | CA-003-10 | Se edita una cuenta que ya tiene partidas. | Puede cambiar nombre y estado; código, naturaleza y padre permanecen sin cambios. |
 | CA-003-11 | El usuario busca una cuenta por una parte de su código o nombre. | El catálogo muestra las coincidencias sin distinguir mayúsculas ni acentos, informa cuántas encontró y conserva los ancestros necesarios para entender la jerarquía de cada resultado. |
 | CA-003-12 | La búsqueda no tiene coincidencias o el usuario la limpia. | Se muestra un estado vacío específico con una acción clara para limpiar; al limpiar se restaura el catálogo y el foco permite continuar la búsqueda sin navegación innecesaria. |
+| CA-003-13 | Un administrador carga un CSV completo con el layout SAT vigente. | El archivo usa el encabezado exacto `code,name,nature,parent_code,accepts_entries,active,sat_grouping_code`, codificación UTF-8, naturaleza `DEBIT` o `CREDIT`, booleanos `true` o `false`, y código de padre vacío para cuentas raíz. Si la validación termina bien, el sistema asigna un identificador único a la nueva versión de la plantilla y la activa para empresas nuevas. Si hay errores, informa las filas y conserva activa la versión anterior. |
+| CA-003-14 | Se crea una empresa cuando hay una plantilla SAT vigente. | La empresa recibe una copia independiente de esa plantilla. Los cambios en el catálogo de la empresa no alteran la plantilla global ni otros catálogos; actualizar la plantilla no modifica empresas ya creadas. |
+| CA-003-15 | Un administrador necesita preparar un archivo para cargar o actualizar la plantilla SAT. | Puede descargar un CSV UTF-8 con el encabezado exacto y una guía breve para cada campo y sus valores permitidos. El archivo descargado no contiene datos de empresas ni sustituye la plantilla vigente. |
 
 ## Requisitos no funcionales aplicables
 
@@ -50,7 +53,9 @@ La importación acepta CSV UTF-8 con encabezado `code,name,nature,parent_code,ac
 
 ## Fuera de alcance
 
-No incluye mapeo automático al catálogo SAT, patrones ni migración histórica.
+No incluye mapeo automático de cuentas de una empresa al catálogo SAT ni migración de catálogos existentes a una nueva versión de la plantilla.
+
+Se conserva el criterio vigente para elegir cuentas de póliza: cuenta activa con `accepts_entries=true`. Esta entrega no agrega la condición estructural de que no tenga hijas.
 
 ## Criterios de finalización
 

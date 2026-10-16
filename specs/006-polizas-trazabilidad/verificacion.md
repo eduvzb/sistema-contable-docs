@@ -1,60 +1,30 @@
 # Verificación — SPEC-006
 
-## Resumen de la entrega
+## Entrega actual: CA-006-19/20/40/41/42/43/44
 
-- [x] CA-006-30/34/35: opción global persistente y restringida a administradores; las pólizas consultan su valor vigente al guardar.
-- [x] CA-006-07/31/32/33: CFDI usados siguen visibles; los vínculos nuevos se validan en el servidor, sin escrituras parciales y conservando relaciones previas.
-- [x] CA-006-32/34: dos solicitudes concurrentes a periodos distintos compiten por el mismo CFDI en PostgreSQL; solo una lo vincula. También se comprueba la serialización entre el cambio de configuración y el guardado.
-- [x] CA-006-36/37: las propuestas incluyen el componente, serie-folio y emisor propios de cada XML, con sustitutos para datos ausentes o en blanco.
-- [x] CA-006-38/39: conceptos editables y persistidos sin recálculo al abrir; el texto largo no se trunca y su error puede corregirse al crear o editar sin perder la captura.
-- [x] Pruebas backend/frontend, tipos, formato y revisión de diferencias ejecutados según los comandos y resultados indicados abajo.
-- [x] QA humana de los conceptos de partidas (tarea 018; CA-006-36/39): revisados el uso visible y la lectura/edición de conceptos en la interfaz.
-  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
-- [x] QA humana de la vista previa de conceptos CFDI (tarea 023; CA-006-25/29), integrada con la conservación y consulta descritas en SPEC-004.
-  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
-- [x] QA humana: opción global, bloqueo y consulta de CFDI usados, vínculos históricos, teclado y operación en anchos estrechos aprobados.
-  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
+- [x] Catálogo global administrado sólo por administrador: alta/edición/activación/desactivación, códigos usados protegidos y tipo histórico inactivo conservado. El editor sólo permite tipos activos para nuevas asignaciones; errores de catálogo bloquean guardar y ofrecen reintento.
+- [x] Tabla CFDI con Disponibles/Todos/Contabilizados y filtros de fecha, tipo, RFC/nombre contraparte, monto exacto, UUID/serie-folio y búsqueda general. POSTED define contabilización; selección y vínculos previos se conservan al filtrar. Documentos históricos siguen consultables.
+- [x] POST/PUT exige reserva propia y devuelve 409 sin escrituras parciales. La interfaz refresca dueño por foco/polling, deshabilita cambios de terceros sin borrar captura y descarta respuestas tardías al cerrar/cambiar contexto, incluido el guardado en conflicto.
+- [x] Backend final `6d3cd78cc750ce587b1576db33b4e31ea8a2a313`, frontend final `5f265342d109055d463133e595d2a25d0f15ba07`, rama en ambos `codex/feature/SPEC-006/tipos-filtros-reserva`.
+- [x] [PR backend #14](https://github.com/eduvzb/sistema-contable-back/pull/14) y [PR frontend #23](https://github.com/eduvzb/sistema-contable-front/pull/23) hacia main, SHA verificados, revisor `alavazarez` solicitado. No hay checks remotos disponibles. Integrar primero [SPEC-002 backend #13](https://github.com/eduvzb/sistema-contable-back/pull/13) y su [frontend #22](https://github.com/eduvzb/sistema-contable-front/pull/22); backend006 antes de frontend006. No se mezclaron commits de002 en estas ramas.
 
-## Evidencia técnica
+## Pruebas y revisión
 
-### Backend
+- [x] Sail aislado: 121 pruebas/1,105 aserciones antes del caso histórico adicional; prueba final de tipos 7 pruebas/50 aserciones. Ensayo final conjunto002/003/006 con `./vendor/bin/sail exec -T -w /var/www/html/.orchestrator-worktrees/integration laravel.test php artisan test --compact`: 131 pruebas/1,217 aserciones, 13.30s, aprobado. Sólo DB testing; ejecuciones secuenciales del orquestador.
+- [x] Autor frontend ejecutó `pnpm --config.verify-deps-before-run=false test`: 73/73. Orquestador comprobó el conjunto002/003/006/007: 87/87 pruebas en13 archivos. Tipos, lint, formato y build pasan en frontend006 final y en el conjunto: mismos comandos pnpm con `typecheck`, `lint`, `format:check`, `build`.
+- [x] Pint, PHP lint y `git diff --check` aprobados. Sin cambios de dependencias. Dos migraciones aditivas del conjunto: plantilla versionada y catálogo de tipos; no ejecutadas sobre datos operativos.
+- [x] Revisión independiente backend `audit_007_009` y frontend `audit_001_003`, gpt-6-luna/high: sin hallazgos pendientes sobre SHA finales. Se corrigieron autorización DELETE, fallo de catálogo y respuestas tardías antes de publicar. El orquestador resolvió en el ensayo conjunto sólo adiciones de rutas/paneles que coexisten con003.
 
-- Rama `codex/feature/SPEC-006/reutilizacion-cfdi-entrega`; commit `8d4997c`.
-- PR [#11](https://github.com/eduvzb/sistema-contable-back/pull/11), fusionada a `main` el 2026-10-15; merge commit `2253855`. CI sin checks reportados.
-- `./vendor/bin/sail artisan test --compact`: **114 pruebas aprobadas, 1,057 aserciones**. Incluye endpoints reales en procesos/conexiones PostgreSQL independientes para competencia por un CFDI y actualización concurrente de la opción global.
-- `./vendor/bin/sail pint --dirty --format agent`: aprobado.
-- `git diff --check`: aprobado.
+## QA humana pendiente
 
-El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el commit ajeno `c89aa7f`; su rama y contenido se conservaron.
+- [ ] Revisar CRUD y selección de tipos activos, incluida lectura de tipos desactivados.
+- [ ] Revisar filtros, estados CFDI, teclado y selección al cambiar filtros.
+- [ ] Revisar toma/liberación de reserva, responsable visible y acciones deshabilitadas para terceros.
+- [ ] Registrar persona, fecha, resultado y observaciones. La spec pasa a QA; no se acredita aprobación nueva ni estado Implementada.
 
-### Frontend
+## QA humana del alcance anterior (conservada)
 
-- Rama `codex/feature/SPEC-006/reutilizacion-cfdi`; commit `6d250cf`.
-- PR [#19](https://github.com/eduvzb/sistema-contable-front/pull/19), fusionada a `main` el 2026-10-15; merge commit `23c845a`. CI sin checks reportados.
-- `pnpm test`: **58 pruebas aprobadas** en 10 archivos.
-- `pnpm typecheck`: aprobado.
-- `pnpm lint`: cero errores; 94 warnings en scripts existentes de `.agents/skills/impeccable`.
-- Prettier en los archivos frontend modificados: aprobado.
-- `git diff --check`: aprobado.
+- [x] Opción global de reutilización, indicación de uso, conservación de vínculos anteriores, lectura/edición de conceptos largos y error de longitud (tarea 018), y vista previa de descripciones integrada con SPEC-004 (tarea 023).
+- [x] Aprobación general del alcance anterior confirmada el 2026-10-15 por el usuario solicitante, registrada previamente en el PR documental #1; fecha de ejecución y observaciones generales no especificadas. Tarea 023 sin observaciones reportadas.
 
-### Documentación
-
-- Rama `codex/docs/SPEC-006/cierre-tecnico`; commits `56763a1` y `62cdc69`.
-- PR [#1](https://github.com/eduvzb/sistema-contable-docs/pull/1), abierta hacia `main`; reviewer `alavazarez` solicitado. CI sin checks reportados.
-- `python3 scripts/spec_index.py --write` y `python3 scripts/spec_index.py --check`: 9 specs y enlaces locales validados.
-- `git diff --check`: aprobado.
-
-## QA humana aprobada
-
-- [x] Confirmar que la opción global en Administración sea clara y que un guardado fallido no se presente como exitoso.
-- [x] Confirmar que «Ya usado en otra póliza» se distingue de «contabilizado» y que los vínculos anteriores siguen consultables.
-- [x] Tarea 018: revisar con teclado y en anchos estrechos la lectura y edición de conceptos largos y el error de longitud.
-  - Aprobación confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
-- [x] Tarea 023: revisar la vista previa de descripciones y su integración con los conceptos conservados en SPEC-004.
-  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
-- [x] Revisar con teclado y en anchos estrechos el selector y los vínculos históricos.
-- Aprobación general de QA de SPEC-006 confirmada el 2026-10-15 por el usuario solicitante en esta sesión; fecha de ejecución y observaciones no especificadas.
-
-## Observación fuera del alcance
-
-Se mantiene el contraste previo: CA-006-19/20 describen una tabla con filtros, mientras el selector existente presenta una lista con búsqueda. Esta entrega no reconstruye el selector ni acredita esa discrepancia preexistente.
+La aprobación anterior se conserva para ese alcance. Tabla y filtros nuevos, tipos globales y reserva explícita requieren la QA humana pendiente indicada arriba.

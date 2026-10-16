@@ -2,7 +2,7 @@
 
 - **Estado:** Implementada
 - **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana pendiente.
+- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana aprobada y registrada.
 - **Usuario:** Administrador y contador
 - **Dependencias:** Ninguna funcionalidad previa.
 
