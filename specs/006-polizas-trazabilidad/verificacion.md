@@ -8,7 +8,11 @@
 - [x] CA-006-36/37: las propuestas incluyen el componente, serie-folio y emisor propios de cada XML, con sustitutos para datos ausentes o en blanco.
 - [x] CA-006-38/39: conceptos editables y persistidos sin recálculo al abrir; el texto largo no se trunca y su error puede corregirse al crear o editar sin perder la captura.
 - [x] Pruebas backend/frontend, tipos, formato y revisión de diferencias ejecutados según los comandos y resultados indicados abajo.
-- [ ] QA humana: revisar el uso visible y la lectura/edición de conceptos en la interfaz; registrar persona, fecha, resultado y observaciones. No hay aprobación humana registrada.
+- [x] QA humana de los conceptos de partidas (tarea 018; CA-006-36/39): revisados el uso visible y la lectura/edición de conceptos en la interfaz.
+  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
+- [x] QA humana de la vista previa de conceptos CFDI (tarea 023; CA-006-25/29), integrada con la conservación y consulta descritas en SPEC-004.
+  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
+- [ ] QA humana pendiente: revisar que la opción global sea clara, que el bloqueo de CFDI usados se distinga de «contabilizado» y que los vínculos históricos sigan consultables. La revisión de teclado y anchos estrechos de estos flujos sigue pendiente.
 
 ## Evidencia técnica
 
@@ -43,8 +47,12 @@ El PR #10 se cerró como reemplazado para mantener fuera de esta entrega el comm
 
 - [ ] Confirmar que la opción global en Administración sea clara y que un guardado fallido no se presente como exitoso.
 - [ ] Confirmar que «Ya usado en otra póliza» se distingue de «contabilizado» y que los vínculos anteriores siguen consultables.
-- [ ] Revisar con teclado y en anchos estrechos el selector, los vínculos históricos, la lectura y edición de conceptos largos, y el error de longitud.
-- [ ] Registrar persona, fecha, resultado y observaciones. No cambiar a Implementada hasta registrar aprobación humana.
+- [x] Tarea 018: revisar con teclado y en anchos estrechos la lectura y edición de conceptos largos y el error de longitud.
+  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
+- [x] Tarea 023: revisar la vista previa de descripciones y su integración con los conceptos conservados en SPEC-004.
+  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
+- [ ] Revisar con teclado y en anchos estrechos el selector y los vínculos históricos.
+- La aprobación de las tareas 018 y 023 no cierra el QA completo de SPEC-006; los puntos pendientes anteriores deben aprobarse antes de cambiar la spec a Implementada.
 
 ## Observación fuera del alcance
 

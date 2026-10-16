@@ -25,10 +25,10 @@ CA-004-12/13: conservación de conceptos CFDI y consulta autorizada del detalle.
   - Backend: commit `d841b59`, [PR #9](https://github.com/eduvzb/sistema-contable-back/pull/9).
   - Frontend: commit `c032007`, [PR #18](https://github.com/eduvzb/sistema-contable-front/pull/18).
 
-### QA humana pendiente
+### QA humana
 
-- [ ] Revisar el resultado integrado con la vista previa de [SPEC-006](../006-polizas-trazabilidad/verificacion.md), incluidos conceptos de nuevas importaciones y el aviso de documentos anteriores.
-- [ ] Registrar fecha, resultado y observaciones. No hay aprobación humana registrada.
+- [x] Revisar el resultado integrado con la vista previa de [SPEC-006](../006-polizas-trazabilidad/verificacion.md), incluidos conceptos de nuevas importaciones y el aviso de documentos anteriores (tarea 023).
+  - Aprobado el 2026-10-15 por el usuario solicitante, según confirmación recibida en esta sesión. No se reportaron observaciones.
 
 ## Contraste de implementación
 
