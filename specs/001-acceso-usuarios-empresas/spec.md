@@ -1,8 +1,8 @@
 # SPEC-001 — Acceso, usuarios y empresas
 
-- **Estado:** QA
-- **Actualizado:** 2026-09-24
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana pendiente.
+- **Estado:** Implementada
+- **Actualizado:** 2026-10-15
+- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana aprobada y registrada.
 - **Usuario:** Administrador y contador
 - **Dependencias:** Ninguna funcionalidad previa.
 
