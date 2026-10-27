@@ -18,6 +18,7 @@ Para un cambio nuevo, revisa primero si corresponde a una spec existente. Usa el
 | [SPEC-007](007-ppd-complementos/spec.md) | PPD y complementos | **QA** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
 | [SPEC-008](008-balanza-basica/spec.md) | Balanza básica | **Implementada** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-003](003-catalogo-cuentas/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
 | [SPEC-009](009-reportes-exportacion/spec.md) | Reportes y exportación | **Implementada** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-008](008-balanza-basica/spec.md) |
+| [SPEC-010](010-roles-permisos-por-empresa/spec.md) | Roles y permisos por empresa | **Borrador** | [SPEC-001 — Acceso, usuarios y empresas](001-acceso-usuarios-empresas/spec.md) |
 <!-- END SPEC STATUS -->
 
 ## Al retomar trabajo
