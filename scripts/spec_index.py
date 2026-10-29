@@ -13,7 +13,6 @@ INDEX = SPECS / "README.md"
 BEGIN = "<!-- BEGIN SPEC STATUS -->"
 END = "<!-- END SPEC STATUS -->"
 STATES = {"Borrador", "Lista", "Actualización pendiente", "QA", "Implementada"}
-FILES = ("spec.md", "plan.md", "tasks-backend.md", "tasks-frontend.md", "verificacion.md")
 
 
 def field(contents: str, name: str, file: Path) -> str:
@@ -31,9 +30,8 @@ def entries() -> list[tuple[str, str, str, str, Path]]:
             continue
         number = folder.name[:3]
         spec = folder / "spec.md"
-        for name in FILES:
-            if not (folder / name).is_file():
-                raise ValueError(f"missing {folder / name}")
+        if not spec.is_file():
+            raise ValueError(f"missing {spec}")
         contents = spec.read_text()
         title = re.search(rf"^# SPEC-{number} — (.+)$", contents, re.M)
         if not title:
@@ -56,6 +54,8 @@ def entries() -> list[tuple[str, str, str, str, Path]]:
             raise ValueError(f"{spec}: missing or duplicate acceptance criterion")
         for side in ("backend", "frontend"):
             task_file = folder / f"tasks-{side}.md"
+            if not task_file.is_file():
+                continue
             tasks = task_file.read_text()
             if state in {"QA", "Implementada"} and "- [ ]" in tasks:
                 raise ValueError(f"{task_file}: {state} has open technical tasks")

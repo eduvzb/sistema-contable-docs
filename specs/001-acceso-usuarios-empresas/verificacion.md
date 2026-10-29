@@ -4,6 +4,13 @@ El [estado de trabajo y los criterios](spec.md) se contrastan con el código y l
 
 ## Entrega actual
 
+### Actualización pendiente: edición de empresa
+
+- [ ] Backend: endpoint de actualización, validaciones y autorización vigente de administrador/contador asignado, con RFC inmutable.
+- [ ] Frontend: formulario de edición accesible desde la empresa seleccionada, con errores y estados comprobados.
+- [ ] Reemplazo de FIEL: criterio y controles coordinados en [SPEC-012](../012-descarga-masiva-sat/spec.md#ampliación-autorizada-edición-de-empresa-y-reemplazo-de-fiel-para-usuarios-reales); sin implementación ni prueba de producción acreditadas en esta actualización documental.
+- No se ejecutaron pruebas de producto ni se modificó código en esta preparación documental.
+
 - [x] La regresión actual del árbol integrado pasa con Laravel Sail: `./vendor/bin/sail artisan test --compact`, 114 pruebas y 1,057 aserciones (2026-10-15; árbol equivalente a backend `2253855`).
 - [x] La suite frontend pasa: `pnpm test`, 58 pruebas en 10 archivos; `pnpm typecheck` y `pnpm build` aprobados (árbol equivalente a `23c845a`).
 - [x] `pnpm lint` termina sin errores; reporta 94 advertencias en herramientas locales excluidas de Git.

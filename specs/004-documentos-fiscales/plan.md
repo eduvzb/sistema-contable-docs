@@ -1,6 +1,14 @@
 # Plan técnico — SPEC-004
 
-Esta entrega cubre CA-004-12/13 de [spec.md](spec.md). La interfaz consumidora pertenece a [SPEC-006](../006-polizas-trazabilidad/plan.md).
+## Actualización pendiente coordinada con SPEC-012
+
+La entrega actual revisa CA-004-01/03/10/11/12/13 y añade CA-004-14 de [spec.md](spec.md). El [plan preliminar de SPEC-012](../012-descarga-masiva-sat/plan.md) concentra el diseño pendiente de tipos N/T, originales privados, comparación histórica y resultados del importador compartido. No se define aquí otro contrato ni otra migración.
+
+La ejecución se concentra en BE-012-02/03 y FE-012-05, con BE-012-10 para almacenamiento y respaldos. Contratos, dimensionamiento y autorizaciones siguen pendientes; coordinar los criterios no autoriza implementar ni habilitar conexión real. Las regresiones deben conservar conceptos, impuestos, pagos, unicidad e integración contable de los tipos permitidos.
+
+## Referencia de la entrega anterior: conceptos
+
+El contenido siguiente describe el contrato anterior de CA-004-12/13 para [SPEC-006](../006-polizas-trazabilidad/plan.md), cuya evidencia se conserva en verificación. Sus menciones al descarte de XML y a la ausencia de conceptos describen la base de aquella entrega, no el nuevo resultado esperado ni trabajo pendiente que deba repetirse. La política de originales queda sustituida por la actualización anterior.
 
 ## Base comprobada
 

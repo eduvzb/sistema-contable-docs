@@ -1,29 +1,13 @@
-# Instrucciones para agentes
+# Guía breve para trabajar en Braval
 
-Este repositorio contiene documentación y specs compartidas del sistema contable. La implementación vive en los repositorios hermanos de backend y frontend.
+Este repositorio guarda decisiones de producto y specs; el código vive en los repositorios hermanos `sistema-contable-backend` y `sistema-contable-frontend`.
 
-## Antes de cambiar comportamiento
+1. Antes de cambiar comportamiento, mira código y pruebas. Consulta [fuentes de dominio](docs/fuentes.md) sólo si aportan al caso. No inventes reglas contables o fiscales.
+2. Para un cambio pequeño con resultado claro, implementa y prueba directamente. Usa una [spec](docs/flujo-spec.md) cuando haya decisiones de negocio, varios contratos, migraciones o riesgos que deban acordarse. Reutiliza la spec existente si corresponde.
+3. Escribe lo mínimo que permita entender el cambio de un vistazo: objetivo, alcance y resultados observables; errores y límites sólo si afectan la decisión. Plan, tareas y evidencia separada sólo cuando aporten información nueva. No reduzcas criterios vigentes de specs anteriores para adaptar el formato.
+4. Respeta aislamiento por empresa, contexto de periodo, integridad y precisión monetaria. Para cambios interactivos en Next/React, prueba comportamiento con Vitest y React Testing Library.
+5. Ejecuta las pruebas relevantes y comunica resultados reales y pendientes. Backend: usa Sail y la base de pruebas aislada según su README; si no está disponible, indica el bloqueo. La validación visual humana no se atribuye al agente.
 
-1. Localiza la funcionalidad en el [índice de specs](specs/README.md).
-2. Respeta la [constitución](docs/constitution.md) y verifica el comportamiento actual en código y pruebas antes de proponer un cambio.
-3. Lee `specs/NNN-nombre/spec.md` para conocer el alcance previsto y el estado de trabajo. Si hay implementación pendiente, abre su `plan.md` y las tareas del repositorio afectado; para cerrar la entrega, abre `verificacion.md`. Consulta las fuentes de dominio pertinentes según el [mapa](docs/fuentes.md), sin cargar toda Planeación por rutina.
-4. Sigue el [flujo SDD](docs/flujo-spec.md): aclara los bloqueantes de esa spec y registra el comportamiento esperado antes de implementar. No inventes reglas de negocio.
+No se requieren ramas, commits, publicación ni PR para completar este flujo. Sólo se hacen por solicitud expresa; la skill de entrega del workspace es opcional. Se puede delegar investigación o trabajo independiente cuando ahorre contexto; el responsable de la tarea conserva las decisiones, integra resultados y comunica bloqueos. No se delegan decisiones de negocio pendientes ni se atribuyen pruebas ajenas sin evidencia. Protege cambios locales previos.
 
-## Durante el trabajo
-
-- Para nuevas specs y próximas entregas, usa definiciones pequeñas y directas: objetivo breve, alcance acotado y criterios observables. No repitas los CA en historias, reglas o casos límite; integra errores y límites en los propios criterios. Mantén contratos en `plan.md`, trabajo en tareas y evidencia en `verificacion.md`. No reescribas specs existentes fuera del cambio solicitado ni elimines criterios vigentes para abreviar.
-- Escribe las specs en lenguaje natural, como explicarías el cambio a otra persona. Usa frases cortas, sujetos y acciones claros, y palabras habituales; evita fórmulas rígidas, jerga innecesaria y siglas sin explicar. Conserva nombres técnicos exactos sólo cuando sean necesarios para implementar o comprobar el resultado. Claridad no significa sobreexplicar ni perder precisión.
-- Realiza el cambio coherente más pequeño que cumpla la spec, usando las convenciones del framework.
-- Reutiliza la spec al cambiar una funcionalidad existente. Si la documentación contradice el código, confirma primero qué hace el producto; registra el comportamiento deseado como cambio explícito antes de implementarlo.
-- Las instrucciones explícitas del usuario definen el cambio solicitado; registra criterios o dudas pendientes sin mantener un diario de decisiones cerradas.
-- Preserva integridad, aislamiento y trazabilidad. Confirma responsabilidades y precisión monetaria en los contratos y el código vigentes.
-- Para comportamiento interactivo nuevo o modificado en Next/React, agrega pruebas de componentes y comportamiento con Vitest y React Testing Library. No sustituyas esa cobertura con snapshots ni con pruebas integrales por navegador.
-- Registra problemas ajenos al alcance sin resolverlos dentro del mismo cambio.
-
-## Al terminar
-
-- Verifica los criterios de aceptación y las regresiones relevantes. Las reglas de negocio requieren pruebas de comportamiento esperado y errores, no de detalles internos.
-- Registra en `verificacion.md` sólo la evidencia de la entrega en curso y su QA pendiente. Conserva en `spec.md` los criterios y el estado de trabajo; el código y las pruebas acreditan lo implementado. Retira las tareas cerradas tras comprobar su «Hecho cuando».
-- Cuando implementación y comprobaciones técnicas estén completas, marca la spec como QA. No realices ni exijas una comprobación integral de interfaz por navegador: la validación visual corresponde a una persona.
-- Marca la spec como Implementada únicamente cuando la aprobación de QA humana esté registrada conforme al flujo.
-- Regenera el índice con `python3 scripts/spec_index.py --write` si cambia un estado y ejecuta `python3 scripts/spec_index.py --check` al cerrar el trabajo documental.
+Si editas specs, ejecuta `python3 scripts/spec_index.py --check` desde este repositorio; regenera el índice sólo cuando corresponda y sin sobrescribir cambios ajenos.

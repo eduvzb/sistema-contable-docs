@@ -2,7 +2,13 @@
 
 El [estado de trabajo y los criterios](spec.md) se contrastan con el código y las pruebas de backend y frontend. Git conserva las entregas anteriores.
 
-## Entrega actual
+## Entrega actual — coordinación con SPEC-012 (2026-10-28)
+
+- [x] Criterios coordinados documentalmente: simulación exclusiva de administrador con advertencia/confirmación, sin fallback y con importador común. Plan y tareas enlazan el trabajo centralizado en SPEC-012.
+- [ ] Completar el cierre de CA-005-01/02/04/07 revisados, regresiones y QA nueva. La implementación compartida de administrador/confirmación e importador y sus pruebas actuales se registran en [la etapa controlada de SPEC-012](../012-descarga-masiva-sat/verificacion.md); no se atribuyen a la QA anterior ni se acredita publicación/PR.
+- Validación documental y bloqueos registrados en [SPEC-012](../012-descarga-masiva-sat/verificacion.md). Estado: Actualización pendiente; los contratos siguen abiertos.
+
+## Evidencia anterior conservada — no acredita la actualización actual
 
 - [x] La regresión actual del árbol integrado pasa con Laravel Sail: `./vendor/bin/sail artisan test --compact`, 114 pruebas y 1,057 aserciones (2026-10-15; árbol equivalente a backend `2253855`).
 - [x] La suite frontend pasa: `pnpm test`, 58 pruebas en 10 archivos; `pnpm typecheck` y `pnpm build` aprobados (árbol equivalente a `23c845a`).
