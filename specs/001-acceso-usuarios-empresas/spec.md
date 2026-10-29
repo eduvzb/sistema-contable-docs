@@ -1,8 +1,8 @@
 # SPEC-001 — Acceso, usuarios y empresas
 
-- **Estado:** Implementada
-- **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana aprobada y registrada.
+- **Estado:** Actualización pendiente
+- **Actualizado:** 2026-10-28
+- **Criterios de esta entrega:** Edición de datos de empresa por administrador o contador asignado, con RFC inmutable (CA-001-20). El reemplazo de FIEL se especifica en SPEC-012.
 - **Usuario:** Administrador y contador
 - **Dependencias:** Ninguna funcionalidad previa.
 
@@ -11,6 +11,8 @@
 Permitir que un administrador inicial creado desde consola gestione empresas, contadores y sus asignaciones; permitir que ambos roles inicien sesión y consulten únicamente el alcance autorizado. El administrador tiene acceso operativo a todas las empresas. El contador accede solo a las asignadas.
 
 Incluye autenticación, cambio obligatorio de contraseña temporal, alta y consulta de empresas, alta y consulta de contadores, restablecimiento de contraseñas y reemplazo de asignaciones. Los datos de empresa incluyen RFC, razón social, nombre comercial, tipo de persona derivado, régimen fiscal y versión de plantilla de cuentas. Empresa/ejercicio/periodo, XML y operaciones contables corresponden a las specs siguientes; la copia del catálogo inicial se concreta en SPEC-003.
+
+Esta actualización permite editar la razón social, el nombre comercial y el régimen fiscal de una empresa existente. El RFC permanece inmutable. La autorización para editar credenciales FIEL se define en SPEC-012.
 
 ## Historias de usuario
 
@@ -52,6 +54,7 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 | CA-001-17 | Un usuario abre la ruta raíz `/`. | La interfaz resuelve su estado de acceso y realiza una sola navegación de reemplazo al destino aplicable: `/login` si no está autenticado, `/password` si debe cambiar su contraseña o `/companies` si puede operar. No muestra una pantalla protegida intermedia ni agrega `/companies` al historial antes de enviar a un usuario no autenticado a `/login`. |
 | CA-001-18 | CUANDO el administrador crea una empresa con nombre comercial válido, o SI lo omite, envía sólo espacios o supera 255 caracteres. | EL SISTEMA recorta y conserva el valor válido sin exigir unicidad; para los casos inválidos responde `422` sin dejar empresa ni catálogo parcial. La interfaz presenta la razón social como nombre principal y el nombre comercial como dato secundario. |
 | CA-001-19 | CUANDO se captura un RFC estructuralmente válido de 12 o 13 caracteres durante el alta, o se consulta una empresa nueva o existente. | EL SISTEMA muestra en interfaz y recurso `PERSONA_MORAL` o `PERSONA_FISICA`, respectivamente, calculado a partir del RFC normalizado, sin persistirlo ni filtrar regímenes. El recurso incluye `commercial_name` y `account_template_version`; las empresas existentes exponen nombre comercial igual a razón social y versión `null`. |
+| CA-001-20 | Un administrador o contador con acceso vigente edita una empresa. | Puede actualizar razón social, nombre comercial y régimen fiscal. El RFC se muestra como no editable y nunca cambia. Un usuario sin acceso no obtiene ni modifica la empresa; los valores inválidos o un intento de incluir/cambiar el RFC no dejan cambios parciales. Los permisos de reemplazo de FIEL siguen SPEC-012. |
 
 ## Requisitos no funcionales aplicables
 
@@ -64,7 +67,7 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 
 ## Fuera de alcance
 
-Quedan fuera registro público, invitaciones por correo, edición de perfiles, bajas, creación de otros administradores desde la interfaz, roles adicionales, límites comerciales y administración de múltiples despachos.
+Quedan fuera registro público, invitaciones por correo, edición de perfiles de usuario, bajas, creación de otros administradores desde la interfaz, roles adicionales, límites comerciales y administración de múltiples despachos.
 
 No incluye dashboard contable.
 

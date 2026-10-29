@@ -1,6 +1,12 @@
 # Verificación — SPEC-004
 
-## Entrega actual
+## Entrega actual — coordinación con SPEC-012 (2026-10-28)
+
+- [x] Criterios de originales, duplicados, conceptos y tipos coordinados documentalmente con SPEC-012; plan y tareas enlazan el trabajo centralizado.
+- [ ] Completar el cierre de CA-004-01/03/10/11/12/13/14 revisados, incluidos respaldos y QA nueva. La implementación compartida de tipos, originales y resultados y sus pruebas actuales se registran en [la etapa controlada de SPEC-012](../012-descarga-masiva-sat/verificacion.md); no se atribuyen a la QA anterior ni se acredita operación productiva.
+- Validación documental y bloqueos registrados en [SPEC-012](../012-descarga-masiva-sat/verificacion.md). Estado: Actualización pendiente; los contratos de la entrega siguen abiertos.
+
+## Evidencia anterior conservada — no acredita la actualización actual
 
 - [x] La regresión actual del árbol integrado pasa con Laravel Sail: `./vendor/bin/sail artisan test --compact`, 114 pruebas y 1,057 aserciones (2026-10-15; árbol equivalente a backend `2253855`).
 - [x] La suite frontend pasa: `pnpm test`, 58 pruebas en 10 archivos; `pnpm typecheck` y `pnpm build` aprobados (árbol equivalente a `23c845a`).

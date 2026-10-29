@@ -9,16 +9,18 @@ Para un cambio nuevo, revisa primero si corresponde a una spec existente. Usa el
 <!-- BEGIN SPEC STATUS -->
 | Spec | Funcionalidad | Estado | Dependencias de preparación |
 |---|---|---|---|
-| [SPEC-001](001-acceso-usuarios-empresas/spec.md) | Acceso, usuarios y empresas | **Implementada** | Ninguna funcionalidad previa. |
+| [SPEC-001](001-acceso-usuarios-empresas/spec.md) | Acceso, usuarios y empresas | **Actualización pendiente** | Ninguna funcionalidad previa. |
 | [SPEC-002](002-contexto-contable/spec.md) | Contexto contable | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md) |
 | [SPEC-003](003-catalogo-cuentas/spec.md) | Catálogo de cuentas | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
-| [SPEC-004](004-documentos-fiscales/spec.md) | Documentos fiscales | **Implementada** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
-| [SPEC-005](005-descarga-simulada/spec.md) | Descarga simulada | **Implementada** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md) |
+| [SPEC-004](004-documentos-fiscales/spec.md) | Documentos fiscales | **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
+| [SPEC-005](005-descarga-simulada/spec.md) | Descarga simulada | **Actualización pendiente** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md) |
 | [SPEC-006](006-polizas-trazabilidad/spec.md) | Pólizas y trazabilidad | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md), [SPEC-003](003-catalogo-cuentas/spec.md), [SPEC-004](004-documentos-fiscales/spec.md) |
 | [SPEC-007](007-ppd-complementos/spec.md) | PPD y complementos | **QA** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
 | [SPEC-008](008-balanza-basica/spec.md) | Balanza básica | **Implementada** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-003](003-catalogo-cuentas/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md) |
 | [SPEC-009](009-reportes-exportacion/spec.md) | Reportes y exportación | **Implementada** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-008](008-balanza-basica/spec.md) |
 | [SPEC-010](010-roles-permisos-por-empresa/spec.md) | Roles y permisos por empresa | **Borrador** | [SPEC-001 — Acceso, usuarios y empresas](001-acceso-usuarios-empresas/spec.md) |
+| [SPEC-011](011-diot/spec.md) | DIOT | **Actualización pendiente** | [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-006](006-polizas-trazabilidad/spec.md), [SPEC-009](009-reportes-exportacion/spec.md) |
+| [SPEC-012](012-descarga-masiva-sat/spec.md) | Descarga masiva del SAT | **Borrador** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md), [SPEC-004](004-documentos-fiscales/spec.md), [SPEC-005](005-descarga-simulada/spec.md) |
 <!-- END SPEC STATUS -->
 
 ## Al retomar trabajo
