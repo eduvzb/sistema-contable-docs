@@ -1,8 +1,8 @@
 # SPEC-001 — Acceso, usuarios y empresas
 
-- **Estado:** Implementada
-- **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** Sin tareas técnicas abiertas; QA humana aprobada y registrada.
+- **Estado:** Actualización pendiente
+- **Actualizado:** 2026-10-28
+- **Criterios de esta entrega:** Añadir «Recordarme» con vencimiento máximo de 30 días desde el inicio de sesión.
 - **Usuario:** Administrador y contador
 - **Dependencias:** Ninguna funcionalidad previa.
 
@@ -52,6 +52,7 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 | CA-001-17 | Un usuario abre la ruta raíz `/`. | La interfaz resuelve su estado de acceso y realiza una sola navegación de reemplazo al destino aplicable: `/login` si no está autenticado, `/password` si debe cambiar su contraseña o `/companies` si puede operar. No muestra una pantalla protegida intermedia ni agrega `/companies` al historial antes de enviar a un usuario no autenticado a `/login`. |
 | CA-001-18 | CUANDO el administrador crea una empresa con nombre comercial válido, o SI lo omite, envía sólo espacios o supera 255 caracteres. | EL SISTEMA recorta y conserva el valor válido sin exigir unicidad; para los casos inválidos responde `422` sin dejar empresa ni catálogo parcial. La interfaz presenta la razón social como nombre principal y el nombre comercial como dato secundario. |
 | CA-001-19 | CUANDO se captura un RFC estructuralmente válido de 12 o 13 caracteres durante el alta, o se consulta una empresa nueva o existente. | EL SISTEMA muestra en interfaz y recurso `PERSONA_MORAL` o `PERSONA_FISICA`, respectivamente, calculado a partir del RFC normalizado, sin persistirlo ni filtrar regímenes. El recurso incluye `commercial_name` y `account_template_version`; las empresas existentes exponen nombre comercial igual a razón social y versión `null`. |
+| CA-001-20 | Un usuario inicia sesión con «Recordarme» marcado o desmarcado. | Marcado mantiene la sesión entre cierres y reaperturas del navegador hasta 30 días desde ese inicio de sesión, sin renovar el límite por actividad; desmarcado conserva la expiración actual de sesión (120 minutos de inactividad). Cerrar sesión invalida también la sesión recordada. |
 
 ## Requisitos no funcionales aplicables
 

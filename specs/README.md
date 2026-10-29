@@ -9,7 +9,7 @@ Para un cambio nuevo, revisa primero si corresponde a una spec existente. Usa el
 <!-- BEGIN SPEC STATUS -->
 | Spec | Funcionalidad | Estado | Dependencias de preparación |
 |---|---|---|---|
-| [SPEC-001](001-acceso-usuarios-empresas/spec.md) | Acceso, usuarios y empresas | **Implementada** | Ninguna funcionalidad previa. |
+| [SPEC-001](001-acceso-usuarios-empresas/spec.md) | Acceso, usuarios y empresas | **Actualización pendiente** | Ninguna funcionalidad previa. |
 | [SPEC-002](002-contexto-contable/spec.md) | Contexto contable | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md) |
 | [SPEC-003](003-catalogo-cuentas/spec.md) | Catálogo de cuentas | **QA** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
 | [SPEC-004](004-documentos-fiscales/spec.md) | Documentos fiscales | **Implementada** | [SPEC-001](001-acceso-usuarios-empresas/spec.md), [SPEC-002](002-contexto-contable/spec.md) |
