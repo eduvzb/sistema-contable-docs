@@ -2,7 +2,7 @@
 
 - **Estado:** Actualización pendiente
 - **Actualizado:** 2026-10-28
-- **Criterios de esta entrega:** Edición de datos de empresa por administrador o contador asignado, con RFC inmutable (CA-001-20). El reemplazo de FIEL se especifica en SPEC-012.
+- **Criterios de esta entrega:** Edición de datos de empresa por administrador o contador asignado, con RFC inmutable (CA-001-20), y sesión «Recordarme» con vencimiento máximo de 30 días (CA-001-21). El reemplazo de FIEL se especifica en SPEC-012.
 - **Usuario:** Administrador y contador
 - **Dependencias:** Ninguna funcionalidad previa.
 
@@ -55,6 +55,7 @@ Las asignaciones se reemplazan como conjunto dentro de una transacción, sin dup
 | CA-001-18 | CUANDO el administrador crea una empresa con nombre comercial válido, o SI lo omite, envía sólo espacios o supera 255 caracteres. | EL SISTEMA recorta y conserva el valor válido sin exigir unicidad; para los casos inválidos responde `422` sin dejar empresa ni catálogo parcial. La interfaz presenta la razón social como nombre principal y el nombre comercial como dato secundario. |
 | CA-001-19 | CUANDO se captura un RFC estructuralmente válido de 12 o 13 caracteres durante el alta, o se consulta una empresa nueva o existente. | EL SISTEMA muestra en interfaz y recurso `PERSONA_MORAL` o `PERSONA_FISICA`, respectivamente, calculado a partir del RFC normalizado, sin persistirlo ni filtrar regímenes. El recurso incluye `commercial_name` y `account_template_version`; las empresas existentes exponen nombre comercial igual a razón social y versión `null`. |
 | CA-001-20 | Un administrador o contador con acceso vigente edita una empresa. | Puede actualizar razón social, nombre comercial y régimen fiscal. El RFC se muestra como no editable y nunca cambia. Un usuario sin acceso no obtiene ni modifica la empresa; los valores inválidos o un intento de incluir/cambiar el RFC no dejan cambios parciales. Los permisos de reemplazo de FIEL siguen SPEC-012. |
+| CA-001-21 | Un usuario inicia sesión con «Recordarme» marcado o desmarcado. | Marcado mantiene la sesión entre cierres y reaperturas del navegador hasta 30 días desde ese inicio de sesión, sin renovar el límite por actividad; desmarcado conserva la expiración actual de sesión (120 minutos de inactividad). Cerrar sesión invalida también la sesión recordada. |
 
 ## Requisitos no funcionales aplicables
 
