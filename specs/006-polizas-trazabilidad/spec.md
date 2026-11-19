@@ -1,8 +1,8 @@
 # SPEC-006 — Pólizas y trazabilidad
 
-- **Estado:** QA
-- **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** catálogo global de tipos de póliza, disponibilidad y filtros de CFDI, y reserva de trabajo antes de modificar pólizas.
+- **Estado:** Actualización pendiente
+- **Actualizado:** 2026-11-19
+- **Criterios de esta entrega:** vista de PDF de CFDI desde la póliza y confirmación/auditoría de alertas PPD/fiscales al contabilizar, sin omitir validaciones contables.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-001](../001-acceso-usuarios-empresas/spec.md), [SPEC-002](../002-contexto-contable/spec.md), [SPEC-003](../003-catalogo-cuentas/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md)
 
@@ -78,10 +78,14 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 | CA-006-42 | El usuario abre el selector de CFDI relacionados. | El filtro inicial es «Disponibles» y muestra CFDI sin vínculos a pólizas para agregar. «Todos» muestra todos los documentos; «Contabilizados» muestra documentos relacionados con al menos una póliza POSTED. Un CFDI relacionado solo con borradores no aparece en «Disponibles», sí aparece en «Todos» y no se considera contabilizado. Al editar, los vínculos que ya pertenecen a la póliza siguen visibles y consultables según CA-006-33, aunque no sean candidatos disponibles para agregar. |
 | CA-006-43 | Se selecciona un CFDI en cualquiera de los filtros. | La opción global de reutilización sigue determinando si puede añadirse a la póliza. Los filtros no eluden la validación del servidor ni cambian relaciones existentes. |
 | CA-006-44 | Un usuario intenta crear o editar una póliza dentro de un periodo reservado por otra persona. | Se muestra quién trabaja en el periodo; puede consultar las pólizas, pero no iniciar ni guardar cambios. Si tenía el editor abierto antes de la reserva, se deshabilitan sus cambios y se conserva la captura. El servidor comprueba la reserva y rechaza POST/PUT de terceros sin escrituras parciales. |
+| CA-006-45 | Una póliza POSTED contiene alertas PPD o diferencias de IVA previamente identificadas por el servidor. | Antes de guardar, el sistema presenta una confirmación explícita con los CFDI, facturas relacionadas, importes observados, valores esperados y diferencias. La autorización sólo es válida para el contenido exacto de la operación confirmada; si cambian partidas, vínculos o alertas, se requiere confirmar de nuevo. |
+| CA-006-46 | El usuario confirma la contabilización con alertas PPD o fiscales. | El servidor vuelve a calcular las alertas dentro de la operación y, junto con el guardado, persiste una evidencia inmutable con póliza, usuario, fecha/hora y detalle de cada alerta autorizada. La respuesta o una petición manipulada no puede omitir la confirmación ni autorizar datos distintos. |
+| CA-006-47 | La póliza tiene alertas autorizadas, pero incumple una regla contable u otra validación bloqueante. | La confirmación no omite las validaciones contables: la póliza no se contabiliza si está desbalanceada, faltan datos obligatorios, cuentas inválidas u otra regla de integridad aplicable. No se persiste autorización cuando la operación falla. |
+| CA-006-48 | El usuario crea o edita una póliza con CFDI relacionados y necesita consultar el comprobante. | En el encabezado del bloque de cada CFDI puede abrir su PDF en una ventana nueva, con el mismo formato disponible en la acción «Imprimir» de CFDI registrados, sin salir de la póliza. |
 
 ## Requisitos no funcionales aplicables
 
-- Aislamiento, integridad y precisión: CA-006-03/04/08/12; accesibilidad y layout del editor y del selector de CFDI: CA-006-14/15/18/19/20. Los filtros tienen etiquetas asociadas, los errores de rango son anunciables y la tabla conserva operación por teclado y desplazamiento interno en viewports estrechos.
+- Aislamiento, integridad y precisión: CA-006-03/04/08/12/45/46/47; accesibilidad y layout del editor y del selector de CFDI: CA-006-14/15/18/19/20. Los filtros tienen etiquetas asociadas, los errores de rango son anunciables y la tabla conserva operación por teclado y desplazamiento interno en viewports estrechos.
 
 ## Casos límite
 
@@ -89,7 +93,7 @@ Para la propuesta pendiente, un CFDI `I` emitido genera cargo por total y descue
 
 ## Fuera de alcance
 
-No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión, auditoría histórica completa, búsqueda entre periodos, paginación, selección masiva ni cambios al contrato backend de documentos fiscales.
+No incluye contabilización directa al continuar, tratamientos fiscales prescritos, estados adicionales, cierre/reversión ni auditoría histórica completa; la evidencia acotada de autorización de CA-006-45/46 sí queda incluida. Tampoco incluye búsqueda entre periodos, paginación, selección masiva ni cambios al contrato backend de documentos fiscales.
 
 Esta entrega no cambia la regla de reutilización configurable ya aprobada, la generación de importes o sugerencias, ni el concepto de las partidas ya definido en CA-006-36 a CA-006-39. Tampoco cambia el estado contable del periodo: la reserva descrita en SPEC-002 solo controla quién está trabajando. La vista previa de descripciones conserva el dato definido en SPEC-004. DIOT queda fuera de esta entrega y en investigación. El selector CFDI completa la tabla y los filtros de CA-006-19/20; no amplía la bandeja de Documentos fiscales.
 
