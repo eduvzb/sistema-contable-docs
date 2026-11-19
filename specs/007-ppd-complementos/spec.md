@@ -1,8 +1,8 @@
 # SPEC-007 — PPD y complementos
 
-- **Estado:** QA
-- **Actualizado:** 2026-10-15
-- **Criterios de esta entrega:** CA-007-05: navegación entre documentos fiscales relacionados; cierre técnico completo, QA humana pendiente.
+- **Estado:** Actualización pendiente
+- **Actualizado:** 2026-11-19
+- **Criterios de esta entrega:** alertas no bloqueantes de secuencia/saldos PPD y diferencias de IVA, con autorización auditable conforme a SPEC-006.
 - **Usuario:** Administrador o contador con empresa accesible
 - **Dependencias:** [SPEC-002](../002-contexto-contable/spec.md), [SPEC-004](../004-documentos-fiscales/spec.md), [SPEC-006](../006-polizas-trazabilidad/spec.md)
 
@@ -34,10 +34,12 @@ La factura PPD puede relacionarse con una póliza inicial y un complemento puede
 | CA-007-07 | Se intenta relacionar un pago/complemento con información de otra empresa. | No se crea una relación que mezcle información de empresas. |
 | CA-007-08 | Se consulta una factura con complementos y pólizas en distintos periodos. | Se pueden reconstruir sus relaciones documentales y contables sin limitar artificialmente todos sus movimientos al periodo de la factura. |
 | CA-007-09 | Se importa un complemento cuya factura referida todavía no existe en la empresa. | Se conserva el UUID y el importe referido como relación pendiente, sin crear un documento ficticio ni exponer documentos de otra empresa. |
+| CA-007-10 | Al contabilizar se detectan parcialidades repetidas o no consecutivas, diferencias en `ImpSaldoAnt`/`ImpSaldoInsoluto`, un pago mayor al saldo, pagos acumulados mayores al total de la factura o IVA calculado distinto al XML. | El sistema presenta una alerta legible por factura y complemento con importes indicados, esperados y diferencias. No bloquea por estas discrepancias si el usuario confirma expresamente la autorización conforme a CA-006-45/46. |
+| CA-007-11 | La autorización de CA-007-10 se confirma y se contabiliza la póliza. | La autorización y su detalle quedan persistidos conforme a CA-006-46. XML ilegible, asignaciones que no coinciden, relaciones no verificables, moneda no comparable y otras fallas estructurales siguen bloqueando. La autorización no altera partidas ni valida por sí misma el tratamiento fiscal. |
 
 ## Requisitos no funcionales aplicables
 
-- Aislamiento y precisión de importes: CA-007-05/07/08/09.
+- Aislamiento y precisión de importes: CA-007-05/07/08/09/10/11.
 
 ## Casos límite
 
@@ -45,7 +47,7 @@ La factura PPD puede relacionarse con una póliza inicial y un complemento puede
 
 ## Fuera de alcance
 
-No incluye cálculo de saldo, sobrepagos, diferencias, provisiones automáticas, automatización de IVA, reglas por régimen ni moneda extranjera avanzada.
+No incluye estado fiscal de liquidación, provisiones automáticas, automatización del tratamiento de IVA, reglas por régimen ni moneda extranjera avanzada. Las comparaciones de saldos, pagos e IVA de CA-007-10 sólo producen alertas operativas; no certifican validez fiscal.
 
 ## Preguntas abiertas para ampliaciones
 
